@@ -18,7 +18,6 @@
 #import <Foundation/Foundation.h>
 
 #import <Matter/MTRNOCChainIssuer.h>
-#import <Matter/MTROnboardingPayloadParser.h>
 
 @class MTRBaseDevice;
 
@@ -27,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void (^MTRDeviceConnectionCallback)(MTRBaseDevice * _Nullable device, NSError * _Nullable error);
 
 @class MTRCommissioningParameters;
+@class MTRSetupPayload;
 @protocol MTRDevicePairingDelegate;
 
 @interface MTRDeviceController : NSObject
@@ -34,10 +34,10 @@ typedef void (^MTRDeviceConnectionCallback)(MTRBaseDevice * _Nullable device, NS
 @property (readonly, nonatomic) BOOL isRunning;
 
 /**
- * Return the Node Id assigned to the controller.  Will return nil if the
+ * Return the Node ID assigned to the controller.  Will return nil if the
  * controller is not running (and hence does not know its node id).
  */
-@property (readonly, nonatomic, nullable) NSNumber * controllerNodeId;
+@property (readonly, nonatomic, nullable) NSNumber * controllerNodeID MTR_NEWLY_AVAILABLE;
 
 /**
  * Set up a commissioning session for a device, using the provided setup payload
@@ -129,7 +129,7 @@ typedef void (^MTRDeviceConnectionCallback)(MTRBaseDevice * _Nullable device, NS
 - (nullable MTRBaseDevice *)getDeviceBeingCommissioned:(uint64_t)deviceId error:(NSError * __autoreleasing *)error;
 - (BOOL)getBaseDevice:(uint64_t)deviceID
                 queue:(dispatch_queue_t)queue
-    completionHandler:(MTRDeviceConnectionCallback)completionHandler;
+           completion:(MTRDeviceConnectionCallback)completion MTR_NEWLY_AVAILABLE;
 
 - (BOOL)openPairingWindow:(uint64_t)deviceID duration:(NSUInteger)duration error:(NSError * __autoreleasing *)error;
 - (nullable NSString *)openPairingWindowWithPIN:(uint64_t)deviceID
@@ -173,7 +173,7 @@ typedef void (^MTRDeviceConnectionCallback)(MTRBaseDevice * _Nullable device, NS
  * Attempts to retrieve the attestation challenge for a commissionee with the given Device ID.
  * Returns nil if given Device ID does not match an active commissionee, or if a Secure Session is not availale.
  */
-- (nullable NSData *)fetchAttestationChallengeForDeviceId:(uint64_t)deviceId;
+- (NSData * _Nullable)attestationChallengeForDeviceID:(NSNumber *)deviceID MTR_NEWLY_AVAILABLE;
 
 /**
  * Compute a PASE verifier and passcode ID for the desired setup pincode.
@@ -191,6 +191,20 @@ typedef void (^MTRDeviceConnectionCallback)(MTRBaseDevice * _Nullable device, NS
  * Shutdown the controller. Calls to shutdown after the first one are NO-OPs.
  */
 - (void)shutdown;
+
+@end
+
+@interface MTRDeviceController (Deprecated)
+
+@property (readonly, nonatomic, nullable) NSNumber * controllerNodeId MTR_NEWLY_DEPRECATED("Please use controllerNodeID");
+
+- (nullable NSData *)fetchAttestationChallengeForDeviceId:(uint64_t)deviceId
+    MTR_NEWLY_DEPRECATED("Please use attestationChallengeForDeviceID");
+
+- (BOOL)getBaseDevice:(uint64_t)deviceID
+                queue:(dispatch_queue_t)queue
+    completionHandler:(MTRDeviceConnectionCallback)completionHandler
+    MTR_NEWLY_DEPRECATED("Please use [MTRBaseDevice deviceWithNodeID:controller:]");
 
 @end
 

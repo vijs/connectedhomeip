@@ -1,8 +1,9 @@
-{{> header}}
+{{> header excludeZapComment=true}}
 
 #import <Foundation/Foundation.h>
 
 #import "MTRAttributeCacheContainer_Internal.h"
+#import "MTRAsyncCallbackWorkQueue.h"
 #import "MTRBaseDevice_internal.h"
 #import "MTRClusterConstants.h"
 #import "MTRClusters_internal.h"
@@ -27,14 +28,16 @@ using chip::SessionHandle;
 {{#chip_client_clusters includeAll=true}}
 @implementation MTRCluster{{asUpperCamelCase name}}
 
-- (instancetype)initWithDevice:(MTRDevice *)device endpoint:(uint16_t)endpoint queue:(dispatch_queue_t)queue
+- (instancetype)initWithDevice:(MTRDevice *)device endpointID:(NSNumber *)endpointID queue:(dispatch_queue_t)queue
 {
     if (self = [super initWithQueue:queue]) {
         if (device == nil) {
             return nil;
         }
 
-        _endpoint = endpoint;
+        {{!TODO consider range-checking the incoming number to make sure it's
+                actually in the uint16_t range}}
+        _endpoint = [endpointID unsignedShortValue];
         _device = device;
     }
     return self;
@@ -43,65 +46,80 @@ using chip::SessionHandle;
 {{#chip_cluster_commands}}
 {{#*inline "callbackName"}}{{#if hasSpecificResponse}}{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase responseName}}{{else}}CommandSuccess{{/if}}{{/inline}}
 {{#unless (hasArguments)}}
-- (void){{asLowerCamelCase name}}WithExpectedValues:(NSArray<NSDictionary<NSString *, id> *> *)expectedValues expectedValueInterval:(NSNumber *)expectedValueIntervalMs completionHandler:({{>command_completion_type command=.}})completionHandler
+- (void){{asLowerCamelCase name}}WithExpectedValues:(NSArray<NSDictionary<NSString *, id> *> *)expectedValues expectedValueInterval:(NSNumber *)expectedValueIntervalMs completion:({{>command_completion_type command=.}})completion
 {
-  [self {{asLowerCamelCase name}}WithParams:nil expectedValues:expectedValues expectedValueInterval:expectedValueIntervalMs completionHandler:completionHandler];
+  [self {{asLowerCamelCase name}}WithParams:nil expectedValues:expectedValues expectedValueInterval:expectedValueIntervalMs completion:completion];
 }
 {{/unless}}
-- (void){{asLowerCamelCase name}}WithParams: (MTR{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase name}}Params * {{#unless (commandHasRequiredField .)}}_Nullable{{/unless}})params expectedValues:(NSArray<NSDictionary<NSString *, id> *> *)expectedValues expectedValueInterval:(NSNumber *)expectedValueIntervalMs completionHandler:({{>command_completion_type command=.}})completionHandler
+- (void){{asLowerCamelCase name}}WithParams: (MTR{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase name}}Params * {{#unless (commandHasRequiredField .)}}_Nullable{{/unless}})params expectedValues:(NSArray<NSDictionary<NSString *, id> *> *)expectedValues expectedValueInterval:(NSNumber *)expectedValueIntervalMs completion:({{>command_completion_type command=.}})completion
 {
     // Make a copy of params before we go async.
     params = [params copy];
-    MTRBaseDevice *baseDevice = [[MTRBaseDevice alloc] initWithNodeID:self.device.nodeID controller:self.device.deviceController];
-    new MTR{{>callbackName}}CallbackBridge(self.callbackQueue,
-      baseDevice,
-      {{#if hasSpecificResponse}}
-        {{! This treats completionHandler as taking an id for the data.  This is
-            not great from a type-safety perspective, of course. }}
-        completionHandler,
-      {{else}}
-        {{! For now, don't change the bridge API; instead just use an adapter
-            to invoke our completion handler. This is not great from a
-            type-safety perspective, of course. }}
-        ^(id _Nullable value, NSError * _Nullable error) {
-          completionHandler(error);
-        },
-      {{/if}}
-      ^(ExchangeManager & exchangeManager, const SessionHandle & session, Cancelable * success, Cancelable * failure) {
-        chip::Optional<uint16_t> timedInvokeTimeoutMs;
-        ListFreer listFreer;
-        {{asUpperCamelCase parent.name}}::Commands::{{asUpperCamelCase name}}::Type request;
-        if (params != nil) {
-          if (params.timedInvokeTimeoutMs != nil) {
-            timedInvokeTimeoutMs.SetValue(params.timedInvokeTimeoutMs.unsignedShortValue);
-          }
-        }
-        {{#if mustUseTimedInvoke}}
-        if (!timedInvokeTimeoutMs.HasValue()) {
-          timedInvokeTimeoutMs.SetValue(10000);
-        }
-        {{/if}}
-        {{#chip_cluster_command_arguments}}
-          {{#first}}
-            {{#unless (commandHasRequiredField parent)}}
-            if (params != nil) {
-            {{/unless}}
-          {{/first}}
-          {{>encode_value target=(concat "request." (asLowerCamelCase label)) source=(concat "params." (asStructPropertyName label)) cluster=parent.parent.name errorCode="return CHIP_ERROR_INVALID_ARGUMENT;" depth=0}}
-          {{#last}}
-            {{#unless (commandHasRequiredField parent)}}
+    NSNumber *timedInvokeTimeoutMsParam = params.timedInvokeTimeoutMs;
+    if (timedInvokeTimeoutMsParam) {
+      timedInvokeTimeoutMsParam = MTRClampedNumber(timedInvokeTimeoutMsParam, @(1), @(UINT16_MAX));
+    }
+    MTRAsyncCallbackQueueWorkItem * workItem = [[MTRAsyncCallbackQueueWorkItem alloc] initWithQueue:self.callbackQueue];
+    MTRAsyncCallbackReadyHandler readyHandler = ^(MTRDevice * device, NSUInteger retryCount) {
+        MTRBaseDevice *baseDevice = [[MTRBaseDevice alloc] initWithNodeID:self.device.nodeID controller:self.device.deviceController];
+        new MTR{{>callbackName}}CallbackBridge(self.callbackQueue,
+          baseDevice,
+          {{#if hasSpecificResponse}}
+            {{! This treats completion as taking an id for the data.  This is
+                not great from a type-safety perspective, of course. }}
+            completion,
+          {{else}}
+            {{! For now, don't change the bridge API; instead just use an adapter
+                to invoke our completion handler. This is not great from a
+                type-safety perspective, of course. }}
+            ^(id _Nullable value, NSError * _Nullable error) {
+              completion(error);
+                  [workItem endWork];
+            },
+          {{/if}}
+          ^(ExchangeManager & exchangeManager, const SessionHandle & session, Cancelable * success, Cancelable * failure) {
+            chip::Optional<uint16_t> timedInvokeTimeoutMs;
+            ListFreer listFreer;
+            {{asUpperCamelCase parent.name}}::Commands::{{asUpperCamelCase name}}::Type request;
+            if (timedInvokeTimeoutMsParam != nil) {
+              timedInvokeTimeoutMs.SetValue(timedInvokeTimeoutMsParam.unsignedShortValue);
             }
-           {{/unless}}
-          {{/last}}
-        {{/chip_cluster_command_arguments}}
+            {{#if mustUseTimedInvoke}}
+            if (!timedInvokeTimeoutMs.HasValue()) {
+              timedInvokeTimeoutMs.SetValue(10000);
+            }
+            {{/if}}
+            {{#chip_cluster_command_arguments}}
+              {{#first}}
+                {{#unless (commandHasRequiredField parent)}}
+                if (params != nil) {
+                {{/unless}}
+              {{/first}}
+              {{>encode_value target=(concat "request." (asLowerCamelCase label)) source=(concat "params." (asStructPropertyName label)) cluster=parent.parent.name errorCode="return CHIP_ERROR_INVALID_ARGUMENT;" depth=0}}
+              {{#last}}
+                {{#unless (commandHasRequiredField parent)}}
+                }
+               {{/unless}}
+              {{/last}}
+            {{/chip_cluster_command_arguments}}
 
-        auto successFn = Callback<{{>callbackName}}CallbackType>::FromCancelable(success);
-        auto failureFn = Callback<DefaultFailureCallbackType>::FromCancelable(failure);
-        chip::Controller::{{asUpperCamelCase parent.name}}Cluster cppCluster(exchangeManager, session, self->_endpoint);
-        return cppCluster.InvokeCommand(request, successFn->mContext, successFn->mCall, failureFn->mCall, timedInvokeTimeoutMs);
-    });
+            auto successFn = Callback<{{>callbackName}}CallbackType>::FromCancelable(success);
+            auto failureFn = Callback<DefaultFailureCallbackType>::FromCancelable(failure);
+            chip::Controller::{{asUpperCamelCase parent.name}}Cluster cppCluster(exchangeManager, session, self->_endpoint);
+            return cppCluster.InvokeCommand(request, successFn->mContext, successFn->mCall, failureFn->mCall, timedInvokeTimeoutMs);
+      });
+    };
+    workItem.readyHandler = readyHandler;
+    [self.device.asyncCallbackWorkQueue enqueueWorkItem:workItem];
 
-    [self.device setExpectedValues:expectedValues expectedValueInterval:expectedValueIntervalMs];
+    if (!expectedValueIntervalMs || ([expectedValueIntervalMs compare:@(0)] == NSOrderedAscending)) {
+      expectedValues = nil;
+    } else {
+      expectedValueIntervalMs = MTRClampedNumber(expectedValueIntervalMs, @(1), @(UINT32_MAX));
+    }
+    if (expectedValues) {
+      [self.device setExpectedValues:expectedValues expectedValueInterval:expectedValueIntervalMs];
+    }
 }
 {{/chip_cluster_commands}}
 
@@ -134,6 +152,27 @@ using chip::SessionHandle;
 
 {{/chip_server_cluster_attributes}}
 
+@end
+
+@implementation MTRCluster{{asUpperCamelCase name}} (Deprecated)
+
+- (instancetype)initWithDevice:(MTRDevice *)device endpoint:(uint16_t)endpoint queue:(dispatch_queue_t)queue
+{
+    return [self initWithDevice:device endpointID:@(endpoint) queue:queue];
+}
+
+{{#chip_cluster_commands}}
+- (void){{asLowerCamelCase name}}WithParams:(MTR{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase name}}Params * {{#unless (commandHasRequiredField .)}}_Nullable{{/unless}})params expectedValues:(NSArray<NSDictionary<NSString *, id> *> * _Nullable)expectedDataValueDictionaries expectedValueInterval:(NSNumber * _Nullable)expectedValueIntervalMs completionHandler:({{>command_completion_type command=.}})completionHandler
+{
+  [self {{asLowerCamelCase name}}WithParams:params expectedValues:expectedDataValueDictionaries expectedValueInterval:expectedValueIntervalMs completion:completionHandler];
+}
+{{#unless (hasArguments)}}
+- (void){{asLowerCamelCase name}}WithExpectedValues:(NSArray<NSDictionary<NSString *, id> *> *)expectedValues expectedValueInterval:(NSNumber *)expectedValueIntervalMs completionHandler:({{>command_completion_type command=.}})completionHandler
+{
+  [self {{asLowerCamelCase name}}WithExpectedValues:expectedValues expectedValueInterval:expectedValueIntervalMs completion:completionHandler];
+}
+{{/unless}}
+{{/chip_cluster_commands}}
 @end
 
 {{/chip_client_clusters}}

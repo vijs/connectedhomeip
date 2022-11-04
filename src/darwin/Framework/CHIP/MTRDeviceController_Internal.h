@@ -114,11 +114,11 @@ NS_ASSUME_NONNULL_BEGIN
  * dispatch to the Matter queue).
  *
  * If the controller is not running when this function is called, will return NO
- * and never invoke the completionHandler.  If the controller is not running
- * when the async dispatch on the Matter queue would happen, an error will be
- * dispatched to the completion handler.
+ * and never invoke the completion.  If the controller is not running when the
+ * async dispatch on the Matter queue would happen, an error will be dispatched
+ * to the completion handler.
  */
-- (BOOL)getSessionForNode:(chip::NodeId)nodeID completionHandler:(MTRInternalDeviceConnectionCallback)completionHandler;
+- (BOOL)getSessionForNode:(chip::NodeId)nodeID completion:(MTRInternalDeviceConnectionCallback)completion;
 
 /**
  * Get a session for the commissionee device with the given device id.  This may
@@ -156,7 +156,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Device-specific data and SDK access
 // DeviceController will act as a central repository for this opaque dictionary that MTRDevice manages
-- (MTRDevice *)deviceForNodeID:(uint64_t)nodeID;
+- (MTRDevice *)deviceForNodeID:(NSNumber *)nodeID;
 - (void)removeDevice:(MTRDevice *)device;
 
 @end
