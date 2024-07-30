@@ -4750,6 +4750,18 @@ static id _Nullable DecodeAttributeValueForAdministratorCommissioningCluster(Att
     *aError = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH_IB;
     return nil;
 }
+static id _Nullable DecodeAttributeValueForJointFabricPkiCluster(AttributeId aAttributeId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
+{
+    using namespace Clusters::JointFabricPki;
+    switch (aAttributeId) {
+    default: {
+        break;
+    }
+    }
+
+    *aError = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH_IB;
+    return nil;
+}
 static id _Nullable DecodeAttributeValueForOperationalCredentialsCluster(AttributeId aAttributeId, TLV::TLVReader & aReader, CHIP_ERROR * aError)
 {
     using namespace Clusters::OperationalCredentials;
@@ -20336,6 +20348,9 @@ id _Nullable MTRDecodeAttributeValue(const ConcreteAttributePath & aPath, TLV::T
     }
     case Clusters::AdministratorCommissioning::Id: {
         return DecodeAttributeValueForAdministratorCommissioningCluster(aPath.mAttributeId, aReader, aError);
+    }
+    case Clusters::JointFabricPki::Id: {
+        return DecodeAttributeValueForJointFabricPkiCluster(aPath.mAttributeId, aReader, aError);
     }
     case Clusters::OperationalCredentials::Id: {
         return DecodeAttributeValueForOperationalCredentialsCluster(aPath.mAttributeId, aReader, aError);
