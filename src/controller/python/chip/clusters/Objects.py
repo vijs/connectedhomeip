@@ -36,6 +36,7 @@ from .ClusterObjects import (Cluster, ClusterAttributeDescriptor, ClusterCommand
                              ClusterObjectDescriptor, ClusterObjectFieldDescriptor)
 from .Types import Nullable, NullValue
 
+
 class Globals:
     class Enums:
         class TestGlobalEnum(MatterIntEnum):
@@ -62,13 +63,13 @@ class Globals:
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="name", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="myBitmap", Tag=1, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="myEnum", Tag=2, Type=typing.Union[None, Nullable, Globals.Enums.TestGlobalEnum]),
+                        ClusterObjectFieldDescriptor(
+                            Label="myEnum", Tag=2, Type=typing.Union[None, Nullable, Globals.Enums.TestGlobalEnum]),
                     ])
 
             name: 'str' = ""
             myBitmap: 'typing.Union[Nullable, uint]' = NullValue
             myEnum: 'typing.Union[None, Nullable, Globals.Enums.TestGlobalEnum]' = None
-
 
 
 @dataclass
@@ -628,7 +629,8 @@ class OnOff(Cluster):
                 ClusterObjectFieldDescriptor(Label="globalSceneControl", Tag=0x00004000, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="onTime", Tag=0x00004001, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="offWaitTime", Tag=0x00004002, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="startUpOnOff", Tag=0x00004003, Type=typing.Union[None, Nullable, OnOff.Enums.StartUpOnOffEnum]),
+                ClusterObjectFieldDescriptor(Label="startUpOnOff", Tag=0x00004003,
+                                             Type=typing.Union[None, Nullable, OnOff.Enums.StartUpOnOffEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -2125,11 +2127,13 @@ class Descriptor(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="deviceTypeList", Tag=0x00000000, Type=typing.List[Descriptor.Structs.DeviceTypeStruct]),
+                ClusterObjectFieldDescriptor(Label="deviceTypeList", Tag=0x00000000,
+                                             Type=typing.List[Descriptor.Structs.DeviceTypeStruct]),
                 ClusterObjectFieldDescriptor(Label="serverList", Tag=0x00000001, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="clientList", Tag=0x00000002, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="partsList", Tag=0x00000003, Type=typing.List[uint]),
-                ClusterObjectFieldDescriptor(Label="tagList", Tag=0x00000004, Type=typing.Optional[typing.List[Descriptor.Structs.SemanticTagStruct]]),
+                ClusterObjectFieldDescriptor(Label="tagList", Tag=0x00000004,
+                                             Type=typing.Optional[typing.List[Descriptor.Structs.SemanticTagStruct]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -2530,8 +2534,10 @@ class AccessControl(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="acl", Tag=0x00000000, Type=typing.List[AccessControl.Structs.AccessControlEntryStruct]),
-                ClusterObjectFieldDescriptor(Label="extension", Tag=0x00000001, Type=typing.Optional[typing.List[AccessControl.Structs.AccessControlExtensionStruct]]),
+                ClusterObjectFieldDescriptor(Label="acl", Tag=0x00000000,
+                                             Type=typing.List[AccessControl.Structs.AccessControlEntryStruct]),
+                ClusterObjectFieldDescriptor(Label="extension", Tag=0x00000001,
+                                             Type=typing.Optional[typing.List[AccessControl.Structs.AccessControlExtensionStruct]]),
                 ClusterObjectFieldDescriptor(Label="subjectsPerAccessControlEntry", Tag=0x00000002, Type=uint),
                 ClusterObjectFieldDescriptor(Label="targetsPerAccessControlEntry", Tag=0x00000003, Type=uint),
                 ClusterObjectFieldDescriptor(Label="accessControlEntriesPerFabric", Tag=0x00000004, Type=uint),
@@ -2610,10 +2616,13 @@ class AccessControl(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="privilege", Tag=1, Type=AccessControl.Enums.AccessControlEntryPrivilegeEnum),
-                        ClusterObjectFieldDescriptor(Label="authMode", Tag=2, Type=AccessControl.Enums.AccessControlEntryAuthModeEnum),
+                        ClusterObjectFieldDescriptor(Label="privilege", Tag=1,
+                                                     Type=AccessControl.Enums.AccessControlEntryPrivilegeEnum),
+                        ClusterObjectFieldDescriptor(Label="authMode", Tag=2,
+                                                     Type=AccessControl.Enums.AccessControlEntryAuthModeEnum),
                         ClusterObjectFieldDescriptor(Label="subjects", Tag=3, Type=typing.Union[Nullable, typing.List[uint]]),
-                        ClusterObjectFieldDescriptor(Label="targets", Tag=4, Type=typing.Union[Nullable, typing.List[AccessControl.Structs.AccessControlTargetStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="targets", Tag=4, Type=typing.Union[Nullable, typing.List[AccessControl.Structs.AccessControlTargetStruct]]),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=254, Type=uint),
                     ])
 
@@ -2831,7 +2840,8 @@ class AccessControl(Cluster):
                         ClusterObjectFieldDescriptor(Label="adminNodeID", Tag=1, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="adminPasscodeID", Tag=2, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="changeType", Tag=3, Type=AccessControl.Enums.ChangeTypeEnum),
-                        ClusterObjectFieldDescriptor(Label="latestValue", Tag=4, Type=typing.Union[Nullable, AccessControl.Structs.AccessControlEntryStruct]),
+                        ClusterObjectFieldDescriptor(Label="latestValue", Tag=4,
+                                                     Type=typing.Union[Nullable, AccessControl.Structs.AccessControlEntryStruct]),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=254, Type=uint),
                     ])
 
@@ -2858,7 +2868,8 @@ class AccessControl(Cluster):
                         ClusterObjectFieldDescriptor(Label="adminNodeID", Tag=1, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="adminPasscodeID", Tag=2, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="changeType", Tag=3, Type=AccessControl.Enums.ChangeTypeEnum),
-                        ClusterObjectFieldDescriptor(Label="latestValue", Tag=4, Type=typing.Union[Nullable, AccessControl.Structs.AccessControlExtensionStruct]),
+                        ClusterObjectFieldDescriptor(Label="latestValue", Tag=4,
+                                                     Type=typing.Union[Nullable, AccessControl.Structs.AccessControlExtensionStruct]),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=254, Type=uint),
                     ])
 
@@ -2878,7 +2889,8 @@ class Actions(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="actionList", Tag=0x00000000, Type=typing.List[Actions.Structs.ActionStruct]),
-                ClusterObjectFieldDescriptor(Label="endpointLists", Tag=0x00000001, Type=typing.List[Actions.Structs.EndpointListStruct]),
+                ClusterObjectFieldDescriptor(Label="endpointLists", Tag=0x00000001,
+                                             Type=typing.List[Actions.Structs.EndpointListStruct]),
                 ClusterObjectFieldDescriptor(Label="setupURL", Tag=0x00000002, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -3446,8 +3458,10 @@ class BasicInformation(Cluster):
                 ClusterObjectFieldDescriptor(Label="localConfigDisabled", Tag=0x00000010, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="reachable", Tag=0x00000011, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="uniqueID", Tag=0x00000012, Type=str),
-                ClusterObjectFieldDescriptor(Label="capabilityMinima", Tag=0x00000013, Type=BasicInformation.Structs.CapabilityMinimaStruct),
-                ClusterObjectFieldDescriptor(Label="productAppearance", Tag=0x00000014, Type=typing.Optional[BasicInformation.Structs.ProductAppearanceStruct]),
+                ClusterObjectFieldDescriptor(Label="capabilityMinima", Tag=0x00000013,
+                                             Type=BasicInformation.Structs.CapabilityMinimaStruct),
+                ClusterObjectFieldDescriptor(Label="productAppearance", Tag=0x00000014,
+                                             Type=typing.Optional[BasicInformation.Structs.ProductAppearanceStruct]),
                 ClusterObjectFieldDescriptor(Label="specificationVersion", Tag=0x00000015, Type=uint),
                 ClusterObjectFieldDescriptor(Label="maxPathsPerInvoke", Tag=0x00000016, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -3551,7 +3565,8 @@ class BasicInformation(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="finish", Tag=0, Type=BasicInformation.Enums.ProductFinishEnum),
-                        ClusterObjectFieldDescriptor(Label="primaryColor", Tag=1, Type=typing.Union[Nullable, BasicInformation.Enums.ColorEnum]),
+                        ClusterObjectFieldDescriptor(Label="primaryColor", Tag=1,
+                                                     Type=typing.Union[Nullable, BasicInformation.Enums.ColorEnum]),
                     ])
 
             finish: 'BasicInformation.Enums.ProductFinishEnum' = 0
@@ -3890,7 +3905,8 @@ class BasicInformation(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=BasicInformation.Structs.CapabilityMinimaStruct)
 
-            value: 'BasicInformation.Structs.CapabilityMinimaStruct' = field(default_factory=lambda: BasicInformation.Structs.CapabilityMinimaStruct())
+            value: 'BasicInformation.Structs.CapabilityMinimaStruct' = field(
+                default_factory=lambda: BasicInformation.Structs.CapabilityMinimaStruct())
 
         @dataclass
         class ProductAppearance(ClusterAttributeDescriptor):
@@ -4182,7 +4198,8 @@ class OtaSoftwareUpdateProvider(Cluster):
                         ClusterObjectFieldDescriptor(Label="vendorID", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="productID", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="softwareVersion", Tag=2, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="protocolsSupported", Tag=3, Type=typing.List[OtaSoftwareUpdateProvider.Enums.DownloadProtocolEnum]),
+                        ClusterObjectFieldDescriptor(Label="protocolsSupported", Tag=3,
+                                                     Type=typing.List[OtaSoftwareUpdateProvider.Enums.DownloadProtocolEnum]),
                         ClusterObjectFieldDescriptor(Label="hardwareVersion", Tag=4, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="location", Tag=5, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="requestorCanConsent", Tag=6, Type=typing.Optional[bool]),
@@ -4192,7 +4209,8 @@ class OtaSoftwareUpdateProvider(Cluster):
             vendorID: 'uint' = 0
             productID: 'uint' = 0
             softwareVersion: 'uint' = 0
-            protocolsSupported: 'typing.List[OtaSoftwareUpdateProvider.Enums.DownloadProtocolEnum]' = field(default_factory=lambda: [])
+            protocolsSupported: 'typing.List[OtaSoftwareUpdateProvider.Enums.DownloadProtocolEnum]' = field(default_factory=lambda: [
+            ])
             hardwareVersion: 'typing.Optional[uint]' = None
             location: 'typing.Optional[str]' = None
             requestorCanConsent: 'typing.Optional[bool]' = None
@@ -4257,7 +4275,8 @@ class OtaSoftwareUpdateProvider(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="action", Tag=0, Type=OtaSoftwareUpdateProvider.Enums.ApplyUpdateActionEnum),
+                        ClusterObjectFieldDescriptor(
+                            Label="action", Tag=0, Type=OtaSoftwareUpdateProvider.Enums.ApplyUpdateActionEnum),
                         ClusterObjectFieldDescriptor(Label="delayedActionTime", Tag=1, Type=uint),
                     ])
 
@@ -4388,9 +4407,11 @@ class OtaSoftwareUpdateRequestor(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="defaultOTAProviders", Tag=0x00000000, Type=typing.List[OtaSoftwareUpdateRequestor.Structs.ProviderLocation]),
+                ClusterObjectFieldDescriptor(Label="defaultOTAProviders", Tag=0x00000000,
+                                             Type=typing.List[OtaSoftwareUpdateRequestor.Structs.ProviderLocation]),
                 ClusterObjectFieldDescriptor(Label="updatePossible", Tag=0x00000001, Type=bool),
-                ClusterObjectFieldDescriptor(Label="updateState", Tag=0x00000002, Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
+                ClusterObjectFieldDescriptor(Label="updateState", Tag=0x00000002,
+                                             Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
                 ClusterObjectFieldDescriptor(Label="updateStateProgress", Tag=0x00000003, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -4480,7 +4501,8 @@ class OtaSoftwareUpdateRequestor(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="providerNodeID", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="vendorID", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="announcementReason", Tag=2, Type=OtaSoftwareUpdateRequestor.Enums.AnnouncementReasonEnum),
+                        ClusterObjectFieldDescriptor(Label="announcementReason", Tag=2,
+                                                     Type=OtaSoftwareUpdateRequestor.Enums.AnnouncementReasonEnum),
                         ClusterObjectFieldDescriptor(Label="metadataForNode", Tag=3, Type=typing.Optional[bytes]),
                         ClusterObjectFieldDescriptor(Label="endpoint", Tag=4, Type=uint),
                     ])
@@ -4667,8 +4689,10 @@ class OtaSoftwareUpdateRequestor(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="previousState", Tag=0, Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
-                        ClusterObjectFieldDescriptor(Label="newState", Tag=1, Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
+                        ClusterObjectFieldDescriptor(Label="previousState", Tag=0,
+                                                     Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
+                        ClusterObjectFieldDescriptor(Label="newState", Tag=1,
+                                                     Type=OtaSoftwareUpdateRequestor.Enums.UpdateStateEnum),
                         ClusterObjectFieldDescriptor(Label="reason", Tag=2, Type=OtaSoftwareUpdateRequestor.Enums.ChangeReasonEnum),
                         ClusterObjectFieldDescriptor(Label="targetSoftwareVersion", Tag=3, Type=typing.Union[Nullable, uint]),
                     ])
@@ -4891,8 +4915,10 @@ class TimeFormatLocalization(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="hourFormat", Tag=0x00000000, Type=TimeFormatLocalization.Enums.HourFormatEnum),
-                ClusterObjectFieldDescriptor(Label="activeCalendarType", Tag=0x00000001, Type=typing.Optional[TimeFormatLocalization.Enums.CalendarTypeEnum]),
-                ClusterObjectFieldDescriptor(Label="supportedCalendarTypes", Tag=0x00000002, Type=typing.Optional[typing.List[TimeFormatLocalization.Enums.CalendarTypeEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeCalendarType", Tag=0x00000001,
+                                             Type=typing.Optional[TimeFormatLocalization.Enums.CalendarTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="supportedCalendarTypes", Tag=0x00000002,
+                                             Type=typing.Optional[typing.List[TimeFormatLocalization.Enums.CalendarTypeEnum]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -5100,7 +5126,8 @@ class UnitLocalization(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="temperatureUnit", Tag=0x00000000, Type=typing.Optional[UnitLocalization.Enums.TempUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="temperatureUnit", Tag=0x00000000,
+                                             Type=typing.Optional[UnitLocalization.Enums.TempUnitEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -5396,34 +5423,45 @@ class PowerSource(Cluster):
                 ClusterObjectFieldDescriptor(Label="status", Tag=0x00000000, Type=PowerSource.Enums.PowerSourceStatusEnum),
                 ClusterObjectFieldDescriptor(Label="order", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="description", Tag=0x00000002, Type=str),
-                ClusterObjectFieldDescriptor(Label="wiredAssessedInputVoltage", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="wiredAssessedInputFrequency", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="wiredCurrentType", Tag=0x00000005, Type=typing.Optional[PowerSource.Enums.WiredCurrentTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="wiredAssessedInputVoltage", Tag=0x00000003,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="wiredAssessedInputFrequency", Tag=0x00000004,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="wiredCurrentType", Tag=0x00000005,
+                                             Type=typing.Optional[PowerSource.Enums.WiredCurrentTypeEnum]),
                 ClusterObjectFieldDescriptor(Label="wiredAssessedCurrent", Tag=0x00000006, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="wiredNominalVoltage", Tag=0x00000007, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="wiredMaximumCurrent", Tag=0x00000008, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="wiredPresent", Tag=0x00000009, Type=typing.Optional[bool]),
-                ClusterObjectFieldDescriptor(Label="activeWiredFaults", Tag=0x0000000A, Type=typing.Optional[typing.List[PowerSource.Enums.WiredFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeWiredFaults", Tag=0x0000000A,
+                                             Type=typing.Optional[typing.List[PowerSource.Enums.WiredFaultEnum]]),
                 ClusterObjectFieldDescriptor(Label="batVoltage", Tag=0x0000000B, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="batPercentRemaining", Tag=0x0000000C, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="batTimeRemaining", Tag=0x0000000D, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="batChargeLevel", Tag=0x0000000E, Type=typing.Optional[PowerSource.Enums.BatChargeLevelEnum]),
+                ClusterObjectFieldDescriptor(Label="batChargeLevel", Tag=0x0000000E,
+                                             Type=typing.Optional[PowerSource.Enums.BatChargeLevelEnum]),
                 ClusterObjectFieldDescriptor(Label="batReplacementNeeded", Tag=0x0000000F, Type=typing.Optional[bool]),
-                ClusterObjectFieldDescriptor(Label="batReplaceability", Tag=0x00000010, Type=typing.Optional[PowerSource.Enums.BatReplaceabilityEnum]),
+                ClusterObjectFieldDescriptor(Label="batReplaceability", Tag=0x00000010,
+                                             Type=typing.Optional[PowerSource.Enums.BatReplaceabilityEnum]),
                 ClusterObjectFieldDescriptor(Label="batPresent", Tag=0x00000011, Type=typing.Optional[bool]),
-                ClusterObjectFieldDescriptor(Label="activeBatFaults", Tag=0x00000012, Type=typing.Optional[typing.List[PowerSource.Enums.BatFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeBatFaults", Tag=0x00000012,
+                                             Type=typing.Optional[typing.List[PowerSource.Enums.BatFaultEnum]]),
                 ClusterObjectFieldDescriptor(Label="batReplacementDescription", Tag=0x00000013, Type=typing.Optional[str]),
-                ClusterObjectFieldDescriptor(Label="batCommonDesignation", Tag=0x00000014, Type=typing.Optional[PowerSource.Enums.BatCommonDesignationEnum]),
+                ClusterObjectFieldDescriptor(Label="batCommonDesignation", Tag=0x00000014,
+                                             Type=typing.Optional[PowerSource.Enums.BatCommonDesignationEnum]),
                 ClusterObjectFieldDescriptor(Label="batANSIDesignation", Tag=0x00000015, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="batIECDesignation", Tag=0x00000016, Type=typing.Optional[str]),
-                ClusterObjectFieldDescriptor(Label="batApprovedChemistry", Tag=0x00000017, Type=typing.Optional[PowerSource.Enums.BatApprovedChemistryEnum]),
+                ClusterObjectFieldDescriptor(Label="batApprovedChemistry", Tag=0x00000017,
+                                             Type=typing.Optional[PowerSource.Enums.BatApprovedChemistryEnum]),
                 ClusterObjectFieldDescriptor(Label="batCapacity", Tag=0x00000018, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="batQuantity", Tag=0x00000019, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="batChargeState", Tag=0x0000001A, Type=typing.Optional[PowerSource.Enums.BatChargeStateEnum]),
+                ClusterObjectFieldDescriptor(Label="batChargeState", Tag=0x0000001A,
+                                             Type=typing.Optional[PowerSource.Enums.BatChargeStateEnum]),
                 ClusterObjectFieldDescriptor(Label="batTimeToFullCharge", Tag=0x0000001B, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="batFunctionalWhileCharging", Tag=0x0000001C, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="batChargingCurrent", Tag=0x0000001D, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="activeBatChargeFaults", Tag=0x0000001E, Type=typing.Optional[typing.List[PowerSource.Enums.BatChargeFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeBatChargeFaults", Tag=0x0000001E,
+                                             Type=typing.Optional[typing.List[PowerSource.Enums.BatChargeFaultEnum]]),
                 ClusterObjectFieldDescriptor(Label="endpointList", Tag=0x0000001F, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -5705,8 +5743,10 @@ class PowerSource(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
                     ])
 
             current: 'typing.List[PowerSource.Enums.BatChargeFaultEnum]' = field(default_factory=lambda: [])
@@ -6404,8 +6444,10 @@ class PowerSource(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[PowerSource.Enums.BatChargeFaultEnum]),
                     ])
 
             current: 'typing.List[PowerSource.Enums.BatChargeFaultEnum]' = field(default_factory=lambda: [])
@@ -6421,9 +6463,12 @@ class GeneralCommissioning(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="breadcrumb", Tag=0x00000000, Type=uint),
-                ClusterObjectFieldDescriptor(Label="basicCommissioningInfo", Tag=0x00000001, Type=GeneralCommissioning.Structs.BasicCommissioningInfo),
-                ClusterObjectFieldDescriptor(Label="regulatoryConfig", Tag=0x00000002, Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
-                ClusterObjectFieldDescriptor(Label="locationCapability", Tag=0x00000003, Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
+                ClusterObjectFieldDescriptor(Label="basicCommissioningInfo", Tag=0x00000001,
+                                             Type=GeneralCommissioning.Structs.BasicCommissioningInfo),
+                ClusterObjectFieldDescriptor(Label="regulatoryConfig", Tag=0x00000002,
+                                             Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
+                ClusterObjectFieldDescriptor(Label="locationCapability", Tag=0x00000003,
+                                             Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
                 ClusterObjectFieldDescriptor(Label="supportsConcurrentConnection", Tag=0x00000004, Type=bool),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -6512,7 +6557,8 @@ class GeneralCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0, Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
+                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0,
+                                                     Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=str),
                     ])
 
@@ -6530,7 +6576,8 @@ class GeneralCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="newRegulatoryConfig", Tag=0, Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="newRegulatoryConfig", Tag=0,
+                                                     Type=GeneralCommissioning.Enums.RegulatoryLocationTypeEnum),
                         ClusterObjectFieldDescriptor(Label="countryCode", Tag=1, Type=str),
                         ClusterObjectFieldDescriptor(Label="breadcrumb", Tag=2, Type=uint),
                     ])
@@ -6550,7 +6597,8 @@ class GeneralCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0, Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
+                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0,
+                                                     Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=str),
                     ])
 
@@ -6581,7 +6629,8 @@ class GeneralCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0, Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
+                        ClusterObjectFieldDescriptor(Label="errorCode", Tag=0,
+                                                     Type=GeneralCommissioning.Enums.CommissioningErrorEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=str),
                     ])
 
@@ -6619,7 +6668,8 @@ class GeneralCommissioning(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=GeneralCommissioning.Structs.BasicCommissioningInfo)
 
-            value: 'GeneralCommissioning.Structs.BasicCommissioningInfo' = field(default_factory=lambda: GeneralCommissioning.Structs.BasicCommissioningInfo())
+            value: 'GeneralCommissioning.Structs.BasicCommissioningInfo' = field(
+                default_factory=lambda: GeneralCommissioning.Structs.BasicCommissioningInfo())
 
         @dataclass
         class RegulatoryConfig(ClusterAttributeDescriptor):
@@ -6775,14 +6825,17 @@ class NetworkCommissioning(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="maxNetworks", Tag=0x00000000, Type=uint),
-                ClusterObjectFieldDescriptor(Label="networks", Tag=0x00000001, Type=typing.List[NetworkCommissioning.Structs.NetworkInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="networks", Tag=0x00000001,
+                                             Type=typing.List[NetworkCommissioning.Structs.NetworkInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="scanMaxTimeSeconds", Tag=0x00000002, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="connectMaxTimeSeconds", Tag=0x00000003, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="interfaceEnabled", Tag=0x00000004, Type=bool),
-                ClusterObjectFieldDescriptor(Label="lastNetworkingStatus", Tag=0x00000005, Type=typing.Union[Nullable, NetworkCommissioning.Enums.NetworkCommissioningStatusEnum]),
+                ClusterObjectFieldDescriptor(Label="lastNetworkingStatus", Tag=0x00000005,
+                                             Type=typing.Union[Nullable, NetworkCommissioning.Enums.NetworkCommissioningStatusEnum]),
                 ClusterObjectFieldDescriptor(Label="lastNetworkID", Tag=0x00000006, Type=typing.Union[Nullable, bytes]),
                 ClusterObjectFieldDescriptor(Label="lastConnectErrorValue", Tag=0x00000007, Type=typing.Union[Nullable, int]),
-                ClusterObjectFieldDescriptor(Label="supportedWiFiBands", Tag=0x00000008, Type=typing.Optional[typing.List[NetworkCommissioning.Enums.WiFiBandEnum]]),
+                ClusterObjectFieldDescriptor(Label="supportedWiFiBands", Tag=0x00000008,
+                                             Type=typing.Optional[typing.List[NetworkCommissioning.Enums.WiFiBandEnum]]),
                 ClusterObjectFieldDescriptor(Label="supportedThreadFeatures", Tag=0x00000009, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="threadVersion", Tag=0x0000000A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -6961,10 +7014,13 @@ class NetworkCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0, Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0,
+                                                     Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=typing.Optional[str]),
-                        ClusterObjectFieldDescriptor(Label="wiFiScanResults", Tag=2, Type=typing.Optional[typing.List[NetworkCommissioning.Structs.WiFiInterfaceScanResultStruct]]),
-                        ClusterObjectFieldDescriptor(Label="threadScanResults", Tag=3, Type=typing.Optional[typing.List[NetworkCommissioning.Structs.ThreadInterfaceScanResultStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="wiFiScanResults", Tag=2, Type=typing.Optional[typing.List[NetworkCommissioning.Structs.WiFiInterfaceScanResultStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="threadScanResults", Tag=3, Type=typing.Optional[typing.List[NetworkCommissioning.Structs.ThreadInterfaceScanResultStruct]]),
                     ])
 
             networkingStatus: 'NetworkCommissioning.Enums.NetworkCommissioningStatusEnum' = 0
@@ -7045,7 +7101,8 @@ class NetworkCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0, Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0,
+                                                     Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="networkIndex", Tag=2, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="clientIdentity", Tag=3, Type=typing.Optional[bytes]),
@@ -7087,7 +7144,8 @@ class NetworkCommissioning(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0, Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="networkingStatus", Tag=0,
+                                                     Type=NetworkCommissioning.Enums.NetworkCommissioningStatusEnum),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=1, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="errorValue", Tag=2, Type=typing.Union[Nullable, int]),
                     ])
@@ -7494,7 +7552,8 @@ class DiagnosticLogs(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="intent", Tag=0, Type=DiagnosticLogs.Enums.IntentEnum),
-                        ClusterObjectFieldDescriptor(Label="requestedProtocol", Tag=1, Type=DiagnosticLogs.Enums.TransferProtocolEnum),
+                        ClusterObjectFieldDescriptor(Label="requestedProtocol", Tag=1,
+                                                     Type=DiagnosticLogs.Enums.TransferProtocolEnum),
                         ClusterObjectFieldDescriptor(Label="transferFileDesignator", Tag=2, Type=typing.Optional[str]),
                     ])
 
@@ -7630,14 +7689,19 @@ class GeneralDiagnostics(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="networkInterfaces", Tag=0x00000000, Type=typing.List[GeneralDiagnostics.Structs.NetworkInterface]),
+                ClusterObjectFieldDescriptor(Label="networkInterfaces", Tag=0x00000000,
+                                             Type=typing.List[GeneralDiagnostics.Structs.NetworkInterface]),
                 ClusterObjectFieldDescriptor(Label="rebootCount", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="upTime", Tag=0x00000002, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="totalOperationalHours", Tag=0x00000003, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="bootReason", Tag=0x00000004, Type=typing.Optional[GeneralDiagnostics.Enums.BootReasonEnum]),
-                ClusterObjectFieldDescriptor(Label="activeHardwareFaults", Tag=0x00000005, Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]]),
-                ClusterObjectFieldDescriptor(Label="activeRadioFaults", Tag=0x00000006, Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]]),
-                ClusterObjectFieldDescriptor(Label="activeNetworkFaults", Tag=0x00000007, Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="bootReason", Tag=0x00000004,
+                                             Type=typing.Optional[GeneralDiagnostics.Enums.BootReasonEnum]),
+                ClusterObjectFieldDescriptor(Label="activeHardwareFaults", Tag=0x00000005,
+                                             Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeRadioFaults", Tag=0x00000006,
+                                             Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]]),
+                ClusterObjectFieldDescriptor(Label="activeNetworkFaults", Tag=0x00000007,
+                                             Type=typing.Optional[typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]]),
                 ClusterObjectFieldDescriptor(Label="testEventTriggersEnabled", Tag=0x00000008, Type=bool),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -7746,8 +7810,10 @@ class GeneralDiagnostics(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="name", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="isOperational", Tag=1, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="offPremiseServicesReachableIPv4", Tag=2, Type=typing.Union[Nullable, bool]),
-                        ClusterObjectFieldDescriptor(Label="offPremiseServicesReachableIPv6", Tag=3, Type=typing.Union[Nullable, bool]),
+                        ClusterObjectFieldDescriptor(Label="offPremiseServicesReachableIPv4",
+                                                     Tag=2, Type=typing.Union[Nullable, bool]),
+                        ClusterObjectFieldDescriptor(Label="offPremiseServicesReachableIPv6",
+                                                     Tag=3, Type=typing.Union[Nullable, bool]),
                         ClusterObjectFieldDescriptor(Label="hardwareAddress", Tag=4, Type=bytes),
                         ClusterObjectFieldDescriptor(Label="IPv4Addresses", Tag=5, Type=typing.List[bytes]),
                         ClusterObjectFieldDescriptor(Label="IPv6Addresses", Tag=6, Type=typing.List[bytes]),
@@ -8105,8 +8171,10 @@ class GeneralDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]),
                     ])
 
             current: 'typing.List[GeneralDiagnostics.Enums.HardwareFaultEnum]' = field(default_factory=lambda: [])
@@ -8126,8 +8194,10 @@ class GeneralDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]),
                     ])
 
             current: 'typing.List[GeneralDiagnostics.Enums.RadioFaultEnum]' = field(default_factory=lambda: [])
@@ -8147,8 +8217,10 @@ class GeneralDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]),
                     ])
 
             current: 'typing.List[GeneralDiagnostics.Enums.NetworkFaultEnum]' = field(default_factory=lambda: [])
@@ -8182,7 +8254,8 @@ class SoftwareDiagnostics(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="threadMetrics", Tag=0x00000000, Type=typing.Optional[typing.List[SoftwareDiagnostics.Structs.ThreadMetricsStruct]]),
+                ClusterObjectFieldDescriptor(Label="threadMetrics", Tag=0x00000000,
+                                             Type=typing.Optional[typing.List[SoftwareDiagnostics.Structs.ThreadMetricsStruct]]),
                 ClusterObjectFieldDescriptor(Label="currentHeapFree", Tag=0x00000001, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="currentHeapUsed", Tag=0x00000002, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="currentHeapHighWatermark", Tag=0x00000003, Type=typing.Optional[uint]),
@@ -8438,14 +8511,17 @@ class ThreadNetworkDiagnostics(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="channel", Tag=0x00000000, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="routingRole", Tag=0x00000001, Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Enums.RoutingRoleEnum]),
+                ClusterObjectFieldDescriptor(Label="routingRole", Tag=0x00000001,
+                                             Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Enums.RoutingRoleEnum]),
                 ClusterObjectFieldDescriptor(Label="networkName", Tag=0x00000002, Type=typing.Union[Nullable, str]),
                 ClusterObjectFieldDescriptor(Label="panId", Tag=0x00000003, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="extendedPanId", Tag=0x00000004, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="meshLocalPrefix", Tag=0x00000005, Type=typing.Union[Nullable, bytes]),
                 ClusterObjectFieldDescriptor(Label="overrunCount", Tag=0x00000006, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="neighborTable", Tag=0x00000007, Type=typing.List[ThreadNetworkDiagnostics.Structs.NeighborTableStruct]),
-                ClusterObjectFieldDescriptor(Label="routeTable", Tag=0x00000008, Type=typing.List[ThreadNetworkDiagnostics.Structs.RouteTableStruct]),
+                ClusterObjectFieldDescriptor(Label="neighborTable", Tag=0x00000007,
+                                             Type=typing.List[ThreadNetworkDiagnostics.Structs.NeighborTableStruct]),
+                ClusterObjectFieldDescriptor(Label="routeTable", Tag=0x00000008,
+                                             Type=typing.List[ThreadNetworkDiagnostics.Structs.RouteTableStruct]),
                 ClusterObjectFieldDescriptor(Label="partitionId", Tag=0x00000009, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="weighting", Tag=0x0000000A, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="dataVersion", Tag=0x0000000B, Type=typing.Union[Nullable, uint]),
@@ -8496,10 +8572,13 @@ class ThreadNetworkDiagnostics(Cluster):
                 ClusterObjectFieldDescriptor(Label="activeTimestamp", Tag=0x00000038, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="pendingTimestamp", Tag=0x00000039, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="delay", Tag=0x0000003A, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="securityPolicy", Tag=0x0000003B, Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Structs.SecurityPolicy]),
+                ClusterObjectFieldDescriptor(Label="securityPolicy", Tag=0x0000003B,
+                                             Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Structs.SecurityPolicy]),
                 ClusterObjectFieldDescriptor(Label="channelPage0Mask", Tag=0x0000003C, Type=typing.Union[Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="operationalDatasetComponents", Tag=0x0000003D, Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Structs.OperationalDatasetComponents]),
-                ClusterObjectFieldDescriptor(Label="activeNetworkFaultsList", Tag=0x0000003E, Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
+                ClusterObjectFieldDescriptor(Label="operationalDatasetComponents", Tag=0x0000003D,
+                                             Type=typing.Union[Nullable, ThreadNetworkDiagnostics.Structs.OperationalDatasetComponents]),
+                ClusterObjectFieldDescriptor(Label="activeNetworkFaultsList", Tag=0x0000003E,
+                                             Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -9867,7 +9946,8 @@ class ThreadNetworkDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="connectionStatus", Tag=0, Type=ThreadNetworkDiagnostics.Enums.ConnectionStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="connectionStatus", Tag=0,
+                                                     Type=ThreadNetworkDiagnostics.Enums.ConnectionStatusEnum),
                     ])
 
             connectionStatus: 'ThreadNetworkDiagnostics.Enums.ConnectionStatusEnum' = 0
@@ -9886,8 +9966,10 @@ class ThreadNetworkDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="current", Tag=0, Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
-                        ClusterObjectFieldDescriptor(Label="previous", Tag=1, Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="current", Tag=0,
+                                                     Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
+                        ClusterObjectFieldDescriptor(Label="previous", Tag=1,
+                                                     Type=typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]),
                     ])
 
             current: 'typing.List[ThreadNetworkDiagnostics.Enums.NetworkFaultEnum]' = field(default_factory=lambda: [])
@@ -9903,14 +9985,18 @@ class WiFiNetworkDiagnostics(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="bssid", Tag=0x00000000, Type=typing.Union[Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="securityType", Tag=0x00000001, Type=typing.Union[Nullable, WiFiNetworkDiagnostics.Enums.SecurityTypeEnum]),
-                ClusterObjectFieldDescriptor(Label="wiFiVersion", Tag=0x00000002, Type=typing.Union[Nullable, WiFiNetworkDiagnostics.Enums.WiFiVersionEnum]),
+                ClusterObjectFieldDescriptor(Label="securityType", Tag=0x00000001,
+                                             Type=typing.Union[Nullable, WiFiNetworkDiagnostics.Enums.SecurityTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="wiFiVersion", Tag=0x00000002,
+                                             Type=typing.Union[Nullable, WiFiNetworkDiagnostics.Enums.WiFiVersionEnum]),
                 ClusterObjectFieldDescriptor(Label="channelNumber", Tag=0x00000003, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="rssi", Tag=0x00000004, Type=typing.Union[Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="beaconLostCount", Tag=0x00000005, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="beaconRxCount", Tag=0x00000006, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="packetMulticastRxCount", Tag=0x00000007, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="packetMulticastTxCount", Tag=0x00000008, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="packetMulticastRxCount", Tag=0x00000007,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="packetMulticastTxCount", Tag=0x00000008,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="packetUnicastRxCount", Tag=0x00000009, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="packetUnicastTxCount", Tag=0x0000000A, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="currentMaxRate", Tag=0x0000000B, Type=typing.Union[None, Nullable, uint]),
@@ -10349,7 +10435,8 @@ class WiFiNetworkDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="associationFailureCause", Tag=0, Type=WiFiNetworkDiagnostics.Enums.AssociationFailureCauseEnum),
+                        ClusterObjectFieldDescriptor(Label="associationFailureCause", Tag=0,
+                                                     Type=WiFiNetworkDiagnostics.Enums.AssociationFailureCauseEnum),
                         ClusterObjectFieldDescriptor(Label="status", Tag=1, Type=uint),
                     ])
 
@@ -10370,7 +10457,8 @@ class WiFiNetworkDiagnostics(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="connectionStatus", Tag=0, Type=WiFiNetworkDiagnostics.Enums.ConnectionStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="connectionStatus", Tag=0,
+                                                     Type=WiFiNetworkDiagnostics.Enums.ConnectionStatusEnum),
                     ])
 
             connectionStatus: 'WiFiNetworkDiagnostics.Enums.ConnectionStatusEnum' = 0
@@ -10384,7 +10472,8 @@ class EthernetNetworkDiagnostics(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="PHYRate", Tag=0x00000000, Type=typing.Union[None, Nullable, EthernetNetworkDiagnostics.Enums.PHYRateEnum]),
+                ClusterObjectFieldDescriptor(Label="PHYRate", Tag=0x00000000,
+                                             Type=typing.Union[None, Nullable, EthernetNetworkDiagnostics.Enums.PHYRateEnum]),
                 ClusterObjectFieldDescriptor(Label="fullDuplex", Tag=0x00000001, Type=typing.Union[None, Nullable, bool]),
                 ClusterObjectFieldDescriptor(Label="packetRxCount", Tag=0x00000002, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="packetTxCount", Tag=0x00000003, Type=typing.Optional[uint]),
@@ -10706,13 +10795,18 @@ class TimeSynchronization(Cluster):
             Fields=[
                 ClusterObjectFieldDescriptor(Label="UTCTime", Tag=0x00000000, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="granularity", Tag=0x00000001, Type=TimeSynchronization.Enums.GranularityEnum),
-                ClusterObjectFieldDescriptor(Label="timeSource", Tag=0x00000002, Type=typing.Optional[TimeSynchronization.Enums.TimeSourceEnum]),
-                ClusterObjectFieldDescriptor(Label="trustedTimeSource", Tag=0x00000003, Type=typing.Union[None, Nullable, TimeSynchronization.Structs.TrustedTimeSourceStruct]),
+                ClusterObjectFieldDescriptor(Label="timeSource", Tag=0x00000002,
+                                             Type=typing.Optional[TimeSynchronization.Enums.TimeSourceEnum]),
+                ClusterObjectFieldDescriptor(Label="trustedTimeSource", Tag=0x00000003,
+                                             Type=typing.Union[None, Nullable, TimeSynchronization.Structs.TrustedTimeSourceStruct]),
                 ClusterObjectFieldDescriptor(Label="defaultNTP", Tag=0x00000004, Type=typing.Union[None, Nullable, str]),
-                ClusterObjectFieldDescriptor(Label="timeZone", Tag=0x00000005, Type=typing.Optional[typing.List[TimeSynchronization.Structs.TimeZoneStruct]]),
-                ClusterObjectFieldDescriptor(Label="DSTOffset", Tag=0x00000006, Type=typing.Optional[typing.List[TimeSynchronization.Structs.DSTOffsetStruct]]),
+                ClusterObjectFieldDescriptor(Label="timeZone", Tag=0x00000005,
+                                             Type=typing.Optional[typing.List[TimeSynchronization.Structs.TimeZoneStruct]]),
+                ClusterObjectFieldDescriptor(Label="DSTOffset", Tag=0x00000006,
+                                             Type=typing.Optional[typing.List[TimeSynchronization.Structs.DSTOffsetStruct]]),
                 ClusterObjectFieldDescriptor(Label="localTime", Tag=0x00000007, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="timeZoneDatabase", Tag=0x00000008, Type=typing.Optional[TimeSynchronization.Enums.TimeZoneDatabaseEnum]),
+                ClusterObjectFieldDescriptor(Label="timeZoneDatabase", Tag=0x00000008,
+                                             Type=typing.Optional[TimeSynchronization.Enums.TimeZoneDatabaseEnum]),
                 ClusterObjectFieldDescriptor(Label="NTPServerAvailable", Tag=0x00000009, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="timeZoneListMaxSize", Tag=0x0000000A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="DSTOffsetListMaxSize", Tag=0x0000000B, Type=typing.Optional[uint]),
@@ -10880,7 +10974,8 @@ class TimeSynchronization(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="UTCTime", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="granularity", Tag=1, Type=TimeSynchronization.Enums.GranularityEnum),
-                        ClusterObjectFieldDescriptor(Label="timeSource", Tag=2, Type=typing.Optional[TimeSynchronization.Enums.TimeSourceEnum]),
+                        ClusterObjectFieldDescriptor(Label="timeSource", Tag=2,
+                                                     Type=typing.Optional[TimeSynchronization.Enums.TimeSourceEnum]),
                     ])
 
             UTCTime: 'uint' = 0
@@ -10898,7 +10993,8 @@ class TimeSynchronization(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="trustedTimeSource", Tag=0, Type=typing.Union[Nullable, TimeSynchronization.Structs.FabricScopedTrustedTimeSourceStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="trustedTimeSource", Tag=0, Type=typing.Union[Nullable, TimeSynchronization.Structs.FabricScopedTrustedTimeSourceStruct]),
                     ])
 
             trustedTimeSource: 'typing.Union[Nullable, TimeSynchronization.Structs.FabricScopedTrustedTimeSourceStruct]' = NullValue
@@ -10914,7 +11010,8 @@ class TimeSynchronization(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="timeZone", Tag=0, Type=typing.List[TimeSynchronization.Structs.TimeZoneStruct]),
+                        ClusterObjectFieldDescriptor(Label="timeZone", Tag=0,
+                                                     Type=typing.List[TimeSynchronization.Structs.TimeZoneStruct]),
                     ])
 
             timeZone: 'typing.List[TimeSynchronization.Structs.TimeZoneStruct]' = field(default_factory=lambda: [])
@@ -10946,7 +11043,8 @@ class TimeSynchronization(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="DSTOffset", Tag=0, Type=typing.List[TimeSynchronization.Structs.DSTOffsetStruct]),
+                        ClusterObjectFieldDescriptor(Label="DSTOffset", Tag=0,
+                                                     Type=typing.List[TimeSynchronization.Structs.DSTOffsetStruct]),
                     ])
 
             DSTOffset: 'typing.List[TimeSynchronization.Structs.DSTOffsetStruct]' = field(default_factory=lambda: [])
@@ -11385,7 +11483,8 @@ class BridgedDeviceBasicInformation(Cluster):
                 ClusterObjectFieldDescriptor(Label="serialNumber", Tag=0x0000000F, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="reachable", Tag=0x00000011, Type=bool),
                 ClusterObjectFieldDescriptor(Label="uniqueID", Tag=0x00000012, Type=str),
-                ClusterObjectFieldDescriptor(Label="productAppearance", Tag=0x00000014, Type=typing.Optional[BridgedDeviceBasicInformation.Structs.ProductAppearanceStruct]),
+                ClusterObjectFieldDescriptor(Label="productAppearance", Tag=0x00000014,
+                                             Type=typing.Optional[BridgedDeviceBasicInformation.Structs.ProductAppearanceStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -11470,8 +11569,10 @@ class BridgedDeviceBasicInformation(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="finish", Tag=0, Type=BridgedDeviceBasicInformation.Enums.ProductFinishEnum),
-                        ClusterObjectFieldDescriptor(Label="primaryColor", Tag=1, Type=typing.Union[Nullable, BridgedDeviceBasicInformation.Enums.ColorEnum]),
+                        ClusterObjectFieldDescriptor(
+                            Label="finish", Tag=0, Type=BridgedDeviceBasicInformation.Enums.ProductFinishEnum),
+                        ClusterObjectFieldDescriptor(Label="primaryColor", Tag=1,
+                                                     Type=typing.Union[Nullable, BridgedDeviceBasicInformation.Enums.ColorEnum]),
                     ])
 
             finish: 'BridgedDeviceBasicInformation.Enums.ProductFinishEnum' = 0
@@ -12265,7 +12366,8 @@ class AdministratorCommissioning(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="windowStatus", Tag=0x00000000, Type=AdministratorCommissioning.Enums.CommissioningWindowStatusEnum),
+                ClusterObjectFieldDescriptor(Label="windowStatus", Tag=0x00000000,
+                                             Type=AdministratorCommissioning.Enums.CommissioningWindowStatusEnum),
                 ClusterObjectFieldDescriptor(Label="adminFabricIndex", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="adminVendorId", Tag=0x00000002, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -12524,6 +12626,238 @@ class AdministratorCommissioning(Cluster):
 
 
 @dataclass
+class JointFabricPki(Cluster):
+    id: typing.ClassVar[int] = 0x0000003D
+
+    @ChipUtility.classproperty
+    def descriptor(cls) -> ClusterObjectDescriptor:
+        return ClusterObjectDescriptor(
+            Fields=[
+                ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
+                ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
+                ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
+                ClusterObjectFieldDescriptor(Label="attributeList", Tag=0x0000FFFB, Type=typing.List[uint]),
+                ClusterObjectFieldDescriptor(Label="featureMap", Tag=0x0000FFFC, Type=uint),
+                ClusterObjectFieldDescriptor(Label="clusterRevision", Tag=0x0000FFFD, Type=uint),
+            ])
+
+    generatedCommandList: 'typing.List[uint]' = None
+    acceptedCommandList: 'typing.List[uint]' = None
+    eventList: 'typing.List[uint]' = None
+    attributeList: 'typing.List[uint]' = None
+    featureMap: 'uint' = None
+    clusterRevision: 'uint' = None
+
+    class Enums:
+        class JointFabricStatusEnum(MatterIntEnum):
+            kOk = 0x00
+            kInvalidPublicKey = 0x01
+            kInvalidNodeOpId = 0x02
+            kInvalidNOC = 0x03
+            kMissingCsr = 0x04
+            kTableFull = 0x05
+            kInvalidAdminSubject = 0x06
+            kFabricConflict = 0x09
+            kLabelConflict = 0x0A
+            kInvalidFabricIndex = 0x0B
+            # All received enum values that are not listed above will be mapped
+            # to kUnknownEnumValue. This is a helper enum value that should only
+            # be used by code to process how it handles receiving an unknown
+            # enum value. This specific value should never be transmitted.
+            kUnknownEnumValue = 7,
+
+        class SignNOCIssuerRequestStatusEnum(MatterIntEnum):
+            kOk = 0x00
+            kFailSafeRequired = 0x01
+            kInvalidNOCIssuerCSR = 0x02
+            kChainValidationFailed = 0x03
+            kTrustQuotientThreshold = 0x04
+            kSignNOCIssuerFailed = 0x05
+            # All received enum values that are not listed above will be mapped
+            # to kUnknownEnumValue. This is a helper enum value that should only
+            # be used by code to process how it handles receiving an unknown
+            # enum value. This specific value should never be transmitted.
+            kUnknownEnumValue = 6,
+
+    class Commands:
+        @dataclass
+        class JointFabricRequest(ClusterCommand):
+            cluster_id: typing.ClassVar[int] = 0x0000003D
+            command_id: typing.ClassVar[int] = 0x00000000
+            is_client: typing.ClassVar[bool] = True
+            response_type: typing.ClassVar[str] = 'SignNOCIssuerRequest'
+
+            @ChipUtility.classproperty
+            def descriptor(cls) -> ClusterObjectDescriptor:
+                return ClusterObjectDescriptor(
+                    Fields=[
+                        ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=0, Type=uint),
+                    ])
+
+            fabricIndex: 'uint' = 0
+
+        @dataclass
+        class SignNOCIssuerRequest(ClusterCommand):
+            cluster_id: typing.ClassVar[int] = 0x0000003D
+            command_id: typing.ClassVar[int] = 0x00000001
+            is_client: typing.ClassVar[bool] = False
+            response_type: typing.ClassVar[str] = None
+
+            @ChipUtility.classproperty
+            def descriptor(cls) -> ClusterObjectDescriptor:
+                return ClusterObjectDescriptor(
+                    Fields=[
+                        ClusterObjectFieldDescriptor(Label="NOCIssuerCSR", Tag=0, Type=bytes),
+                    ])
+
+            NOCIssuerCSR: 'bytes' = b""
+
+        @dataclass
+        class SignNOCIssuerResponse(ClusterCommand):
+            cluster_id: typing.ClassVar[int] = 0x0000003D
+            command_id: typing.ClassVar[int] = 0x00000002
+            is_client: typing.ClassVar[bool] = True
+            response_type: typing.ClassVar[str] = 'JointFabricResponse'
+
+            @ChipUtility.classproperty
+            def descriptor(cls) -> ClusterObjectDescriptor:
+                return ClusterObjectDescriptor(
+                    Fields=[
+                        ClusterObjectFieldDescriptor(Label="statusCode", Tag=0,
+                                                     Type=JointFabricPki.Enums.SignNOCIssuerRequestStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="NOCIssuerCert", Tag=1, Type=bytes),
+                        ClusterObjectFieldDescriptor(Label="nodeId", Tag=2, Type=uint),
+                        ClusterObjectFieldDescriptor(Label="fabricId", Tag=3, Type=uint),
+                        ClusterObjectFieldDescriptor(Label="adminVendorId", Tag=4, Type=uint),
+                        ClusterObjectFieldDescriptor(Label="caseAdminSubject", Tag=5, Type=uint),
+                    ])
+
+            statusCode: 'JointFabricPki.Enums.SignNOCIssuerRequestStatusEnum' = 0
+            NOCIssuerCert: 'bytes' = b""
+            nodeId: 'uint' = 0
+            fabricId: 'uint' = 0
+            adminVendorId: 'uint' = 0
+            caseAdminSubject: 'uint' = 0
+
+        @dataclass
+        class JointFabricResponse(ClusterCommand):
+            cluster_id: typing.ClassVar[int] = 0x0000003D
+            command_id: typing.ClassVar[int] = 0x00000003
+            is_client: typing.ClassVar[bool] = False
+            response_type: typing.ClassVar[str] = None
+
+            @ChipUtility.classproperty
+            def descriptor(cls) -> ClusterObjectDescriptor:
+                return ClusterObjectDescriptor(
+                    Fields=[
+                        ClusterObjectFieldDescriptor(Label="statusCode", Tag=0, Type=JointFabricPki.Enums.JointFabricStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=1, Type=typing.Optional[uint]),
+                        ClusterObjectFieldDescriptor(Label="debugText", Tag=2, Type=typing.Optional[str]),
+                    ])
+
+            statusCode: 'JointFabricPki.Enums.JointFabricStatusEnum' = 0
+            fabricIndex: 'typing.Optional[uint]' = None
+            debugText: 'typing.Optional[str]' = None
+
+    class Attributes:
+        @dataclass
+        class GeneratedCommandList(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFF8
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=typing.List[uint])
+
+            value: 'typing.List[uint]' = field(default_factory=lambda: [])
+
+        @dataclass
+        class AcceptedCommandList(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFF9
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=typing.List[uint])
+
+            value: 'typing.List[uint]' = field(default_factory=lambda: [])
+
+        @dataclass
+        class EventList(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFFA
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=typing.List[uint])
+
+            value: 'typing.List[uint]' = field(default_factory=lambda: [])
+
+        @dataclass
+        class AttributeList(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFFB
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=typing.List[uint])
+
+            value: 'typing.List[uint]' = field(default_factory=lambda: [])
+
+        @dataclass
+        class FeatureMap(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFFC
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=uint)
+
+            value: 'uint' = 0
+
+        @dataclass
+        class ClusterRevision(ClusterAttributeDescriptor):
+            @ChipUtility.classproperty
+            def cluster_id(cls) -> int:
+                return 0x0000003D
+
+            @ChipUtility.classproperty
+            def attribute_id(cls) -> int:
+                return 0x0000FFFD
+
+            @ChipUtility.classproperty
+            def attribute_type(cls) -> ClusterObjectFieldDescriptor:
+                return ClusterObjectFieldDescriptor(Type=uint)
+
+            value: 'uint' = 0
+
+
+@dataclass
 class OperationalCredentials(Cluster):
     id: typing.ClassVar[int] = 0x0000003E
 
@@ -12531,8 +12865,10 @@ class OperationalCredentials(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="NOCs", Tag=0x00000000, Type=typing.List[OperationalCredentials.Structs.NOCStruct]),
-                ClusterObjectFieldDescriptor(Label="fabrics", Tag=0x00000001, Type=typing.List[OperationalCredentials.Structs.FabricDescriptorStruct]),
+                ClusterObjectFieldDescriptor(Label="NOCs", Tag=0x00000000,
+                                             Type=typing.List[OperationalCredentials.Structs.NOCStruct]),
+                ClusterObjectFieldDescriptor(Label="fabrics", Tag=0x00000001,
+                                             Type=typing.List[OperationalCredentials.Structs.FabricDescriptorStruct]),
                 ClusterObjectFieldDescriptor(Label="supportedFabrics", Tag=0x00000002, Type=uint),
                 ClusterObjectFieldDescriptor(Label="commissionedFabrics", Tag=0x00000003, Type=uint),
                 ClusterObjectFieldDescriptor(Label="trustedRootCertificates", Tag=0x00000004, Type=typing.List[bytes]),
@@ -12668,7 +13004,8 @@ class OperationalCredentials(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="certificateType", Tag=0, Type=OperationalCredentials.Enums.CertificateChainTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="certificateType", Tag=0,
+                                                     Type=OperationalCredentials.Enums.CertificateChainTypeEnum),
                     ])
 
             certificateType: 'OperationalCredentials.Enums.CertificateChainTypeEnum' = 0
@@ -12778,7 +13115,8 @@ class OperationalCredentials(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="statusCode", Tag=0, Type=OperationalCredentials.Enums.NodeOperationalCertStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="statusCode", Tag=0,
+                                                     Type=OperationalCredentials.Enums.NodeOperationalCertStatusEnum),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=1, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="debugText", Tag=2, Type=typing.Optional[str]),
                     ])
@@ -13037,8 +13375,10 @@ class GroupKeyManagement(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="groupKeyMap", Tag=0x00000000, Type=typing.List[GroupKeyManagement.Structs.GroupKeyMapStruct]),
-                ClusterObjectFieldDescriptor(Label="groupTable", Tag=0x00000001, Type=typing.List[GroupKeyManagement.Structs.GroupInfoMapStruct]),
+                ClusterObjectFieldDescriptor(Label="groupKeyMap", Tag=0x00000000,
+                                             Type=typing.List[GroupKeyManagement.Structs.GroupKeyMapStruct]),
+                ClusterObjectFieldDescriptor(Label="groupTable", Tag=0x00000001,
+                                             Type=typing.List[GroupKeyManagement.Structs.GroupInfoMapStruct]),
                 ClusterObjectFieldDescriptor(Label="maxGroupsPerFabric", Tag=0x00000002, Type=uint),
                 ClusterObjectFieldDescriptor(Label="maxGroupKeysPerFabric", Tag=0x00000003, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -13114,7 +13454,8 @@ class GroupKeyManagement(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="groupKeySetID", Tag=0, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="groupKeySecurityPolicy", Tag=1, Type=GroupKeyManagement.Enums.GroupKeySecurityPolicyEnum),
+                        ClusterObjectFieldDescriptor(Label="groupKeySecurityPolicy", Tag=1,
+                                                     Type=GroupKeyManagement.Enums.GroupKeySecurityPolicyEnum),
                         ClusterObjectFieldDescriptor(Label="epochKey0", Tag=2, Type=typing.Union[Nullable, bytes]),
                         ClusterObjectFieldDescriptor(Label="epochStartTime0", Tag=3, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="epochKey1", Tag=4, Type=typing.Union[Nullable, bytes]),
@@ -13147,7 +13488,8 @@ class GroupKeyManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="groupKeySet", Tag=0, Type=GroupKeyManagement.Structs.GroupKeySetStruct),
                     ])
 
-            groupKeySet: 'GroupKeyManagement.Structs.GroupKeySetStruct' = field(default_factory=lambda: GroupKeyManagement.Structs.GroupKeySetStruct())
+            groupKeySet: 'GroupKeyManagement.Structs.GroupKeySetStruct' = field(
+                default_factory=lambda: GroupKeyManagement.Structs.GroupKeySetStruct())
 
         @dataclass
         class KeySetRead(ClusterCommand):
@@ -13179,7 +13521,8 @@ class GroupKeyManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="groupKeySet", Tag=0, Type=GroupKeyManagement.Structs.GroupKeySetStruct),
                     ])
 
-            groupKeySet: 'GroupKeyManagement.Structs.GroupKeySetStruct' = field(default_factory=lambda: GroupKeyManagement.Structs.GroupKeySetStruct())
+            groupKeySet: 'GroupKeyManagement.Structs.GroupKeySetStruct' = field(
+                default_factory=lambda: GroupKeyManagement.Structs.GroupKeySetStruct())
 
         @dataclass
         class KeySetRemove(ClusterCommand):
@@ -14227,12 +14570,14 @@ class IcdManagement(Cluster):
                 ClusterObjectFieldDescriptor(Label="idleModeDuration", Tag=0x00000000, Type=uint),
                 ClusterObjectFieldDescriptor(Label="activeModeDuration", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="activeModeThreshold", Tag=0x00000002, Type=uint),
-                ClusterObjectFieldDescriptor(Label="registeredClients", Tag=0x00000003, Type=typing.Optional[typing.List[IcdManagement.Structs.MonitoringRegistrationStruct]]),
+                ClusterObjectFieldDescriptor(Label="registeredClients", Tag=0x00000003,
+                                             Type=typing.Optional[typing.List[IcdManagement.Structs.MonitoringRegistrationStruct]]),
                 ClusterObjectFieldDescriptor(Label="ICDCounter", Tag=0x00000004, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="clientsSupportedPerFabric", Tag=0x00000005, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="userActiveModeTriggerHint", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="userActiveModeTriggerInstruction", Tag=0x00000007, Type=typing.Optional[str]),
-                ClusterObjectFieldDescriptor(Label="operatingMode", Tag=0x00000008, Type=typing.Optional[IcdManagement.Enums.OperatingModeEnum]),
+                ClusterObjectFieldDescriptor(Label="operatingMode", Tag=0x00000008,
+                                             Type=typing.Optional[IcdManagement.Enums.OperatingModeEnum]),
                 ClusterObjectFieldDescriptor(Label="maximumCheckInBackOff", Tag=0x00000009, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -14935,9 +15280,12 @@ class OvenCavityOperationalState(Cluster):
                 ClusterObjectFieldDescriptor(Label="phaseList", Tag=0x00000000, Type=typing.Union[Nullable, typing.List[str]]),
                 ClusterObjectFieldDescriptor(Label="currentPhase", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="countdownTime", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003, Type=typing.List[OvenCavityOperationalState.Structs.OperationalStateStruct]),
-                ClusterObjectFieldDescriptor(Label="operationalState", Tag=0x00000004, Type=OvenCavityOperationalState.Enums.OperationalStateEnum),
-                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005, Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
+                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003,
+                                             Type=typing.List[OvenCavityOperationalState.Structs.OperationalStateStruct]),
+                ClusterObjectFieldDescriptor(Label="operationalState", Tag=0x00000004,
+                                             Type=OvenCavityOperationalState.Enums.OperationalStateEnum),
+                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005,
+                                             Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -15075,10 +15423,12 @@ class OvenCavityOperationalState(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0, Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
+                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0,
+                                                     Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
                     ])
 
-            commandResponseState: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
+            commandResponseState: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
 
     class Attributes:
         @dataclass
@@ -15175,7 +15525,8 @@ class OvenCavityOperationalState(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=OvenCavityOperationalState.Structs.ErrorStateStruct)
 
-            value: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
+            value: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class GeneratedCommandList(ClusterAttributeDescriptor):
@@ -15288,10 +15639,12 @@ class OvenCavityOperationalState(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="errorState", Tag=0, Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
+                        ClusterObjectFieldDescriptor(Label="errorState", Tag=0,
+                                                     Type=OvenCavityOperationalState.Structs.ErrorStateStruct),
                     ])
 
-            errorState: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
+            errorState: 'OvenCavityOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OvenCavityOperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class OperationCompletion(ClusterEvent):
@@ -15325,7 +15678,8 @@ class OvenMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[OvenMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[OvenMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -15603,8 +15957,10 @@ class LaundryDryerControls(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedDrynessLevels", Tag=0x00000000, Type=typing.List[LaundryDryerControls.Enums.DrynessLevelEnum]),
-                ClusterObjectFieldDescriptor(Label="selectedDrynessLevel", Tag=0x00000001, Type=typing.Union[Nullable, LaundryDryerControls.Enums.DrynessLevelEnum]),
+                ClusterObjectFieldDescriptor(Label="supportedDrynessLevels", Tag=0x00000000,
+                                             Type=typing.List[LaundryDryerControls.Enums.DrynessLevelEnum]),
+                ClusterObjectFieldDescriptor(Label="selectedDrynessLevel", Tag=0x00000001,
+                                             Type=typing.Union[Nullable, LaundryDryerControls.Enums.DrynessLevelEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -15774,7 +16130,8 @@ class ModeSelect(Cluster):
             Fields=[
                 ClusterObjectFieldDescriptor(Label="description", Tag=0x00000000, Type=str),
                 ClusterObjectFieldDescriptor(Label="standardNamespace", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000002, Type=typing.List[ModeSelect.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000002,
+                                             Type=typing.List[ModeSelect.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000003, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000005, Type=typing.Union[None, Nullable, uint]),
@@ -15825,7 +16182,8 @@ class ModeSelect(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="semanticTags", Tag=2, Type=typing.List[ModeSelect.Structs.SemanticTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="semanticTags", Tag=2,
+                                                     Type=typing.List[ModeSelect.Structs.SemanticTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -16051,7 +16409,8 @@ class LaundryWasherMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[LaundryWasherMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[LaundryWasherMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -16112,7 +16471,8 @@ class LaundryWasherMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[LaundryWasherMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[LaundryWasherMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -16324,7 +16684,8 @@ class RefrigeratorAndTemperatureControlledCabinetMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -16383,12 +16744,14 @@ class RefrigeratorAndTemperatureControlledCabinetMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="modeTags", Tag=2, Type=typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
             mode: 'uint' = 0
-            modeTags: 'typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeTagStruct]' = field(default_factory=lambda: [])
+            modeTags: 'typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeTagStruct]' = field(default_factory=lambda: [
+            ])
 
     class Commands:
         @dataclass
@@ -16440,7 +16803,8 @@ class RefrigeratorAndTemperatureControlledCabinetMode(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeOptionStruct])
 
-            value: 'typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeOptionStruct]' = field(default_factory=lambda: [])
+            value: 'typing.List[RefrigeratorAndTemperatureControlledCabinetMode.Structs.ModeOptionStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class CurrentMode(ClusterAttributeDescriptor):
@@ -16597,8 +16961,10 @@ class LaundryWasherControls(Cluster):
             Fields=[
                 ClusterObjectFieldDescriptor(Label="spinSpeeds", Tag=0x00000000, Type=typing.Optional[typing.List[str]]),
                 ClusterObjectFieldDescriptor(Label="spinSpeedCurrent", Tag=0x00000001, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfRinses", Tag=0x00000002, Type=typing.Optional[LaundryWasherControls.Enums.NumberOfRinsesEnum]),
-                ClusterObjectFieldDescriptor(Label="supportedRinses", Tag=0x00000003, Type=typing.Optional[typing.List[LaundryWasherControls.Enums.NumberOfRinsesEnum]]),
+                ClusterObjectFieldDescriptor(Label="numberOfRinses", Tag=0x00000002,
+                                             Type=typing.Optional[LaundryWasherControls.Enums.NumberOfRinsesEnum]),
+                ClusterObjectFieldDescriptor(Label="supportedRinses", Tag=0x00000003,
+                                             Type=typing.Optional[typing.List[LaundryWasherControls.Enums.NumberOfRinsesEnum]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -16805,7 +17171,8 @@ class RvcRunMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[RvcRunMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[RvcRunMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -17056,7 +17423,8 @@ class RvcCleanMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[RvcCleanMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[RvcCleanMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -17305,7 +17673,8 @@ class TemperatureControl(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxTemperature", Tag=0x00000002, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="step", Tag=0x00000003, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="selectedTemperatureLevel", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="supportedTemperatureLevels", Tag=0x00000005, Type=typing.Optional[typing.List[str]]),
+                ClusterObjectFieldDescriptor(Label="supportedTemperatureLevels", Tag=0x00000005,
+                                             Type=typing.Optional[typing.List[str]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -17759,7 +18128,8 @@ class DishwasherMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[DishwasherMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[DishwasherMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -17819,7 +18189,8 @@ class DishwasherMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[DishwasherMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[DishwasherMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -18193,17 +18564,24 @@ class SmokeCoAlarm(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="expressedState", Tag=0x00000000, Type=SmokeCoAlarm.Enums.ExpressedStateEnum),
-                ClusterObjectFieldDescriptor(Label="smokeState", Tag=0x00000001, Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
-                ClusterObjectFieldDescriptor(Label="COState", Tag=0x00000002, Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
+                ClusterObjectFieldDescriptor(Label="smokeState", Tag=0x00000001,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
+                ClusterObjectFieldDescriptor(Label="COState", Tag=0x00000002,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
                 ClusterObjectFieldDescriptor(Label="batteryAlert", Tag=0x00000003, Type=SmokeCoAlarm.Enums.AlarmStateEnum),
-                ClusterObjectFieldDescriptor(Label="deviceMuted", Tag=0x00000004, Type=typing.Optional[SmokeCoAlarm.Enums.MuteStateEnum]),
+                ClusterObjectFieldDescriptor(Label="deviceMuted", Tag=0x00000004,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.MuteStateEnum]),
                 ClusterObjectFieldDescriptor(Label="testInProgress", Tag=0x00000005, Type=bool),
                 ClusterObjectFieldDescriptor(Label="hardwareFaultAlert", Tag=0x00000006, Type=bool),
                 ClusterObjectFieldDescriptor(Label="endOfServiceAlert", Tag=0x00000007, Type=SmokeCoAlarm.Enums.EndOfServiceEnum),
-                ClusterObjectFieldDescriptor(Label="interconnectSmokeAlarm", Tag=0x00000008, Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
-                ClusterObjectFieldDescriptor(Label="interconnectCOAlarm", Tag=0x00000009, Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
-                ClusterObjectFieldDescriptor(Label="contaminationState", Tag=0x0000000A, Type=typing.Optional[SmokeCoAlarm.Enums.ContaminationStateEnum]),
-                ClusterObjectFieldDescriptor(Label="smokeSensitivityLevel", Tag=0x0000000B, Type=typing.Optional[SmokeCoAlarm.Enums.SensitivityEnum]),
+                ClusterObjectFieldDescriptor(Label="interconnectSmokeAlarm", Tag=0x00000008,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
+                ClusterObjectFieldDescriptor(Label="interconnectCOAlarm", Tag=0x00000009,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.AlarmStateEnum]),
+                ClusterObjectFieldDescriptor(Label="contaminationState", Tag=0x0000000A,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.ContaminationStateEnum]),
+                ClusterObjectFieldDescriptor(Label="smokeSensitivityLevel", Tag=0x0000000B,
+                                             Type=typing.Optional[SmokeCoAlarm.Enums.SensitivityEnum]),
                 ClusterObjectFieldDescriptor(Label="expiryDate", Tag=0x0000000C, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -19088,7 +19466,8 @@ class MicrowaveOvenMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[MicrowaveOvenMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[MicrowaveOvenMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -19143,7 +19522,8 @@ class MicrowaveOvenMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[MicrowaveOvenMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[MicrowaveOvenMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -19621,9 +20001,12 @@ class OperationalState(Cluster):
                 ClusterObjectFieldDescriptor(Label="phaseList", Tag=0x00000000, Type=typing.Union[Nullable, typing.List[str]]),
                 ClusterObjectFieldDescriptor(Label="currentPhase", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="countdownTime", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003, Type=typing.List[OperationalState.Structs.OperationalStateStruct]),
-                ClusterObjectFieldDescriptor(Label="operationalState", Tag=0x00000004, Type=OperationalState.Enums.OperationalStateEnum),
-                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005, Type=OperationalState.Structs.ErrorStateStruct),
+                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003,
+                                             Type=typing.List[OperationalState.Structs.OperationalStateStruct]),
+                ClusterObjectFieldDescriptor(Label="operationalState", Tag=0x00000004,
+                                             Type=OperationalState.Enums.OperationalStateEnum),
+                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005,
+                                             Type=OperationalState.Structs.ErrorStateStruct),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -19761,10 +20144,12 @@ class OperationalState(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0, Type=OperationalState.Structs.ErrorStateStruct),
+                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0,
+                                                     Type=OperationalState.Structs.ErrorStateStruct),
                     ])
 
-            commandResponseState: 'OperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
+            commandResponseState: 'OperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
 
     class Attributes:
         @dataclass
@@ -19861,7 +20246,8 @@ class OperationalState(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=OperationalState.Structs.ErrorStateStruct)
 
-            value: 'OperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
+            value: 'OperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class GeneratedCommandList(ClusterAttributeDescriptor):
@@ -19977,7 +20363,8 @@ class OperationalState(Cluster):
                         ClusterObjectFieldDescriptor(Label="errorState", Tag=0, Type=OperationalState.Structs.ErrorStateStruct),
                     ])
 
-            errorState: 'OperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
+            errorState: 'OperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: OperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class OperationCompletion(ClusterEvent):
@@ -20014,9 +20401,11 @@ class RvcOperationalState(Cluster):
                 ClusterObjectFieldDescriptor(Label="phaseList", Tag=0x00000000, Type=typing.Union[Nullable, typing.List[str]]),
                 ClusterObjectFieldDescriptor(Label="currentPhase", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="countdownTime", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003, Type=typing.List[RvcOperationalState.Structs.OperationalStateStruct]),
+                ClusterObjectFieldDescriptor(Label="operationalStateList", Tag=0x00000003,
+                                             Type=typing.List[RvcOperationalState.Structs.OperationalStateStruct]),
                 ClusterObjectFieldDescriptor(Label="operationalState", Tag=0x00000004, Type=uint),
-                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005, Type=RvcOperationalState.Structs.ErrorStateStruct),
+                ClusterObjectFieldDescriptor(Label="operationalError", Tag=0x00000005,
+                                             Type=RvcOperationalState.Structs.ErrorStateStruct),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -20131,10 +20520,12 @@ class RvcOperationalState(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0, Type=RvcOperationalState.Structs.ErrorStateStruct),
+                        ClusterObjectFieldDescriptor(Label="commandResponseState", Tag=0,
+                                                     Type=RvcOperationalState.Structs.ErrorStateStruct),
                     ])
 
-            commandResponseState: 'RvcOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
+            commandResponseState: 'RvcOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class GoHome(ClusterCommand):
@@ -20244,7 +20635,8 @@ class RvcOperationalState(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=RvcOperationalState.Structs.ErrorStateStruct)
 
-            value: 'RvcOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
+            value: 'RvcOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class GeneratedCommandList(ClusterAttributeDescriptor):
@@ -20360,7 +20752,8 @@ class RvcOperationalState(Cluster):
                         ClusterObjectFieldDescriptor(Label="errorState", Tag=0, Type=RvcOperationalState.Structs.ErrorStateStruct),
                     ])
 
-            errorState: 'RvcOperationalState.Structs.ErrorStateStruct' = field(default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
+            errorState: 'RvcOperationalState.Structs.ErrorStateStruct' = field(
+                default_factory=lambda: RvcOperationalState.Structs.ErrorStateStruct())
 
         @dataclass
         class OperationCompletion(ClusterEvent):
@@ -20396,7 +20789,8 @@ class ScenesManagement(Cluster):
             Fields=[
                 ClusterObjectFieldDescriptor(Label="lastConfiguredBy", Tag=0x00000000, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="sceneTableSize", Tag=0x00000001, Type=uint),
-                ClusterObjectFieldDescriptor(Label="fabricSceneInfo", Tag=0x00000002, Type=typing.List[ScenesManagement.Structs.SceneInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="fabricSceneInfo", Tag=0x00000002,
+                                             Type=typing.List[ScenesManagement.Structs.SceneInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -20457,7 +20851,8 @@ class ScenesManagement(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="clusterID", Tag=0, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="attributeValueList", Tag=1, Type=typing.List[ScenesManagement.Structs.AttributeValuePairStruct]),
+                        ClusterObjectFieldDescriptor(Label="attributeValueList", Tag=1,
+                                                     Type=typing.List[ScenesManagement.Structs.AttributeValuePairStruct]),
                     ])
 
             clusterID: 'uint' = 0
@@ -20500,7 +20895,8 @@ class ScenesManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="sceneID", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="transitionTime", Tag=2, Type=uint),
                         ClusterObjectFieldDescriptor(Label="sceneName", Tag=3, Type=str),
-                        ClusterObjectFieldDescriptor(Label="extensionFieldSets", Tag=4, Type=typing.List[ScenesManagement.Structs.ExtensionFieldSet]),
+                        ClusterObjectFieldDescriptor(Label="extensionFieldSets", Tag=4,
+                                                     Type=typing.List[ScenesManagement.Structs.ExtensionFieldSet]),
                     ])
 
             groupID: 'uint' = 0
@@ -20563,7 +20959,8 @@ class ScenesManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="sceneID", Tag=2, Type=uint),
                         ClusterObjectFieldDescriptor(Label="transitionTime", Tag=3, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="sceneName", Tag=4, Type=typing.Optional[str]),
-                        ClusterObjectFieldDescriptor(Label="extensionFieldSets", Tag=5, Type=typing.Optional[typing.List[ScenesManagement.Structs.ExtensionFieldSet]]),
+                        ClusterObjectFieldDescriptor(Label="extensionFieldSets", Tag=5,
+                                                     Type=typing.Optional[typing.List[ScenesManagement.Structs.ExtensionFieldSet]]),
                     ])
 
             status: 'uint' = 0
@@ -20940,11 +21337,14 @@ class HepaFilterMonitoring(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="condition", Tag=0x00000000, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="degradationDirection", Tag=0x00000001, Type=typing.Optional[HepaFilterMonitoring.Enums.DegradationDirectionEnum]),
-                ClusterObjectFieldDescriptor(Label="changeIndication", Tag=0x00000002, Type=HepaFilterMonitoring.Enums.ChangeIndicationEnum),
+                ClusterObjectFieldDescriptor(Label="degradationDirection", Tag=0x00000001,
+                                             Type=typing.Optional[HepaFilterMonitoring.Enums.DegradationDirectionEnum]),
+                ClusterObjectFieldDescriptor(Label="changeIndication", Tag=0x00000002,
+                                             Type=HepaFilterMonitoring.Enums.ChangeIndicationEnum),
                 ClusterObjectFieldDescriptor(Label="inPlaceIndicator", Tag=0x00000003, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="lastChangedTime", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="replacementProductList", Tag=0x00000005, Type=typing.Optional[typing.List[HepaFilterMonitoring.Structs.ReplacementProductStruct]]),
+                ClusterObjectFieldDescriptor(Label="replacementProductList", Tag=0x00000005,
+                                             Type=typing.Optional[typing.List[HepaFilterMonitoring.Structs.ReplacementProductStruct]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -21011,7 +21411,8 @@ class HepaFilterMonitoring(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="productIdentifierType", Tag=0, Type=HepaFilterMonitoring.Enums.ProductIdentifierTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="productIdentifierType", Tag=0,
+                                                     Type=HepaFilterMonitoring.Enums.ProductIdentifierTypeEnum),
                         ClusterObjectFieldDescriptor(Label="productIdentifierValue", Tag=1, Type=str),
                     ])
 
@@ -21235,11 +21636,14 @@ class ActivatedCarbonFilterMonitoring(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="condition", Tag=0x00000000, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="degradationDirection", Tag=0x00000001, Type=typing.Optional[ActivatedCarbonFilterMonitoring.Enums.DegradationDirectionEnum]),
-                ClusterObjectFieldDescriptor(Label="changeIndication", Tag=0x00000002, Type=ActivatedCarbonFilterMonitoring.Enums.ChangeIndicationEnum),
+                ClusterObjectFieldDescriptor(Label="degradationDirection", Tag=0x00000001,
+                                             Type=typing.Optional[ActivatedCarbonFilterMonitoring.Enums.DegradationDirectionEnum]),
+                ClusterObjectFieldDescriptor(Label="changeIndication", Tag=0x00000002,
+                                             Type=ActivatedCarbonFilterMonitoring.Enums.ChangeIndicationEnum),
                 ClusterObjectFieldDescriptor(Label="inPlaceIndicator", Tag=0x00000003, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="lastChangedTime", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="replacementProductList", Tag=0x00000005, Type=typing.Optional[typing.List[ActivatedCarbonFilterMonitoring.Structs.ReplacementProductStruct]]),
+                ClusterObjectFieldDescriptor(Label="replacementProductList", Tag=0x00000005,
+                                             Type=typing.Optional[typing.List[ActivatedCarbonFilterMonitoring.Structs.ReplacementProductStruct]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -21306,7 +21710,8 @@ class ActivatedCarbonFilterMonitoring(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="productIdentifierType", Tag=0, Type=ActivatedCarbonFilterMonitoring.Enums.ProductIdentifierTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="productIdentifierType", Tag=0,
+                                                     Type=ActivatedCarbonFilterMonitoring.Enums.ProductIdentifierTypeEnum),
                         ClusterObjectFieldDescriptor(Label="productIdentifierValue", Tag=1, Type=str),
                     ])
 
@@ -21886,8 +22291,10 @@ class ValveConfigurationAndControl(Cluster):
                 ClusterObjectFieldDescriptor(Label="defaultOpenDuration", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="autoCloseTime", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="remainingDuration", Tag=0x00000003, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="currentState", Tag=0x00000004, Type=typing.Union[Nullable, ValveConfigurationAndControl.Enums.ValveStateEnum]),
-                ClusterObjectFieldDescriptor(Label="targetState", Tag=0x00000005, Type=typing.Union[Nullable, ValveConfigurationAndControl.Enums.ValveStateEnum]),
+                ClusterObjectFieldDescriptor(Label="currentState", Tag=0x00000004,
+                                             Type=typing.Union[Nullable, ValveConfigurationAndControl.Enums.ValveStateEnum]),
+                ClusterObjectFieldDescriptor(Label="targetState", Tag=0x00000005,
+                                             Type=typing.Union[Nullable, ValveConfigurationAndControl.Enums.ValveStateEnum]),
                 ClusterObjectFieldDescriptor(Label="currentLevel", Tag=0x00000006, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="targetLevel", Tag=0x00000007, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="defaultOpenLevel", Tag=0x00000008, Type=typing.Optional[uint]),
@@ -22271,7 +22678,8 @@ class ValveConfigurationAndControl(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="valveState", Tag=0, Type=ValveConfigurationAndControl.Enums.ValveStateEnum),
+                        ClusterObjectFieldDescriptor(Label="valveState", Tag=0,
+                                                     Type=ValveConfigurationAndControl.Enums.ValveStateEnum),
                         ClusterObjectFieldDescriptor(Label="valveLevel", Tag=1, Type=typing.Optional[uint]),
                     ])
 
@@ -22306,10 +22714,13 @@ class ElectricalPowerMeasurement(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="powerMode", Tag=0x00000000, Type=ElectricalPowerMeasurement.Enums.PowerModeEnum),
+                ClusterObjectFieldDescriptor(Label="powerMode", Tag=0x00000000,
+                                             Type=ElectricalPowerMeasurement.Enums.PowerModeEnum),
                 ClusterObjectFieldDescriptor(Label="numberOfMeasurementTypes", Tag=0x00000001, Type=uint),
-                ClusterObjectFieldDescriptor(Label="accuracy", Tag=0x00000002, Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyStruct]),
-                ClusterObjectFieldDescriptor(Label="ranges", Tag=0x00000003, Type=typing.Optional[typing.List[ElectricalPowerMeasurement.Structs.MeasurementRangeStruct]]),
+                ClusterObjectFieldDescriptor(Label="accuracy", Tag=0x00000002,
+                                             Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyStruct]),
+                ClusterObjectFieldDescriptor(
+                    Label="ranges", Tag=0x00000003, Type=typing.Optional[typing.List[ElectricalPowerMeasurement.Structs.MeasurementRangeStruct]]),
                 ClusterObjectFieldDescriptor(Label="voltage", Tag=0x00000004, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="activeCurrent", Tag=0x00000005, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="reactiveCurrent", Tag=0x00000006, Type=typing.Union[None, Nullable, int]),
@@ -22321,8 +22732,10 @@ class ElectricalPowerMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="RMSCurrent", Tag=0x0000000C, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="RMSPower", Tag=0x0000000D, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="frequency", Tag=0x0000000E, Type=typing.Union[None, Nullable, int]),
-                ClusterObjectFieldDescriptor(Label="harmonicCurrents", Tag=0x0000000F, Type=typing.Union[None, Nullable, typing.List[ElectricalPowerMeasurement.Structs.HarmonicMeasurementStruct]]),
-                ClusterObjectFieldDescriptor(Label="harmonicPhases", Tag=0x00000010, Type=typing.Union[None, Nullable, typing.List[ElectricalPowerMeasurement.Structs.HarmonicMeasurementStruct]]),
+                ClusterObjectFieldDescriptor(Label="harmonicCurrents", Tag=0x0000000F,
+                                             Type=typing.Union[None, Nullable, typing.List[ElectricalPowerMeasurement.Structs.HarmonicMeasurementStruct]]),
+                ClusterObjectFieldDescriptor(Label="harmonicPhases", Tag=0x00000010,
+                                             Type=typing.Union[None, Nullable, typing.List[ElectricalPowerMeasurement.Structs.HarmonicMeasurementStruct]]),
                 ClusterObjectFieldDescriptor(Label="powerFactor", Tag=0x00000011, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="neutralCurrent", Tag=0x00000012, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -22432,18 +22845,21 @@ class ElectricalPowerMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0, Type=ElectricalPowerMeasurement.Enums.MeasurementTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0,
+                                                     Type=ElectricalPowerMeasurement.Enums.MeasurementTypeEnum),
                         ClusterObjectFieldDescriptor(Label="measured", Tag=1, Type=bool),
                         ClusterObjectFieldDescriptor(Label="minMeasuredValue", Tag=2, Type=int),
                         ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=3, Type=int),
-                        ClusterObjectFieldDescriptor(Label="accuracyRanges", Tag=4, Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyRangeStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="accuracyRanges", Tag=4, Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyRangeStruct]),
                     ])
 
             measurementType: 'ElectricalPowerMeasurement.Enums.MeasurementTypeEnum' = 0
             measured: 'bool' = False
             minMeasuredValue: 'int' = 0
             maxMeasuredValue: 'int' = 0
-            accuracyRanges: 'typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyRangeStruct]' = field(default_factory=lambda: [])
+            accuracyRanges: 'typing.List[ElectricalPowerMeasurement.Structs.MeasurementAccuracyRangeStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class HarmonicMeasurementStruct(ClusterObject):
@@ -22464,7 +22880,8 @@ class ElectricalPowerMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0, Type=ElectricalPowerMeasurement.Enums.MeasurementTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0,
+                                                     Type=ElectricalPowerMeasurement.Enums.MeasurementTypeEnum),
                         ClusterObjectFieldDescriptor(Label="min", Tag=1, Type=int),
                         ClusterObjectFieldDescriptor(Label="max", Tag=2, Type=int),
                         ClusterObjectFieldDescriptor(Label="startTimestamp", Tag=3, Type=typing.Optional[uint]),
@@ -22905,7 +23322,8 @@ class ElectricalPowerMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="ranges", Tag=0, Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementRangeStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="ranges", Tag=0, Type=typing.List[ElectricalPowerMeasurement.Structs.MeasurementRangeStruct]),
                     ])
 
             ranges: 'typing.List[ElectricalPowerMeasurement.Structs.MeasurementRangeStruct]' = field(default_factory=lambda: [])
@@ -22919,12 +23337,18 @@ class ElectricalEnergyMeasurement(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="accuracy", Tag=0x00000000, Type=ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct),
-                ClusterObjectFieldDescriptor(Label="cumulativeEnergyImported", Tag=0x00000001, Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                ClusterObjectFieldDescriptor(Label="cumulativeEnergyExported", Tag=0x00000002, Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                ClusterObjectFieldDescriptor(Label="periodicEnergyImported", Tag=0x00000003, Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                ClusterObjectFieldDescriptor(Label="periodicEnergyExported", Tag=0x00000004, Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                ClusterObjectFieldDescriptor(Label="cumulativeEnergyReset", Tag=0x00000005, Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.CumulativeEnergyResetStruct]),
+                ClusterObjectFieldDescriptor(Label="accuracy", Tag=0x00000000,
+                                             Type=ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct),
+                ClusterObjectFieldDescriptor(Label="cumulativeEnergyImported", Tag=0x00000001,
+                                             Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                ClusterObjectFieldDescriptor(Label="cumulativeEnergyExported", Tag=0x00000002,
+                                             Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                ClusterObjectFieldDescriptor(Label="periodicEnergyImported", Tag=0x00000003,
+                                             Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                ClusterObjectFieldDescriptor(Label="periodicEnergyExported", Tag=0x00000004,
+                                             Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                ClusterObjectFieldDescriptor(Label="cumulativeEnergyReset", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, ElectricalEnergyMeasurement.Structs.CumulativeEnergyResetStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -23008,18 +23432,21 @@ class ElectricalEnergyMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0, Type=ElectricalEnergyMeasurement.Enums.MeasurementTypeEnum),
+                        ClusterObjectFieldDescriptor(Label="measurementType", Tag=0,
+                                                     Type=ElectricalEnergyMeasurement.Enums.MeasurementTypeEnum),
                         ClusterObjectFieldDescriptor(Label="measured", Tag=1, Type=bool),
                         ClusterObjectFieldDescriptor(Label="minMeasuredValue", Tag=2, Type=int),
                         ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=3, Type=int),
-                        ClusterObjectFieldDescriptor(Label="accuracyRanges", Tag=4, Type=typing.List[ElectricalEnergyMeasurement.Structs.MeasurementAccuracyRangeStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="accuracyRanges", Tag=4, Type=typing.List[ElectricalEnergyMeasurement.Structs.MeasurementAccuracyRangeStruct]),
                     ])
 
             measurementType: 'ElectricalEnergyMeasurement.Enums.MeasurementTypeEnum' = 0
             measured: 'bool' = False
             minMeasuredValue: 'int' = 0
             maxMeasuredValue: 'int' = 0
-            accuracyRanges: 'typing.List[ElectricalEnergyMeasurement.Structs.MeasurementAccuracyRangeStruct]' = field(default_factory=lambda: [])
+            accuracyRanges: 'typing.List[ElectricalEnergyMeasurement.Structs.MeasurementAccuracyRangeStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class CumulativeEnergyResetStruct(ClusterObject):
@@ -23027,8 +23454,10 @@ class ElectricalEnergyMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="importedResetTimestamp", Tag=0, Type=typing.Union[None, Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="exportedResetTimestamp", Tag=1, Type=typing.Union[None, Nullable, uint]),
+                        ClusterObjectFieldDescriptor(Label="importedResetTimestamp", Tag=0,
+                                                     Type=typing.Union[None, Nullable, uint]),
+                        ClusterObjectFieldDescriptor(Label="exportedResetTimestamp", Tag=1,
+                                                     Type=typing.Union[None, Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="importedResetSystime", Tag=2, Type=typing.Union[None, Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="exportedResetSystime", Tag=3, Type=typing.Union[None, Nullable, uint]),
                     ])
@@ -23072,7 +23501,8 @@ class ElectricalEnergyMeasurement(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct)
 
-            value: 'ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct' = field(default_factory=lambda: ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct())
+            value: 'ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct' = field(
+                default_factory=lambda: ElectricalEnergyMeasurement.Structs.MeasurementAccuracyStruct())
 
         @dataclass
         class CumulativeEnergyImported(ClusterAttributeDescriptor):
@@ -23265,8 +23695,10 @@ class ElectricalEnergyMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="energyImported", Tag=0, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                        ClusterObjectFieldDescriptor(Label="energyExported", Tag=1, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="energyImported", Tag=0, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="energyExported", Tag=1, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
                     ])
 
             energyImported: 'typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]' = None
@@ -23286,8 +23718,10 @@ class ElectricalEnergyMeasurement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="energyImported", Tag=0, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
-                        ClusterObjectFieldDescriptor(Label="energyExported", Tag=1, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="energyImported", Tag=0, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="energyExported", Tag=1, Type=typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]),
                     ])
 
             energyImported: 'typing.Optional[ElectricalEnergyMeasurement.Structs.EnergyMeasurementStruct]' = None
@@ -23600,10 +24034,13 @@ class DemandResponseLoadControl(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="loadControlPrograms", Tag=0x00000000, Type=typing.List[DemandResponseLoadControl.Structs.LoadControlProgramStruct]),
+                ClusterObjectFieldDescriptor(Label="loadControlPrograms", Tag=0x00000000,
+                                             Type=typing.List[DemandResponseLoadControl.Structs.LoadControlProgramStruct]),
                 ClusterObjectFieldDescriptor(Label="numberOfLoadControlPrograms", Tag=0x00000001, Type=uint),
-                ClusterObjectFieldDescriptor(Label="events", Tag=0x00000002, Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventStruct]),
-                ClusterObjectFieldDescriptor(Label="activeEvents", Tag=0x00000003, Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventStruct]),
+                ClusterObjectFieldDescriptor(Label="events", Tag=0x00000002,
+                                             Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventStruct]),
+                ClusterObjectFieldDescriptor(Label="activeEvents", Tag=0x00000003,
+                                             Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventStruct]),
                 ClusterObjectFieldDescriptor(Label="numberOfEventsPerProgram", Tag=0x00000004, Type=uint),
                 ClusterObjectFieldDescriptor(Label="numberOfTransitions", Tag=0x00000005, Type=uint),
                 ClusterObjectFieldDescriptor(Label="defaultRandomStart", Tag=0x00000006, Type=uint),
@@ -23734,7 +24171,8 @@ class DemandResponseLoadControl(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="heatingSource", Tag=0, Type=DemandResponseLoadControl.Enums.HeatingSourceEnum),
+                        ClusterObjectFieldDescriptor(Label="heatingSource", Tag=0,
+                                                     Type=DemandResponseLoadControl.Enums.HeatingSourceEnum),
                     ])
 
             heatingSource: 'DemandResponseLoadControl.Enums.HeatingSourceEnum' = 0
@@ -23797,11 +24235,16 @@ class DemandResponseLoadControl(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="duration", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="control", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="temperatureControl", Tag=2, Type=typing.Optional[DemandResponseLoadControl.Structs.TemperatureControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="averageLoadControl", Tag=3, Type=typing.Optional[DemandResponseLoadControl.Structs.AverageLoadControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="dutyCycleControl", Tag=4, Type=typing.Optional[DemandResponseLoadControl.Structs.DutyCycleControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="powerSavingsControl", Tag=5, Type=typing.Optional[DemandResponseLoadControl.Structs.PowerSavingsControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="heatingSourceControl", Tag=6, Type=typing.Optional[DemandResponseLoadControl.Structs.HeatingSourceControlStruct]),
+                        ClusterObjectFieldDescriptor(Label="temperatureControl", Tag=2,
+                                                     Type=typing.Optional[DemandResponseLoadControl.Structs.TemperatureControlStruct]),
+                        ClusterObjectFieldDescriptor(Label="averageLoadControl", Tag=3,
+                                                     Type=typing.Optional[DemandResponseLoadControl.Structs.AverageLoadControlStruct]),
+                        ClusterObjectFieldDescriptor(Label="dutyCycleControl", Tag=4,
+                                                     Type=typing.Optional[DemandResponseLoadControl.Structs.DutyCycleControlStruct]),
+                        ClusterObjectFieldDescriptor(Label="powerSavingsControl", Tag=5,
+                                                     Type=typing.Optional[DemandResponseLoadControl.Structs.PowerSavingsControlStruct]),
+                        ClusterObjectFieldDescriptor(Label="heatingSourceControl", Tag=6,
+                                                     Type=typing.Optional[DemandResponseLoadControl.Structs.HeatingSourceControlStruct]),
                     ])
 
             duration: 'uint' = 0
@@ -23823,9 +24266,11 @@ class DemandResponseLoadControl(Cluster):
                         ClusterObjectFieldDescriptor(Label="control", Tag=2, Type=uint),
                         ClusterObjectFieldDescriptor(Label="deviceClass", Tag=3, Type=uint),
                         ClusterObjectFieldDescriptor(Label="enrollmentGroup", Tag=4, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="criticality", Tag=5, Type=DemandResponseLoadControl.Enums.CriticalityLevelEnum),
+                        ClusterObjectFieldDescriptor(Label="criticality", Tag=5,
+                                                     Type=DemandResponseLoadControl.Enums.CriticalityLevelEnum),
                         ClusterObjectFieldDescriptor(Label="startTime", Tag=6, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="transitions", Tag=7, Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventTransitionStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="transitions", Tag=7, Type=typing.List[DemandResponseLoadControl.Structs.LoadControlEventTransitionStruct]),
                     ])
 
             eventID: 'bytes' = b""
@@ -23835,7 +24280,8 @@ class DemandResponseLoadControl(Cluster):
             enrollmentGroup: 'typing.Optional[uint]' = None
             criticality: 'DemandResponseLoadControl.Enums.CriticalityLevelEnum' = 0
             startTime: 'typing.Union[Nullable, uint]' = NullValue
-            transitions: 'typing.List[DemandResponseLoadControl.Structs.LoadControlEventTransitionStruct]' = field(default_factory=lambda: [])
+            transitions: 'typing.List[DemandResponseLoadControl.Structs.LoadControlEventTransitionStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class LoadControlProgramStruct(ClusterObject):
@@ -23868,10 +24314,12 @@ class DemandResponseLoadControl(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="loadControlProgram", Tag=0, Type=DemandResponseLoadControl.Structs.LoadControlProgramStruct),
+                        ClusterObjectFieldDescriptor(Label="loadControlProgram", Tag=0,
+                                                     Type=DemandResponseLoadControl.Structs.LoadControlProgramStruct),
                     ])
 
-            loadControlProgram: 'DemandResponseLoadControl.Structs.LoadControlProgramStruct' = field(default_factory=lambda: DemandResponseLoadControl.Structs.LoadControlProgramStruct())
+            loadControlProgram: 'DemandResponseLoadControl.Structs.LoadControlProgramStruct' = field(
+                default_factory=lambda: DemandResponseLoadControl.Structs.LoadControlProgramStruct())
 
         @dataclass
         class UnregisterLoadControlProgramRequest(ClusterCommand):
@@ -23900,10 +24348,12 @@ class DemandResponseLoadControl(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="event", Tag=0, Type=DemandResponseLoadControl.Structs.LoadControlEventStruct),
+                        ClusterObjectFieldDescriptor(
+                            Label="event", Tag=0, Type=DemandResponseLoadControl.Structs.LoadControlEventStruct),
                     ])
 
-            event: 'DemandResponseLoadControl.Structs.LoadControlEventStruct' = field(default_factory=lambda: DemandResponseLoadControl.Structs.LoadControlEventStruct())
+            event: 'DemandResponseLoadControl.Structs.LoadControlEventStruct' = field(
+                default_factory=lambda: DemandResponseLoadControl.Structs.LoadControlEventStruct())
 
         @dataclass
         class RemoveLoadControlEventRequest(ClusterCommand):
@@ -24178,14 +24628,21 @@ class DemandResponseLoadControl(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="eventID", Tag=0, Type=bytes),
                         ClusterObjectFieldDescriptor(Label="transitionIndex", Tag=1, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="status", Tag=2, Type=DemandResponseLoadControl.Enums.LoadControlEventStatusEnum),
-                        ClusterObjectFieldDescriptor(Label="criticality", Tag=3, Type=DemandResponseLoadControl.Enums.CriticalityLevelEnum),
+                        ClusterObjectFieldDescriptor(
+                            Label="status", Tag=2, Type=DemandResponseLoadControl.Enums.LoadControlEventStatusEnum),
+                        ClusterObjectFieldDescriptor(Label="criticality", Tag=3,
+                                                     Type=DemandResponseLoadControl.Enums.CriticalityLevelEnum),
                         ClusterObjectFieldDescriptor(Label="control", Tag=4, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="temperatureControl", Tag=5, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.TemperatureControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="averageLoadControl", Tag=6, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.AverageLoadControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="dutyCycleControl", Tag=7, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.DutyCycleControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="powerSavingsControl", Tag=8, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.PowerSavingsControlStruct]),
-                        ClusterObjectFieldDescriptor(Label="heatingSourceControl", Tag=9, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.HeatingSourceControlStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="temperatureControl", Tag=5, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.TemperatureControlStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="averageLoadControl", Tag=6, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.AverageLoadControlStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="dutyCycleControl", Tag=7, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.DutyCycleControlStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="powerSavingsControl", Tag=8, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.PowerSavingsControlStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="heatingSourceControl", Tag=9, Type=typing.Union[None, Nullable, DemandResponseLoadControl.Structs.HeatingSourceControlStruct]),
                     ])
 
             eventID: 'bytes' = b""
@@ -24291,7 +24748,8 @@ class Messages(Cluster):
                         ClusterObjectFieldDescriptor(Label="startTime", Tag=3, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="duration", Tag=4, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="messageText", Tag=5, Type=str),
-                        ClusterObjectFieldDescriptor(Label="responses", Tag=6, Type=typing.Optional[typing.List[Messages.Structs.MessageResponseOptionStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="responses", Tag=6, Type=typing.Optional[typing.List[Messages.Structs.MessageResponseOptionStruct]]),
                     ])
 
             messageID: 'bytes' = b""
@@ -24320,7 +24778,8 @@ class Messages(Cluster):
                         ClusterObjectFieldDescriptor(Label="startTime", Tag=3, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="duration", Tag=4, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="messageText", Tag=5, Type=str),
-                        ClusterObjectFieldDescriptor(Label="responses", Tag=6, Type=typing.Optional[typing.List[Messages.Structs.MessageResponseOptionStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="responses", Tag=6, Type=typing.Optional[typing.List[Messages.Structs.MessageResponseOptionStruct]]),
                     ])
 
             messageID: 'bytes' = b""
@@ -24532,7 +24991,8 @@ class Messages(Cluster):
                         ClusterObjectFieldDescriptor(Label="messageID", Tag=0, Type=bytes),
                         ClusterObjectFieldDescriptor(Label="responseID", Tag=1, Type=typing.Union[None, Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="reply", Tag=2, Type=typing.Union[None, Nullable, str]),
-                        ClusterObjectFieldDescriptor(Label="futureMessagesPreference", Tag=3, Type=typing.Union[Nullable, Messages.Enums.FutureMessagePreferenceEnum]),
+                        ClusterObjectFieldDescriptor(Label="futureMessagesPreference", Tag=3,
+                                                     Type=typing.Union[Nullable, Messages.Enums.FutureMessagePreferenceEnum]),
                     ])
 
             messageID: 'bytes' = b""
@@ -24554,9 +25014,12 @@ class DeviceEnergyManagement(Cluster):
                 ClusterObjectFieldDescriptor(Label="ESAState", Tag=0x00000002, Type=DeviceEnergyManagement.Enums.ESAStateEnum),
                 ClusterObjectFieldDescriptor(Label="absMinPower", Tag=0x00000003, Type=int),
                 ClusterObjectFieldDescriptor(Label="absMaxPower", Tag=0x00000004, Type=int),
-                ClusterObjectFieldDescriptor(Label="powerAdjustmentCapability", Tag=0x00000005, Type=typing.Union[None, Nullable, DeviceEnergyManagement.Structs.PowerAdjustCapabilityStruct]),
-                ClusterObjectFieldDescriptor(Label="forecast", Tag=0x00000006, Type=typing.Union[None, Nullable, DeviceEnergyManagement.Structs.ForecastStruct]),
-                ClusterObjectFieldDescriptor(Label="optOutState", Tag=0x00000007, Type=typing.Optional[DeviceEnergyManagement.Enums.OptOutStateEnum]),
+                ClusterObjectFieldDescriptor(Label="powerAdjustmentCapability", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, DeviceEnergyManagement.Structs.PowerAdjustCapabilityStruct]),
+                ClusterObjectFieldDescriptor(Label="forecast", Tag=0x00000006,
+                                             Type=typing.Union[None, Nullable, DeviceEnergyManagement.Structs.ForecastStruct]),
+                ClusterObjectFieldDescriptor(Label="optOutState", Tag=0x00000007,
+                                             Type=typing.Optional[DeviceEnergyManagement.Enums.OptOutStateEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -24729,7 +25192,8 @@ class DeviceEnergyManagement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="powerAdjustCapability", Tag=0, Type=typing.Union[Nullable, typing.List[DeviceEnergyManagement.Structs.PowerAdjustStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="powerAdjustCapability", Tag=0, Type=typing.Union[Nullable, typing.List[DeviceEnergyManagement.Structs.PowerAdjustStruct]]),
                         ClusterObjectFieldDescriptor(Label="cause", Tag=1, Type=DeviceEnergyManagement.Enums.PowerAdjustReasonEnum),
                     ])
 
@@ -24755,7 +25219,8 @@ class DeviceEnergyManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="minPower", Tag=10, Type=typing.Optional[int]),
                         ClusterObjectFieldDescriptor(Label="maxPower", Tag=11, Type=typing.Optional[int]),
                         ClusterObjectFieldDescriptor(Label="nominalEnergy", Tag=12, Type=typing.Optional[int]),
-                        ClusterObjectFieldDescriptor(Label="costs", Tag=13, Type=typing.Optional[typing.List[DeviceEnergyManagement.Structs.CostStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="costs", Tag=13, Type=typing.Optional[typing.List[DeviceEnergyManagement.Structs.CostStruct]]),
                         ClusterObjectFieldDescriptor(Label="minPowerAdjustment", Tag=14, Type=typing.Optional[int]),
                         ClusterObjectFieldDescriptor(Label="maxPowerAdjustment", Tag=15, Type=typing.Optional[int]),
                         ClusterObjectFieldDescriptor(Label="minDurationAdjustment", Tag=16, Type=typing.Optional[uint]),
@@ -24794,8 +25259,10 @@ class DeviceEnergyManagement(Cluster):
                         ClusterObjectFieldDescriptor(Label="earliestStartTime", Tag=4, Type=typing.Union[None, Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="latestEndTime", Tag=5, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="isPausable", Tag=6, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="slots", Tag=7, Type=typing.List[DeviceEnergyManagement.Structs.SlotStruct]),
-                        ClusterObjectFieldDescriptor(Label="forecastUpdateReason", Tag=8, Type=DeviceEnergyManagement.Enums.ForecastUpdateReasonEnum),
+                        ClusterObjectFieldDescriptor(
+                            Label="slots", Tag=7, Type=typing.List[DeviceEnergyManagement.Structs.SlotStruct]),
+                        ClusterObjectFieldDescriptor(Label="forecastUpdateReason", Tag=8,
+                                                     Type=DeviceEnergyManagement.Enums.ForecastUpdateReasonEnum),
                     ])
 
             forecastID: 'uint' = 0
@@ -24937,7 +25404,8 @@ class DeviceEnergyManagement(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="forecastID", Tag=0, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="slotAdjustments", Tag=1, Type=typing.List[DeviceEnergyManagement.Structs.SlotAdjustmentStruct]),
+                        ClusterObjectFieldDescriptor(Label="slotAdjustments", Tag=1,
+                                                     Type=typing.List[DeviceEnergyManagement.Structs.SlotAdjustmentStruct]),
                         ClusterObjectFieldDescriptor(Label="cause", Tag=2, Type=DeviceEnergyManagement.Enums.AdjustmentCauseEnum),
                     ])
 
@@ -24956,7 +25424,8 @@ class DeviceEnergyManagement(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="constraints", Tag=0, Type=typing.List[DeviceEnergyManagement.Structs.ConstraintsStruct]),
+                        ClusterObjectFieldDescriptor(Label="constraints", Tag=0,
+                                                     Type=typing.List[DeviceEnergyManagement.Structs.ConstraintsStruct]),
                         ClusterObjectFieldDescriptor(Label="cause", Tag=1, Type=DeviceEnergyManagement.Enums.AdjustmentCauseEnum),
                     ])
 
@@ -25285,11 +25754,13 @@ class EnergyEvse(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="state", Tag=0x00000000, Type=typing.Union[Nullable, EnergyEvse.Enums.StateEnum]),
+                ClusterObjectFieldDescriptor(Label="state", Tag=0x00000000,
+                                             Type=typing.Union[Nullable, EnergyEvse.Enums.StateEnum]),
                 ClusterObjectFieldDescriptor(Label="supplyState", Tag=0x00000001, Type=EnergyEvse.Enums.SupplyStateEnum),
                 ClusterObjectFieldDescriptor(Label="faultState", Tag=0x00000002, Type=EnergyEvse.Enums.FaultStateEnum),
                 ClusterObjectFieldDescriptor(Label="chargingEnabledUntil", Tag=0x00000003, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="dischargingEnabledUntil", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="dischargingEnabledUntil", Tag=0x00000004,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="circuitCapacity", Tag=0x00000005, Type=int),
                 ClusterObjectFieldDescriptor(Label="minimumChargeCurrent", Tag=0x00000006, Type=int),
                 ClusterObjectFieldDescriptor(Label="maximumChargeCurrent", Tag=0x00000007, Type=int),
@@ -25298,16 +25769,19 @@ class EnergyEvse(Cluster):
                 ClusterObjectFieldDescriptor(Label="randomizationDelayWindow", Tag=0x0000000A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="nextChargeStartTime", Tag=0x00000023, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="nextChargeTargetTime", Tag=0x00000024, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="nextChargeRequiredEnergy", Tag=0x00000025, Type=typing.Union[None, Nullable, int]),
+                ClusterObjectFieldDescriptor(Label="nextChargeRequiredEnergy", Tag=0x00000025,
+                                             Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="nextChargeTargetSoC", Tag=0x00000026, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="approximateEVEfficiency", Tag=0x00000027, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="approximateEVEfficiency", Tag=0x00000027,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="stateOfCharge", Tag=0x00000030, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="batteryCapacity", Tag=0x00000031, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="vehicleID", Tag=0x00000032, Type=typing.Union[None, Nullable, str]),
                 ClusterObjectFieldDescriptor(Label="sessionID", Tag=0x00000040, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="sessionDuration", Tag=0x00000041, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="sessionEnergyCharged", Tag=0x00000042, Type=typing.Union[Nullable, int]),
-                ClusterObjectFieldDescriptor(Label="sessionEnergyDischarged", Tag=0x00000043, Type=typing.Union[None, Nullable, int]),
+                ClusterObjectFieldDescriptor(Label="sessionEnergyDischarged", Tag=0x00000043,
+                                             Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -25448,7 +25922,8 @@ class EnergyEvse(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="dayOfWeekForSequence", Tag=0, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="chargingTargets", Tag=1, Type=typing.List[EnergyEvse.Structs.ChargingTargetStruct]),
+                        ClusterObjectFieldDescriptor(Label="chargingTargets", Tag=1,
+                                                     Type=typing.List[EnergyEvse.Structs.ChargingTargetStruct]),
                     ])
 
             dayOfWeekForSequence: 'uint' = 0
@@ -25466,10 +25941,12 @@ class EnergyEvse(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="chargingTargetSchedules", Tag=0, Type=typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]),
+                        ClusterObjectFieldDescriptor(Label="chargingTargetSchedules", Tag=0,
+                                                     Type=typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]),
                     ])
 
-            chargingTargetSchedules: 'typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]' = field(default_factory=lambda: [])
+            chargingTargetSchedules: 'typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class Disable(ClusterCommand):
@@ -25562,14 +26039,16 @@ class EnergyEvse(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="chargingTargetSchedules", Tag=0, Type=typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]),
+                        ClusterObjectFieldDescriptor(Label="chargingTargetSchedules", Tag=0,
+                                                     Type=typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]),
                     ])
 
             @ChipUtility.classproperty
             def must_use_timed_invoke(cls) -> bool:
                 return True
 
-            chargingTargetSchedules: 'typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]' = field(default_factory=lambda: [])
+            chargingTargetSchedules: 'typing.List[EnergyEvse.Structs.ChargingTargetScheduleStruct]' = field(default_factory=lambda: [
+            ])
 
         @dataclass
         class GetTargets(ClusterCommand):
@@ -26222,10 +26701,13 @@ class EnergyPreference(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="energyBalances", Tag=0x00000000, Type=typing.Optional[typing.List[EnergyPreference.Structs.BalanceStruct]]),
+                ClusterObjectFieldDescriptor(Label="energyBalances", Tag=0x00000000,
+                                             Type=typing.Optional[typing.List[EnergyPreference.Structs.BalanceStruct]]),
                 ClusterObjectFieldDescriptor(Label="currentEnergyBalance", Tag=0x00000001, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="energyPriorities", Tag=0x00000002, Type=typing.Optional[typing.List[EnergyPreference.Enums.EnergyPriorityEnum]]),
-                ClusterObjectFieldDescriptor(Label="lowPowerModeSensitivities", Tag=0x00000003, Type=typing.Optional[typing.List[EnergyPreference.Structs.BalanceStruct]]),
+                ClusterObjectFieldDescriptor(Label="energyPriorities", Tag=0x00000002,
+                                             Type=typing.Optional[typing.List[EnergyPreference.Enums.EnergyPriorityEnum]]),
+                ClusterObjectFieldDescriptor(Label="lowPowerModeSensitivities", Tag=0x00000003,
+                                             Type=typing.Optional[typing.List[EnergyPreference.Structs.BalanceStruct]]),
                 ClusterObjectFieldDescriptor(Label="currentLowPowerModeSensitivity", Tag=0x00000004, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -26628,7 +27110,8 @@ class EnergyEvseMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[EnergyEvseMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[EnergyEvseMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -26688,7 +27171,8 @@ class EnergyEvseMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[EnergyEvseMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[EnergyEvseMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -26900,7 +27384,8 @@ class WaterHeaterMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[WaterHeaterMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[WaterHeaterMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -26960,7 +27445,8 @@ class WaterHeaterMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[WaterHeaterMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[WaterHeaterMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -27172,7 +27658,8 @@ class DeviceEnergyManagementMode(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000, Type=typing.List[DeviceEnergyManagementMode.Structs.ModeOptionStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedModes", Tag=0x00000000,
+                                             Type=typing.List[DeviceEnergyManagementMode.Structs.ModeOptionStruct]),
                 ClusterObjectFieldDescriptor(Label="currentMode", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="startUpMode", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="onMode", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
@@ -27233,7 +27720,8 @@ class DeviceEnergyManagementMode(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="label", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="mode", Tag=1, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2, Type=typing.List[DeviceEnergyManagementMode.Structs.ModeTagStruct]),
+                        ClusterObjectFieldDescriptor(Label="modeTags", Tag=2,
+                                                     Type=typing.List[DeviceEnergyManagementMode.Structs.ModeTagStruct]),
                     ])
 
             label: 'str' = ""
@@ -27445,25 +27933,30 @@ class DoorLock(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="lockState", Tag=0x00000000, Type=typing.Union[Nullable, DoorLock.Enums.DlLockState]),
+                ClusterObjectFieldDescriptor(Label="lockState", Tag=0x00000000,
+                                             Type=typing.Union[Nullable, DoorLock.Enums.DlLockState]),
                 ClusterObjectFieldDescriptor(Label="lockType", Tag=0x00000001, Type=DoorLock.Enums.DlLockType),
                 ClusterObjectFieldDescriptor(Label="actuatorEnabled", Tag=0x00000002, Type=bool),
-                ClusterObjectFieldDescriptor(Label="doorState", Tag=0x00000003, Type=typing.Union[None, Nullable, DoorLock.Enums.DoorStateEnum]),
+                ClusterObjectFieldDescriptor(Label="doorState", Tag=0x00000003,
+                                             Type=typing.Union[None, Nullable, DoorLock.Enums.DoorStateEnum]),
                 ClusterObjectFieldDescriptor(Label="doorOpenEvents", Tag=0x00000004, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="doorClosedEvents", Tag=0x00000005, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="openPeriod", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfTotalUsersSupported", Tag=0x00000011, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfPINUsersSupported", Tag=0x00000012, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfRFIDUsersSupported", Tag=0x00000013, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfWeekDaySchedulesSupportedPerUser", Tag=0x00000014, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfYearDaySchedulesSupportedPerUser", Tag=0x00000015, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfWeekDaySchedulesSupportedPerUser",
+                                             Tag=0x00000014, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfYearDaySchedulesSupportedPerUser",
+                                             Tag=0x00000015, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfHolidaySchedulesSupported", Tag=0x00000016, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="maxPINCodeLength", Tag=0x00000017, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="minPINCodeLength", Tag=0x00000018, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="maxRFIDCodeLength", Tag=0x00000019, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="minRFIDCodeLength", Tag=0x0000001A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="credentialRulesSupport", Tag=0x0000001B, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfCredentialsSupportedPerUser", Tag=0x0000001C, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfCredentialsSupportedPerUser",
+                                             Tag=0x0000001C, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="language", Tag=0x00000021, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="LEDSettings", Tag=0x00000022, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="autoRelockTime", Tag=0x00000023, Type=typing.Optional[uint]),
@@ -27481,15 +27974,22 @@ class DoorLock(Cluster):
                 ClusterObjectFieldDescriptor(Label="sendPINOverTheAir", Tag=0x00000032, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="requirePINforRemoteOperation", Tag=0x00000033, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="expiringUserTimeout", Tag=0x00000035, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="aliroReaderVerificationKey", Tag=0x00000080, Type=typing.Union[None, Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="aliroReaderGroupIdentifier", Tag=0x00000081, Type=typing.Union[None, Nullable, bytes]),
+                ClusterObjectFieldDescriptor(Label="aliroReaderVerificationKey", Tag=0x00000080,
+                                             Type=typing.Union[None, Nullable, bytes]),
+                ClusterObjectFieldDescriptor(Label="aliroReaderGroupIdentifier", Tag=0x00000081,
+                                             Type=typing.Union[None, Nullable, bytes]),
                 ClusterObjectFieldDescriptor(Label="aliroReaderGroupSubIdentifier", Tag=0x00000082, Type=typing.Optional[bytes]),
-                ClusterObjectFieldDescriptor(Label="aliroExpeditedTransactionSupportedProtocolVersions", Tag=0x00000083, Type=typing.Optional[typing.List[bytes]]),
-                ClusterObjectFieldDescriptor(Label="aliroGroupResolvingKey", Tag=0x00000084, Type=typing.Union[None, Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="aliroSupportedBLEUWBProtocolVersions", Tag=0x00000085, Type=typing.Optional[typing.List[bytes]]),
+                ClusterObjectFieldDescriptor(Label="aliroExpeditedTransactionSupportedProtocolVersions",
+                                             Tag=0x00000083, Type=typing.Optional[typing.List[bytes]]),
+                ClusterObjectFieldDescriptor(Label="aliroGroupResolvingKey", Tag=0x00000084,
+                                             Type=typing.Union[None, Nullable, bytes]),
+                ClusterObjectFieldDescriptor(Label="aliroSupportedBLEUWBProtocolVersions",
+                                             Tag=0x00000085, Type=typing.Optional[typing.List[bytes]]),
                 ClusterObjectFieldDescriptor(Label="aliroBLEAdvertisingVersion", Tag=0x00000086, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfAliroCredentialIssuerKeysSupported", Tag=0x00000087, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfAliroEndpointKeysSupported", Tag=0x00000088, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfAliroCredentialIssuerKeysSupported",
+                                             Tag=0x00000087, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfAliroEndpointKeysSupported",
+                                             Tag=0x00000088, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -28267,7 +28767,8 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="status", Tag=1, Type=DoorLock.Enums.DlStatus),
                         ClusterObjectFieldDescriptor(Label="localStartTime", Tag=2, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="localEndTime", Tag=3, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="operatingMode", Tag=4, Type=typing.Optional[DoorLock.Enums.OperatingModeEnum]),
+                        ClusterObjectFieldDescriptor(Label="operatingMode", Tag=4,
+                                                     Type=typing.Optional[DoorLock.Enums.OperatingModeEnum]),
                     ])
 
             holidayIndex: 'uint' = 0
@@ -28307,9 +28808,12 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="userIndex", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="userName", Tag=2, Type=typing.Union[Nullable, str]),
                         ClusterObjectFieldDescriptor(Label="userUniqueID", Tag=3, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=4, Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
-                        ClusterObjectFieldDescriptor(Label="userType", Tag=5, Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
-                        ClusterObjectFieldDescriptor(Label="credentialRule", Tag=6, Type=typing.Union[Nullable, DoorLock.Enums.CredentialRuleEnum]),
+                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=4,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
+                        ClusterObjectFieldDescriptor(Label="userType", Tag=5,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
+                        ClusterObjectFieldDescriptor(Label="credentialRule", Tag=6,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.CredentialRuleEnum]),
                     ])
 
             @ChipUtility.classproperty
@@ -28354,10 +28858,14 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="userIndex", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="userName", Tag=1, Type=typing.Union[Nullable, str]),
                         ClusterObjectFieldDescriptor(Label="userUniqueID", Tag=2, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=3, Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
-                        ClusterObjectFieldDescriptor(Label="userType", Tag=4, Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
-                        ClusterObjectFieldDescriptor(Label="credentialRule", Tag=5, Type=typing.Union[Nullable, DoorLock.Enums.CredentialRuleEnum]),
-                        ClusterObjectFieldDescriptor(Label="credentials", Tag=6, Type=typing.Union[Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
+                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=3,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
+                        ClusterObjectFieldDescriptor(Label="userType", Tag=4,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
+                        ClusterObjectFieldDescriptor(Label="credentialRule", Tag=5,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.CredentialRuleEnum]),
+                        ClusterObjectFieldDescriptor(Label="credentials", Tag=6,
+                                                     Type=typing.Union[Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
                         ClusterObjectFieldDescriptor(Label="creatorFabricIndex", Tag=7, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="lastModifiedFabricIndex", Tag=8, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="nextUserIndex", Tag=9, Type=typing.Union[Nullable, uint]),
@@ -28409,8 +28917,10 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="credential", Tag=1, Type=DoorLock.Structs.CredentialStruct),
                         ClusterObjectFieldDescriptor(Label="credentialData", Tag=2, Type=bytes),
                         ClusterObjectFieldDescriptor(Label="userIndex", Tag=3, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=4, Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
-                        ClusterObjectFieldDescriptor(Label="userType", Tag=5, Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
+                        ClusterObjectFieldDescriptor(Label="userStatus", Tag=4,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserStatusEnum]),
+                        ClusterObjectFieldDescriptor(Label="userType", Tag=5,
+                                                     Type=typing.Union[Nullable, DoorLock.Enums.UserTypeEnum]),
                     ])
 
             @ChipUtility.classproperty
@@ -28495,7 +29005,8 @@ class DoorLock(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="credential", Tag=0, Type=typing.Union[Nullable, DoorLock.Structs.CredentialStruct]),
+                        ClusterObjectFieldDescriptor(Label="credential", Tag=0,
+                                                     Type=typing.Union[Nullable, DoorLock.Structs.CredentialStruct]),
                     ])
 
             @ChipUtility.classproperty
@@ -29442,7 +29953,8 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="userIndex", Tag=2, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=3, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="sourceNode", Tag=4, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="credentials", Tag=5, Type=typing.Union[None, Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="credentials", Tag=5, Type=typing.Union[None, Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
                     ])
 
             lockOperationType: 'DoorLock.Enums.LockOperationTypeEnum' = 0
@@ -29472,7 +29984,8 @@ class DoorLock(Cluster):
                         ClusterObjectFieldDescriptor(Label="userIndex", Tag=3, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=4, Type=typing.Union[Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="sourceNode", Tag=5, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="credentials", Tag=6, Type=typing.Union[None, Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="credentials", Tag=6, Type=typing.Union[None, Nullable, typing.List[DoorLock.Structs.CredentialStruct]]),
                     ])
 
             lockOperationType: 'DoorLock.Enums.LockOperationTypeEnum' = 0
@@ -29531,14 +30044,20 @@ class WindowCovering(Cluster):
                 ClusterObjectFieldDescriptor(Label="numberOfActuationsLift", Tag=0x00000005, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfActuationsTilt", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="configStatus", Tag=0x00000007, Type=uint),
-                ClusterObjectFieldDescriptor(Label="currentPositionLiftPercentage", Tag=0x00000008, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="currentPositionTiltPercentage", Tag=0x00000009, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="currentPositionLiftPercentage", Tag=0x00000008,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="currentPositionTiltPercentage", Tag=0x00000009,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="operationalStatus", Tag=0x0000000A, Type=uint),
-                ClusterObjectFieldDescriptor(Label="targetPositionLiftPercent100ths", Tag=0x0000000B, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="targetPositionTiltPercent100ths", Tag=0x0000000C, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="targetPositionLiftPercent100ths", Tag=0x0000000B,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="targetPositionTiltPercent100ths", Tag=0x0000000C,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="endProductType", Tag=0x0000000D, Type=WindowCovering.Enums.EndProductType),
-                ClusterObjectFieldDescriptor(Label="currentPositionLiftPercent100ths", Tag=0x0000000E, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="currentPositionTiltPercent100ths", Tag=0x0000000F, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="currentPositionLiftPercent100ths",
+                                             Tag=0x0000000E, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="currentPositionTiltPercent100ths",
+                                             Tag=0x0000000F, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="installedOpenLimitLift", Tag=0x00000010, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="installedClosedLimitLift", Tag=0x00000011, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="installedOpenLimitTilt", Tag=0x00000012, Type=typing.Optional[uint]),
@@ -30578,12 +31097,16 @@ class ServiceArea(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="supportedLocations", Tag=0x00000000, Type=typing.List[ServiceArea.Structs.LocationStruct]),
-                ClusterObjectFieldDescriptor(Label="supportedMaps", Tag=0x00000001, Type=typing.Union[Nullable, typing.List[ServiceArea.Structs.MapStruct]]),
-                ClusterObjectFieldDescriptor(Label="selectedLocations", Tag=0x00000002, Type=typing.Union[Nullable, typing.List[uint]]),
+                ClusterObjectFieldDescriptor(Label="supportedLocations", Tag=0x00000000,
+                                             Type=typing.List[ServiceArea.Structs.LocationStruct]),
+                ClusterObjectFieldDescriptor(Label="supportedMaps", Tag=0x00000001,
+                                             Type=typing.Union[Nullable, typing.List[ServiceArea.Structs.MapStruct]]),
+                ClusterObjectFieldDescriptor(Label="selectedLocations", Tag=0x00000002,
+                                             Type=typing.Union[Nullable, typing.List[uint]]),
                 ClusterObjectFieldDescriptor(Label="currentLocation", Tag=0x00000003, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="estimatedEndTime", Tag=0x00000004, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="progress", Tag=0x00000005, Type=typing.Union[None, Nullable, typing.List[ServiceArea.Structs.ProgressStruct]]),
+                ClusterObjectFieldDescriptor(Label="progress", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, typing.List[ServiceArea.Structs.ProgressStruct]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -30865,7 +31388,8 @@ class ServiceArea(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="locationName", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="floorNumber", Tag=1, Type=typing.Union[Nullable, int]),
-                        ClusterObjectFieldDescriptor(Label="areaType", Tag=2, Type=typing.Union[Nullable, ServiceArea.Enums.AreaTypeTag]),
+                        ClusterObjectFieldDescriptor(Label="areaType", Tag=2,
+                                                     Type=typing.Union[Nullable, ServiceArea.Enums.AreaTypeTag]),
                     ])
 
             locationName: 'str' = ""
@@ -30878,10 +31402,14 @@ class ServiceArea(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="locationInfo", Tag=0, Type=typing.Union[Nullable, ServiceArea.Structs.LocationDescriptorStruct]),
-                        ClusterObjectFieldDescriptor(Label="landmarkTag", Tag=1, Type=typing.Union[Nullable, ServiceArea.Enums.LandmarkTag]),
-                        ClusterObjectFieldDescriptor(Label="positionTag", Tag=2, Type=typing.Union[Nullable, ServiceArea.Enums.PositionTag]),
-                        ClusterObjectFieldDescriptor(Label="surfaceTag", Tag=3, Type=typing.Union[Nullable, ServiceArea.Enums.FloorSurfaceTag]),
+                        ClusterObjectFieldDescriptor(Label="locationInfo", Tag=0,
+                                                     Type=typing.Union[Nullable, ServiceArea.Structs.LocationDescriptorStruct]),
+                        ClusterObjectFieldDescriptor(Label="landmarkTag", Tag=1,
+                                                     Type=typing.Union[Nullable, ServiceArea.Enums.LandmarkTag]),
+                        ClusterObjectFieldDescriptor(Label="positionTag", Tag=2,
+                                                     Type=typing.Union[Nullable, ServiceArea.Enums.PositionTag]),
+                        ClusterObjectFieldDescriptor(Label="surfaceTag", Tag=3,
+                                                     Type=typing.Union[Nullable, ServiceArea.Enums.FloorSurfaceTag]),
                     ])
 
             locationInfo: 'typing.Union[Nullable, ServiceArea.Structs.LocationDescriptorStruct]' = NullValue
@@ -30902,7 +31430,8 @@ class ServiceArea(Cluster):
 
             locationID: 'uint' = 0
             mapID: 'typing.Union[Nullable, uint]' = NullValue
-            locationInfo: 'ServiceArea.Structs.LocationInfoStruct' = field(default_factory=lambda: ServiceArea.Structs.LocationInfoStruct())
+            locationInfo: 'ServiceArea.Structs.LocationInfoStruct' = field(
+                default_factory=lambda: ServiceArea.Structs.LocationInfoStruct())
 
         @dataclass
         class MapStruct(ClusterObject):
@@ -31216,15 +31745,20 @@ class PumpConfigurationAndControl(Cluster):
                 ClusterObjectFieldDescriptor(Label="minConstTemp", Tag=0x0000000B, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="maxConstTemp", Tag=0x0000000C, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="pumpStatus", Tag=0x00000010, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="effectiveOperationMode", Tag=0x00000011, Type=PumpConfigurationAndControl.Enums.OperationModeEnum),
-                ClusterObjectFieldDescriptor(Label="effectiveControlMode", Tag=0x00000012, Type=PumpConfigurationAndControl.Enums.ControlModeEnum),
+                ClusterObjectFieldDescriptor(Label="effectiveOperationMode", Tag=0x00000011,
+                                             Type=PumpConfigurationAndControl.Enums.OperationModeEnum),
+                ClusterObjectFieldDescriptor(Label="effectiveControlMode", Tag=0x00000012,
+                                             Type=PumpConfigurationAndControl.Enums.ControlModeEnum),
                 ClusterObjectFieldDescriptor(Label="capacity", Tag=0x00000013, Type=typing.Union[Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="speed", Tag=0x00000014, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="lifetimeRunningHours", Tag=0x00000015, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="power", Tag=0x00000016, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="lifetimeEnergyConsumed", Tag=0x00000017, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="operationMode", Tag=0x00000020, Type=PumpConfigurationAndControl.Enums.OperationModeEnum),
-                ClusterObjectFieldDescriptor(Label="controlMode", Tag=0x00000021, Type=typing.Optional[PumpConfigurationAndControl.Enums.ControlModeEnum]),
+                ClusterObjectFieldDescriptor(Label="lifetimeEnergyConsumed", Tag=0x00000017,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="operationMode", Tag=0x00000020,
+                                             Type=PumpConfigurationAndControl.Enums.OperationModeEnum),
+                ClusterObjectFieldDescriptor(Label="controlMode", Tag=0x00000021,
+                                             Type=typing.Optional[PumpConfigurationAndControl.Enums.ControlModeEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -32077,17 +32611,24 @@ class Thermostat(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxCoolSetpointLimit", Tag=0x00000018, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="minSetpointDeadBand", Tag=0x00000019, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="remoteSensing", Tag=0x0000001A, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="controlSequenceOfOperation", Tag=0x0000001B, Type=Thermostat.Enums.ControlSequenceOfOperationEnum),
+                ClusterObjectFieldDescriptor(Label="controlSequenceOfOperation", Tag=0x0000001B,
+                                             Type=Thermostat.Enums.ControlSequenceOfOperationEnum),
                 ClusterObjectFieldDescriptor(Label="systemMode", Tag=0x0000001C, Type=Thermostat.Enums.SystemModeEnum),
-                ClusterObjectFieldDescriptor(Label="thermostatRunningMode", Tag=0x0000001E, Type=typing.Optional[Thermostat.Enums.ThermostatRunningModeEnum]),
-                ClusterObjectFieldDescriptor(Label="startOfWeek", Tag=0x00000020, Type=typing.Optional[Thermostat.Enums.StartOfWeekEnum]),
+                ClusterObjectFieldDescriptor(Label="thermostatRunningMode", Tag=0x0000001E,
+                                             Type=typing.Optional[Thermostat.Enums.ThermostatRunningModeEnum]),
+                ClusterObjectFieldDescriptor(Label="startOfWeek", Tag=0x00000020,
+                                             Type=typing.Optional[Thermostat.Enums.StartOfWeekEnum]),
                 ClusterObjectFieldDescriptor(Label="numberOfWeeklyTransitions", Tag=0x00000021, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfDailyTransitions", Tag=0x00000022, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="temperatureSetpointHold", Tag=0x00000023, Type=typing.Optional[Thermostat.Enums.TemperatureSetpointHoldEnum]),
-                ClusterObjectFieldDescriptor(Label="temperatureSetpointHoldDuration", Tag=0x00000024, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="thermostatProgrammingOperationMode", Tag=0x00000025, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="temperatureSetpointHold", Tag=0x00000023,
+                                             Type=typing.Optional[Thermostat.Enums.TemperatureSetpointHoldEnum]),
+                ClusterObjectFieldDescriptor(Label="temperatureSetpointHoldDuration", Tag=0x00000024,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="thermostatProgrammingOperationMode",
+                                             Tag=0x00000025, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="thermostatRunningState", Tag=0x00000029, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="setpointChangeSource", Tag=0x00000030, Type=typing.Optional[Thermostat.Enums.SetpointChangeSourceEnum]),
+                ClusterObjectFieldDescriptor(Label="setpointChangeSource", Tag=0x00000030,
+                                             Type=typing.Optional[Thermostat.Enums.SetpointChangeSourceEnum]),
                 ClusterObjectFieldDescriptor(Label="setpointChangeAmount", Tag=0x00000031, Type=typing.Union[None, Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="setpointChangeSourceTimestamp", Tag=0x00000032, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="occupiedSetback", Tag=0x00000034, Type=typing.Union[None, Nullable, uint]),
@@ -32099,25 +32640,36 @@ class Thermostat(Cluster):
                 ClusterObjectFieldDescriptor(Label="emergencyHeatDelta", Tag=0x0000003A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="ACType", Tag=0x00000040, Type=typing.Optional[Thermostat.Enums.ACTypeEnum]),
                 ClusterObjectFieldDescriptor(Label="ACCapacity", Tag=0x00000041, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="ACRefrigerantType", Tag=0x00000042, Type=typing.Optional[Thermostat.Enums.ACRefrigerantTypeEnum]),
-                ClusterObjectFieldDescriptor(Label="ACCompressorType", Tag=0x00000043, Type=typing.Optional[Thermostat.Enums.ACCompressorTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="ACRefrigerantType", Tag=0x00000042,
+                                             Type=typing.Optional[Thermostat.Enums.ACRefrigerantTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="ACCompressorType", Tag=0x00000043,
+                                             Type=typing.Optional[Thermostat.Enums.ACCompressorTypeEnum]),
                 ClusterObjectFieldDescriptor(Label="ACErrorCode", Tag=0x00000044, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="ACLouverPosition", Tag=0x00000045, Type=typing.Optional[Thermostat.Enums.ACLouverPositionEnum]),
+                ClusterObjectFieldDescriptor(Label="ACLouverPosition", Tag=0x00000045,
+                                             Type=typing.Optional[Thermostat.Enums.ACLouverPositionEnum]),
                 ClusterObjectFieldDescriptor(Label="ACCoilTemperature", Tag=0x00000046, Type=typing.Union[None, Nullable, int]),
-                ClusterObjectFieldDescriptor(Label="ACCapacityformat", Tag=0x00000047, Type=typing.Optional[Thermostat.Enums.ACCapacityFormatEnum]),
-                ClusterObjectFieldDescriptor(Label="presetTypes", Tag=0x00000048, Type=typing.Optional[typing.List[Thermostat.Structs.PresetTypeStruct]]),
-                ClusterObjectFieldDescriptor(Label="scheduleTypes", Tag=0x00000049, Type=typing.Optional[typing.List[Thermostat.Structs.ScheduleTypeStruct]]),
+                ClusterObjectFieldDescriptor(Label="ACCapacityformat", Tag=0x00000047,
+                                             Type=typing.Optional[Thermostat.Enums.ACCapacityFormatEnum]),
+                ClusterObjectFieldDescriptor(Label="presetTypes", Tag=0x00000048,
+                                             Type=typing.Optional[typing.List[Thermostat.Structs.PresetTypeStruct]]),
+                ClusterObjectFieldDescriptor(Label="scheduleTypes", Tag=0x00000049,
+                                             Type=typing.Optional[typing.List[Thermostat.Structs.ScheduleTypeStruct]]),
                 ClusterObjectFieldDescriptor(Label="numberOfPresets", Tag=0x0000004A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfSchedules", Tag=0x0000004B, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="numberOfScheduleTransitions", Tag=0x0000004C, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="numberOfScheduleTransitionPerDay", Tag=0x0000004D, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="numberOfScheduleTransitionPerDay",
+                                             Tag=0x0000004D, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="activePresetHandle", Tag=0x0000004E, Type=typing.Union[None, Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="activeScheduleHandle", Tag=0x0000004F, Type=typing.Union[None, Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="presets", Tag=0x00000050, Type=typing.Optional[typing.List[Thermostat.Structs.PresetStruct]]),
-                ClusterObjectFieldDescriptor(Label="schedules", Tag=0x00000051, Type=typing.Optional[typing.List[Thermostat.Structs.ScheduleStruct]]),
+                ClusterObjectFieldDescriptor(Label="activeScheduleHandle", Tag=0x0000004F,
+                                             Type=typing.Union[None, Nullable, bytes]),
+                ClusterObjectFieldDescriptor(Label="presets", Tag=0x00000050,
+                                             Type=typing.Optional[typing.List[Thermostat.Structs.PresetStruct]]),
+                ClusterObjectFieldDescriptor(Label="schedules", Tag=0x00000051,
+                                             Type=typing.Optional[typing.List[Thermostat.Structs.ScheduleStruct]]),
                 ClusterObjectFieldDescriptor(Label="presetsSchedulesEditable", Tag=0x00000052, Type=typing.Optional[bool]),
                 ClusterObjectFieldDescriptor(Label="temperatureSetpointHoldPolicy", Tag=0x00000053, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="setpointHoldExpiryTimestamp", Tag=0x00000054, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="setpointHoldExpiryTimestamp", Tag=0x00000054,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -32429,7 +32981,8 @@ class Thermostat(Cluster):
                         ClusterObjectFieldDescriptor(Label="dayOfWeek", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="transitionTime", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="presetHandle", Tag=2, Type=typing.Optional[bytes]),
-                        ClusterObjectFieldDescriptor(Label="systemMode", Tag=3, Type=typing.Optional[Thermostat.Enums.SystemModeEnum]),
+                        ClusterObjectFieldDescriptor(Label="systemMode", Tag=3,
+                                                     Type=typing.Optional[Thermostat.Enums.SystemModeEnum]),
                         ClusterObjectFieldDescriptor(Label="coolingSetpoint", Tag=4, Type=typing.Optional[int]),
                         ClusterObjectFieldDescriptor(Label="heatingSetpoint", Tag=5, Type=typing.Optional[int]),
                     ])
@@ -32451,7 +33004,8 @@ class Thermostat(Cluster):
                         ClusterObjectFieldDescriptor(Label="systemMode", Tag=1, Type=Thermostat.Enums.SystemModeEnum),
                         ClusterObjectFieldDescriptor(Label="name", Tag=2, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="presetHandle", Tag=3, Type=typing.Optional[bytes]),
-                        ClusterObjectFieldDescriptor(Label="transitions", Tag=4, Type=typing.List[Thermostat.Structs.ScheduleTransitionStruct]),
+                        ClusterObjectFieldDescriptor(Label="transitions", Tag=4,
+                                                     Type=typing.List[Thermostat.Structs.ScheduleTransitionStruct]),
                         ClusterObjectFieldDescriptor(Label="builtIn", Tag=5, Type=typing.Union[None, Nullable, bool]),
                     ])
 
@@ -32561,7 +33115,8 @@ class Thermostat(Cluster):
                         ClusterObjectFieldDescriptor(Label="numberOfTransitionsForSequence", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="dayOfWeekForSequence", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="modeForSequence", Tag=2, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="transitions", Tag=3, Type=typing.List[Thermostat.Structs.WeeklyScheduleTransitionStruct]),
+                        ClusterObjectFieldDescriptor(Label="transitions", Tag=3,
+                                                     Type=typing.List[Thermostat.Structs.WeeklyScheduleTransitionStruct]),
                     ])
 
             numberOfTransitionsForSequence: 'uint' = 0
@@ -32583,7 +33138,8 @@ class Thermostat(Cluster):
                         ClusterObjectFieldDescriptor(Label="numberOfTransitionsForSequence", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="dayOfWeekForSequence", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="modeForSequence", Tag=2, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="transitions", Tag=3, Type=typing.List[Thermostat.Structs.WeeklyScheduleTransitionStruct]),
+                        ClusterObjectFieldDescriptor(Label="transitions", Tag=3,
+                                                     Type=typing.List[Thermostat.Structs.WeeklyScheduleTransitionStruct]),
                     ])
 
             numberOfTransitionsForSequence: 'uint' = 0
@@ -33821,7 +34377,8 @@ class FanControl(Cluster):
                 ClusterObjectFieldDescriptor(Label="rockSetting", Tag=0x00000008, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="windSupport", Tag=0x00000009, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="windSetting", Tag=0x0000000A, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="airflowDirection", Tag=0x0000000B, Type=typing.Optional[FanControl.Enums.AirflowDirectionEnum]),
+                ClusterObjectFieldDescriptor(Label="airflowDirection", Tag=0x0000000B,
+                                             Type=typing.Optional[FanControl.Enums.AirflowDirectionEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -34232,9 +34789,12 @@ class ThermostatUserInterfaceConfiguration(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="temperatureDisplayMode", Tag=0x00000000, Type=ThermostatUserInterfaceConfiguration.Enums.TemperatureDisplayModeEnum),
-                ClusterObjectFieldDescriptor(Label="keypadLockout", Tag=0x00000001, Type=ThermostatUserInterfaceConfiguration.Enums.KeypadLockoutEnum),
-                ClusterObjectFieldDescriptor(Label="scheduleProgrammingVisibility", Tag=0x00000002, Type=typing.Optional[ThermostatUserInterfaceConfiguration.Enums.ScheduleProgrammingVisibilityEnum]),
+                ClusterObjectFieldDescriptor(Label="temperatureDisplayMode", Tag=0x00000000,
+                                             Type=ThermostatUserInterfaceConfiguration.Enums.TemperatureDisplayModeEnum),
+                ClusterObjectFieldDescriptor(Label="keypadLockout", Tag=0x00000001,
+                                             Type=ThermostatUserInterfaceConfiguration.Enums.KeypadLockoutEnum),
+                ClusterObjectFieldDescriptor(Label="scheduleProgrammingVisibility", Tag=0x00000002,
+                                             Type=typing.Optional[ThermostatUserInterfaceConfiguration.Enums.ScheduleProgrammingVisibilityEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -34490,7 +35050,8 @@ class ColorControl(Cluster):
                 ClusterObjectFieldDescriptor(Label="colorTempPhysicalMinMireds", Tag=0x0000400B, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="colorTempPhysicalMaxMireds", Tag=0x0000400C, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="coupleColorTempToLevelMinMireds", Tag=0x0000400D, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="startUpColorTemperatureMireds", Tag=0x00004010, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="startUpColorTemperatureMireds", Tag=0x00004010,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -36050,15 +36611,18 @@ class BallastConfiguration(Cluster):
                 ClusterObjectFieldDescriptor(Label="ballastStatus", Tag=0x00000002, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="minLevel", Tag=0x00000010, Type=uint),
                 ClusterObjectFieldDescriptor(Label="maxLevel", Tag=0x00000011, Type=uint),
-                ClusterObjectFieldDescriptor(Label="intrinsicBallastFactor", Tag=0x00000014, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="ballastFactorAdjustment", Tag=0x00000015, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="intrinsicBallastFactor", Tag=0x00000014,
+                                             Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="ballastFactorAdjustment", Tag=0x00000015,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="lampQuantity", Tag=0x00000020, Type=uint),
                 ClusterObjectFieldDescriptor(Label="lampType", Tag=0x00000030, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="lampManufacturer", Tag=0x00000031, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="lampRatedHours", Tag=0x00000032, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="lampBurnHours", Tag=0x00000033, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="lampAlarmMode", Tag=0x00000034, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="lampBurnHoursTripPoint", Tag=0x00000035, Type=typing.Union[None, Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="lampBurnHoursTripPoint", Tag=0x00000035,
+                                             Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -36430,7 +36994,8 @@ class IlluminanceMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="minMeasuredValue", Tag=0x00000001, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="tolerance", Tag=0x00000003, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="lightSensorType", Tag=0x00000004, Type=typing.Union[None, Nullable, IlluminanceMeasurement.Enums.LightSensorTypeEnum]),
+                ClusterObjectFieldDescriptor(Label="lightSensorType", Tag=0x00000004,
+                                             Type=typing.Union[None, Nullable, IlluminanceMeasurement.Enums.LightSensorTypeEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -37514,19 +38079,27 @@ class OccupancySensing(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="occupancy", Tag=0x00000000, Type=uint),
-                ClusterObjectFieldDescriptor(Label="occupancySensorType", Tag=0x00000001, Type=OccupancySensing.Enums.OccupancySensorTypeEnum),
+                ClusterObjectFieldDescriptor(Label="occupancySensorType", Tag=0x00000001,
+                                             Type=OccupancySensing.Enums.OccupancySensorTypeEnum),
                 ClusterObjectFieldDescriptor(Label="occupancySensorTypeBitmap", Tag=0x00000002, Type=uint),
                 ClusterObjectFieldDescriptor(Label="holdTime", Tag=0x00000003, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="holdTimeLimits", Tag=0x00000004, Type=typing.Optional[OccupancySensing.Structs.HoldTimeLimitsStruct]),
+                ClusterObjectFieldDescriptor(Label="holdTimeLimits", Tag=0x00000004,
+                                             Type=typing.Optional[OccupancySensing.Structs.HoldTimeLimitsStruct]),
                 ClusterObjectFieldDescriptor(Label="PIROccupiedToUnoccupiedDelay", Tag=0x00000010, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="PIRUnoccupiedToOccupiedDelay", Tag=0x00000011, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="PIRUnoccupiedToOccupiedThreshold", Tag=0x00000012, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="ultrasonicOccupiedToUnoccupiedDelay", Tag=0x00000020, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="ultrasonicUnoccupiedToOccupiedDelay", Tag=0x00000021, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="ultrasonicUnoccupiedToOccupiedThreshold", Tag=0x00000022, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="physicalContactOccupiedToUnoccupiedDelay", Tag=0x00000030, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="physicalContactUnoccupiedToOccupiedDelay", Tag=0x00000031, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="physicalContactUnoccupiedToOccupiedThreshold", Tag=0x00000032, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="ultrasonicOccupiedToUnoccupiedDelay",
+                                             Tag=0x00000020, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="ultrasonicUnoccupiedToOccupiedDelay",
+                                             Tag=0x00000021, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="ultrasonicUnoccupiedToOccupiedThreshold",
+                                             Tag=0x00000022, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="physicalContactOccupiedToUnoccupiedDelay",
+                                             Tag=0x00000030, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="physicalContactUnoccupiedToOccupiedDelay",
+                                             Tag=0x00000031, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="physicalContactUnoccupiedToOccupiedThreshold",
+                                             Tag=0x00000032, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -37938,12 +38511,16 @@ class CarbonMonoxideConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[CarbonMonoxideConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -38304,12 +38881,16 @@ class CarbonDioxideConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[CarbonDioxideConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -38670,12 +39251,16 @@ class NitrogenDioxideConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[NitrogenDioxideConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -39036,12 +39621,16 @@ class OzoneConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[OzoneConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[OzoneConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[OzoneConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[OzoneConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[OzoneConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[OzoneConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -39402,12 +39991,16 @@ class Pm25ConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[Pm25ConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -39768,12 +40361,16 @@ class FormaldehydeConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[FormaldehydeConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -40134,12 +40731,16 @@ class Pm1ConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[Pm1ConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -40500,12 +41101,16 @@ class Pm10ConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[Pm10ConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -40866,12 +41471,16 @@ class TotalVolatileOrganicCompoundsConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(
+                    Label="levelValue", Tag=0x0000000A, Type=typing.Optional[TotalVolatileOrganicCompoundsConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -41232,12 +41841,16 @@ class RadonConcentrationMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="maxMeasuredValue", Tag=0x00000002, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValue", Tag=0x00000003, Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="peakMeasuredValueWindow", Tag=0x00000004, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005, Type=typing.Union[None, Nullable, float32]),
+                ClusterObjectFieldDescriptor(Label="averageMeasuredValue", Tag=0x00000005,
+                                             Type=typing.Union[None, Nullable, float32]),
                 ClusterObjectFieldDescriptor(Label="averageMeasuredValueWindow", Tag=0x00000006, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="uncertainty", Tag=0x00000007, Type=typing.Optional[float32]),
-                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008, Type=typing.Optional[RadonConcentrationMeasurement.Enums.MeasurementUnitEnum]),
-                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009, Type=typing.Optional[RadonConcentrationMeasurement.Enums.MeasurementMediumEnum]),
-                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A, Type=typing.Optional[RadonConcentrationMeasurement.Enums.LevelValueEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementUnit", Tag=0x00000008,
+                                             Type=typing.Optional[RadonConcentrationMeasurement.Enums.MeasurementUnitEnum]),
+                ClusterObjectFieldDescriptor(Label="measurementMedium", Tag=0x00000009,
+                                             Type=typing.Optional[RadonConcentrationMeasurement.Enums.MeasurementMediumEnum]),
+                ClusterObjectFieldDescriptor(Label="levelValue", Tag=0x0000000A,
+                                             Type=typing.Optional[RadonConcentrationMeasurement.Enums.LevelValueEnum]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -42055,7 +42668,8 @@ class ThreadNetworkDirectory(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="preferredExtendedPanID", Tag=0x00000000, Type=typing.Union[Nullable, bytes]),
-                ClusterObjectFieldDescriptor(Label="threadNetworks", Tag=0x00000001, Type=typing.List[ThreadNetworkDirectory.Structs.ThreadNetworkStruct]),
+                ClusterObjectFieldDescriptor(Label="threadNetworks", Tag=0x00000001,
+                                             Type=typing.List[ThreadNetworkDirectory.Structs.ThreadNetworkStruct]),
                 ClusterObjectFieldDescriptor(Label="threadNetworkTableSize", Tag=0x00000002, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -42481,9 +43095,12 @@ class Channel(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="channelList", Tag=0x00000000, Type=typing.Optional[typing.List[Channel.Structs.ChannelInfoStruct]]),
-                ClusterObjectFieldDescriptor(Label="lineup", Tag=0x00000001, Type=typing.Union[None, Nullable, Channel.Structs.LineupInfoStruct]),
-                ClusterObjectFieldDescriptor(Label="currentChannel", Tag=0x00000002, Type=typing.Union[None, Nullable, Channel.Structs.ChannelInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="channelList", Tag=0x00000000,
+                                             Type=typing.Optional[typing.List[Channel.Structs.ChannelInfoStruct]]),
+                ClusterObjectFieldDescriptor(Label="lineup", Tag=0x00000001,
+                                             Type=typing.Union[None, Nullable, Channel.Structs.LineupInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="currentChannel", Tag=0x00000002,
+                                             Type=typing.Union[None, Nullable, Channel.Structs.ChannelInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -42628,10 +43245,14 @@ class Channel(Cluster):
                         ClusterObjectFieldDescriptor(Label="releaseDate", Tag=12, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="parentalGuidanceText", Tag=13, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="recordingFlag", Tag=14, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="seriesInfo", Tag=15, Type=typing.Union[None, Nullable, Channel.Structs.SeriesInfoStruct]),
-                        ClusterObjectFieldDescriptor(Label="categoryList", Tag=16, Type=typing.Optional[typing.List[Channel.Structs.ProgramCategoryStruct]]),
-                        ClusterObjectFieldDescriptor(Label="castList", Tag=17, Type=typing.Optional[typing.List[Channel.Structs.ProgramCastStruct]]),
-                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=18, Type=typing.Optional[typing.List[Channel.Structs.ProgramCastStruct]]),
+                        ClusterObjectFieldDescriptor(Label="seriesInfo", Tag=15,
+                                                     Type=typing.Union[None, Nullable, Channel.Structs.SeriesInfoStruct]),
+                        ClusterObjectFieldDescriptor(Label="categoryList", Tag=16,
+                                                     Type=typing.Optional[typing.List[Channel.Structs.ProgramCategoryStruct]]),
+                        ClusterObjectFieldDescriptor(Label="castList", Tag=17,
+                                                     Type=typing.Optional[typing.List[Channel.Structs.ProgramCastStruct]]),
+                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=18,
+                                                     Type=typing.Optional[typing.List[Channel.Structs.ProgramCastStruct]]),
                     ])
 
             identifier: 'str' = ""
@@ -42675,8 +43296,10 @@ class Channel(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="previousToken", Tag=0, Type=typing.Union[None, Nullable, Channel.Structs.PageTokenStruct]),
-                        ClusterObjectFieldDescriptor(Label="nextToken", Tag=1, Type=typing.Union[None, Nullable, Channel.Structs.PageTokenStruct]),
+                        ClusterObjectFieldDescriptor(Label="previousToken", Tag=0,
+                                                     Type=typing.Union[None, Nullable, Channel.Structs.PageTokenStruct]),
+                        ClusterObjectFieldDescriptor(Label="nextToken", Tag=1,
+                                                     Type=typing.Union[None, Nullable, Channel.Structs.PageTokenStruct]),
                     ])
 
             previousToken: 'typing.Union[None, Nullable, Channel.Structs.PageTokenStruct]' = None
@@ -42794,10 +43417,13 @@ class Channel(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="startTime", Tag=0, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="endTime", Tag=1, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="channelList", Tag=2, Type=typing.Optional[typing.List[Channel.Structs.ChannelInfoStruct]]),
-                        ClusterObjectFieldDescriptor(Label="pageToken", Tag=3, Type=typing.Optional[Channel.Structs.PageTokenStruct]),
+                        ClusterObjectFieldDescriptor(Label="channelList", Tag=2,
+                                                     Type=typing.Optional[typing.List[Channel.Structs.ChannelInfoStruct]]),
+                        ClusterObjectFieldDescriptor(Label="pageToken", Tag=3,
+                                                     Type=typing.Optional[Channel.Structs.PageTokenStruct]),
                         ClusterObjectFieldDescriptor(Label="recordingFlag", Tag=4, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=5, Type=typing.Optional[typing.List[Channel.Structs.AdditionalInfoStruct]]),
+                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=5,
+                                                     Type=typing.Optional[typing.List[Channel.Structs.AdditionalInfoStruct]]),
                         ClusterObjectFieldDescriptor(Label="data", Tag=6, Type=typing.Optional[bytes]),
                     ])
 
@@ -42840,7 +43466,8 @@ class Channel(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="programIdentifier", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="shouldRecordSeries", Tag=1, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2, Type=typing.List[Channel.Structs.AdditionalInfoStruct]),
+                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2,
+                                                     Type=typing.List[Channel.Structs.AdditionalInfoStruct]),
                         ClusterObjectFieldDescriptor(Label="data", Tag=3, Type=bytes),
                     ])
 
@@ -42862,7 +43489,8 @@ class Channel(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="programIdentifier", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="shouldRecordSeries", Tag=1, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2, Type=typing.List[Channel.Structs.AdditionalInfoStruct]),
+                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2,
+                                                     Type=typing.List[Channel.Structs.AdditionalInfoStruct]),
                         ClusterObjectFieldDescriptor(Label="data", Tag=3, Type=bytes),
                     ])
 
@@ -43025,7 +43653,8 @@ class TargetNavigator(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="targetList", Tag=0x00000000, Type=typing.List[TargetNavigator.Structs.TargetInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="targetList", Tag=0x00000000,
+                                             Type=typing.List[TargetNavigator.Structs.TargetInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="currentTarget", Tag=0x00000001, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -43250,7 +43879,8 @@ class TargetNavigator(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="targetList", Tag=0, Type=typing.List[TargetNavigator.Structs.TargetInfoStruct]),
+                        ClusterObjectFieldDescriptor(Label="targetList", Tag=0,
+                                                     Type=typing.List[TargetNavigator.Structs.TargetInfoStruct]),
                         ClusterObjectFieldDescriptor(Label="currentTarget", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="data", Tag=2, Type=bytes),
                     ])
@@ -43271,14 +43901,19 @@ class MediaPlayback(Cluster):
                 ClusterObjectFieldDescriptor(Label="currentState", Tag=0x00000000, Type=MediaPlayback.Enums.PlaybackStateEnum),
                 ClusterObjectFieldDescriptor(Label="startTime", Tag=0x00000001, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="duration", Tag=0x00000002, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="sampledPosition", Tag=0x00000003, Type=typing.Union[None, Nullable, MediaPlayback.Structs.PlaybackPositionStruct]),
+                ClusterObjectFieldDescriptor(Label="sampledPosition", Tag=0x00000003,
+                                             Type=typing.Union[None, Nullable, MediaPlayback.Structs.PlaybackPositionStruct]),
                 ClusterObjectFieldDescriptor(Label="playbackSpeed", Tag=0x00000004, Type=typing.Optional[float32]),
                 ClusterObjectFieldDescriptor(Label="seekRangeEnd", Tag=0x00000005, Type=typing.Union[None, Nullable, uint]),
                 ClusterObjectFieldDescriptor(Label="seekRangeStart", Tag=0x00000006, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="activeAudioTrack", Tag=0x00000007, Type=typing.Union[None, Nullable, MediaPlayback.Structs.TrackStruct]),
-                ClusterObjectFieldDescriptor(Label="availableAudioTracks", Tag=0x00000008, Type=typing.Union[None, Nullable, typing.List[MediaPlayback.Structs.TrackStruct]]),
-                ClusterObjectFieldDescriptor(Label="activeTextTrack", Tag=0x00000009, Type=typing.Union[None, Nullable, MediaPlayback.Structs.TrackStruct]),
-                ClusterObjectFieldDescriptor(Label="availableTextTracks", Tag=0x0000000A, Type=typing.Union[None, Nullable, typing.List[MediaPlayback.Structs.TrackStruct]]),
+                ClusterObjectFieldDescriptor(Label="activeAudioTrack", Tag=0x00000007,
+                                             Type=typing.Union[None, Nullable, MediaPlayback.Structs.TrackStruct]),
+                ClusterObjectFieldDescriptor(Label="availableAudioTracks", Tag=0x00000008,
+                                             Type=typing.Union[None, Nullable, typing.List[MediaPlayback.Structs.TrackStruct]]),
+                ClusterObjectFieldDescriptor(Label="activeTextTrack", Tag=0x00000009,
+                                             Type=typing.Union[None, Nullable, MediaPlayback.Structs.TrackStruct]),
+                ClusterObjectFieldDescriptor(Label="availableTextTracks", Tag=0x0000000A,
+                                             Type=typing.Union[None, Nullable, typing.List[MediaPlayback.Structs.TrackStruct]]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -43384,7 +44019,8 @@ class MediaPlayback(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="id", Tag=0, Type=str),
-                        ClusterObjectFieldDescriptor(Label="trackAttributes", Tag=1, Type=typing.Union[Nullable, MediaPlayback.Structs.TrackAttributesStruct]),
+                        ClusterObjectFieldDescriptor(Label="trackAttributes", Tag=1,
+                                                     Type=typing.Union[Nullable, MediaPlayback.Structs.TrackAttributesStruct]),
                     ])
 
             id: 'str' = ""
@@ -43918,7 +44554,8 @@ class MediaPlayback(Cluster):
                         ClusterObjectFieldDescriptor(Label="currentState", Tag=0, Type=MediaPlayback.Enums.PlaybackStateEnum),
                         ClusterObjectFieldDescriptor(Label="startTime", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="duration", Tag=2, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="sampledPosition", Tag=3, Type=MediaPlayback.Structs.PlaybackPositionStruct),
+                        ClusterObjectFieldDescriptor(Label="sampledPosition", Tag=3,
+                                                     Type=MediaPlayback.Structs.PlaybackPositionStruct),
                         ClusterObjectFieldDescriptor(Label="playbackSpeed", Tag=4, Type=float32),
                         ClusterObjectFieldDescriptor(Label="seekRangeEnd", Tag=5, Type=uint),
                         ClusterObjectFieldDescriptor(Label="seekRangeStart", Tag=6, Type=uint),
@@ -43929,7 +44566,8 @@ class MediaPlayback(Cluster):
             currentState: 'MediaPlayback.Enums.PlaybackStateEnum' = 0
             startTime: 'uint' = 0
             duration: 'uint' = 0
-            sampledPosition: 'MediaPlayback.Structs.PlaybackPositionStruct' = field(default_factory=lambda: MediaPlayback.Structs.PlaybackPositionStruct())
+            sampledPosition: 'MediaPlayback.Structs.PlaybackPositionStruct' = field(
+                default_factory=lambda: MediaPlayback.Structs.PlaybackPositionStruct())
             playbackSpeed: 'float32' = 0.0
             seekRangeEnd: 'uint' = 0
             seekRangeStart: 'uint' = 0
@@ -43945,7 +44583,8 @@ class MediaInput(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="inputList", Tag=0x00000000, Type=typing.List[MediaInput.Structs.InputInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="inputList", Tag=0x00000000,
+                                             Type=typing.List[MediaInput.Structs.InputInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="currentInput", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -44729,7 +45368,8 @@ class ContentLauncher(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="languageCode", Tag=0, Type=str),
-                        ClusterObjectFieldDescriptor(Label="characteristics", Tag=1, Type=typing.Optional[typing.List[ContentLauncher.Enums.CharacteristicEnum]]),
+                        ClusterObjectFieldDescriptor(Label="characteristics", Tag=1,
+                                                     Type=typing.Optional[typing.List[ContentLauncher.Enums.CharacteristicEnum]]),
                         ClusterObjectFieldDescriptor(Label="audioOutputIndex", Tag=2, Type=uint),
                     ])
 
@@ -44745,11 +45385,13 @@ class ContentLauncher(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="playbackPosition", Tag=0, Type=uint),
                         ClusterObjectFieldDescriptor(Label="textTrack", Tag=1, Type=ContentLauncher.Structs.TrackPreferenceStruct),
-                        ClusterObjectFieldDescriptor(Label="audioTracks", Tag=2, Type=typing.Optional[typing.List[ContentLauncher.Structs.TrackPreferenceStruct]]),
+                        ClusterObjectFieldDescriptor(
+                            Label="audioTracks", Tag=2, Type=typing.Optional[typing.List[ContentLauncher.Structs.TrackPreferenceStruct]]),
                     ])
 
             playbackPosition: 'uint' = 0
-            textTrack: 'ContentLauncher.Structs.TrackPreferenceStruct' = field(default_factory=lambda: ContentLauncher.Structs.TrackPreferenceStruct())
+            textTrack: 'ContentLauncher.Structs.TrackPreferenceStruct' = field(
+                default_factory=lambda: ContentLauncher.Structs.TrackPreferenceStruct())
             audioTracks: 'typing.Optional[typing.List[ContentLauncher.Structs.TrackPreferenceStruct]]' = None
 
         @dataclass
@@ -44773,7 +45415,8 @@ class ContentLauncher(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="type", Tag=0, Type=ContentLauncher.Enums.ParameterEnum),
                         ClusterObjectFieldDescriptor(Label="value", Tag=1, Type=str),
-                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2, Type=typing.Optional[typing.List[ContentLauncher.Structs.AdditionalInfoStruct]]),
+                        ClusterObjectFieldDescriptor(Label="externalIDList", Tag=2,
+                                                     Type=typing.Optional[typing.List[ContentLauncher.Structs.AdditionalInfoStruct]]),
                     ])
 
             type: 'ContentLauncher.Enums.ParameterEnum' = 0
@@ -44786,7 +45429,8 @@ class ContentLauncher(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="parameterList", Tag=0, Type=typing.List[ContentLauncher.Structs.ParameterStruct]),
+                        ClusterObjectFieldDescriptor(Label="parameterList", Tag=0,
+                                                     Type=typing.List[ContentLauncher.Structs.ParameterStruct]),
                     ])
 
             parameterList: 'typing.List[ContentLauncher.Structs.ParameterStruct]' = field(default_factory=lambda: [])
@@ -44799,7 +45443,8 @@ class ContentLauncher(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="imageURL", Tag=0, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="color", Tag=1, Type=typing.Optional[str]),
-                        ClusterObjectFieldDescriptor(Label="size", Tag=2, Type=typing.Optional[ContentLauncher.Structs.DimensionStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="size", Tag=2, Type=typing.Optional[ContentLauncher.Structs.DimensionStruct]),
                     ])
 
             imageURL: 'typing.Optional[str]' = None
@@ -44813,11 +45458,16 @@ class ContentLauncher(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="providerName", Tag=0, Type=str),
-                        ClusterObjectFieldDescriptor(Label="background", Tag=1, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
-                        ClusterObjectFieldDescriptor(Label="logo", Tag=2, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
-                        ClusterObjectFieldDescriptor(Label="progressBar", Tag=3, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
-                        ClusterObjectFieldDescriptor(Label="splash", Tag=4, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
-                        ClusterObjectFieldDescriptor(Label="waterMark", Tag=5, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
+                        ClusterObjectFieldDescriptor(Label="background", Tag=1,
+                                                     Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="logo", Tag=2, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
+                        ClusterObjectFieldDescriptor(Label="progressBar", Tag=3,
+                                                     Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
+                        ClusterObjectFieldDescriptor(
+                            Label="splash", Tag=4, Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
+                        ClusterObjectFieldDescriptor(Label="waterMark", Tag=5,
+                                                     Type=typing.Optional[ContentLauncher.Structs.StyleInformationStruct]),
                     ])
 
             providerName: 'str' = ""
@@ -44842,11 +45492,13 @@ class ContentLauncher(Cluster):
                         ClusterObjectFieldDescriptor(Label="search", Tag=0, Type=ContentLauncher.Structs.ContentSearchStruct),
                         ClusterObjectFieldDescriptor(Label="autoPlay", Tag=1, Type=bool),
                         ClusterObjectFieldDescriptor(Label="data", Tag=2, Type=typing.Optional[str]),
-                        ClusterObjectFieldDescriptor(Label="playbackPreferences", Tag=3, Type=typing.Optional[ContentLauncher.Structs.PlaybackPreferencesStruct]),
+                        ClusterObjectFieldDescriptor(Label="playbackPreferences", Tag=3,
+                                                     Type=typing.Optional[ContentLauncher.Structs.PlaybackPreferencesStruct]),
                         ClusterObjectFieldDescriptor(Label="useCurrentContext", Tag=4, Type=typing.Optional[bool]),
                     ])
 
-            search: 'ContentLauncher.Structs.ContentSearchStruct' = field(default_factory=lambda: ContentLauncher.Structs.ContentSearchStruct())
+            search: 'ContentLauncher.Structs.ContentSearchStruct' = field(
+                default_factory=lambda: ContentLauncher.Structs.ContentSearchStruct())
             autoPlay: 'bool' = False
             data: 'typing.Optional[str]' = None
             playbackPreferences: 'typing.Optional[ContentLauncher.Structs.PlaybackPreferencesStruct]' = None
@@ -44865,7 +45517,8 @@ class ContentLauncher(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="contentURL", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="displayString", Tag=1, Type=typing.Optional[str]),
-                        ClusterObjectFieldDescriptor(Label="brandingInformation", Tag=2, Type=typing.Optional[ContentLauncher.Structs.BrandingInformationStruct]),
+                        ClusterObjectFieldDescriptor(Label="brandingInformation", Tag=2,
+                                                     Type=typing.Optional[ContentLauncher.Structs.BrandingInformationStruct]),
                     ])
 
             contentURL: 'str' = ""
@@ -45028,7 +45681,8 @@ class AudioOutput(Cluster):
     def descriptor(cls) -> ClusterObjectDescriptor:
         return ClusterObjectDescriptor(
             Fields=[
-                ClusterObjectFieldDescriptor(Label="outputList", Tag=0x00000000, Type=typing.List[AudioOutput.Structs.OutputInfoStruct]),
+                ClusterObjectFieldDescriptor(Label="outputList", Tag=0x00000000,
+                                             Type=typing.List[AudioOutput.Structs.OutputInfoStruct]),
                 ClusterObjectFieldDescriptor(Label="currentOutput", Tag=0x00000001, Type=uint),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -45255,7 +45909,8 @@ class ApplicationLauncher(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="catalogList", Tag=0x00000000, Type=typing.Optional[typing.List[uint]]),
-                ClusterObjectFieldDescriptor(Label="currentApp", Tag=0x00000001, Type=typing.Union[None, Nullable, ApplicationLauncher.Structs.ApplicationEPStruct]),
+                ClusterObjectFieldDescriptor(Label="currentApp", Tag=0x00000001,
+                                             Type=typing.Union[None, Nullable, ApplicationLauncher.Structs.ApplicationEPStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -45308,11 +45963,13 @@ class ApplicationLauncher(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="application", Tag=0, Type=ApplicationLauncher.Structs.ApplicationStruct),
+                        ClusterObjectFieldDescriptor(Label="application", Tag=0,
+                                                     Type=ApplicationLauncher.Structs.ApplicationStruct),
                         ClusterObjectFieldDescriptor(Label="endpoint", Tag=1, Type=typing.Optional[uint]),
                     ])
 
-            application: 'ApplicationLauncher.Structs.ApplicationStruct' = field(default_factory=lambda: ApplicationLauncher.Structs.ApplicationStruct())
+            application: 'ApplicationLauncher.Structs.ApplicationStruct' = field(
+                default_factory=lambda: ApplicationLauncher.Structs.ApplicationStruct())
             endpoint: 'typing.Optional[uint]' = None
 
     class Commands:
@@ -45327,7 +45984,8 @@ class ApplicationLauncher(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="application", Tag=0, Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
+                        ClusterObjectFieldDescriptor(Label="application", Tag=0,
+                                                     Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
                         ClusterObjectFieldDescriptor(Label="data", Tag=1, Type=typing.Optional[bytes]),
                     ])
 
@@ -45345,7 +46003,8 @@ class ApplicationLauncher(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="application", Tag=0, Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
+                        ClusterObjectFieldDescriptor(Label="application", Tag=0,
+                                                     Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
                     ])
 
             application: 'typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]' = None
@@ -45361,7 +46020,8 @@ class ApplicationLauncher(Cluster):
             def descriptor(cls) -> ClusterObjectDescriptor:
                 return ClusterObjectDescriptor(
                     Fields=[
-                        ClusterObjectFieldDescriptor(Label="application", Tag=0, Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
+                        ClusterObjectFieldDescriptor(Label="application", Tag=0,
+                                                     Type=typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]),
                     ])
 
             application: 'typing.Optional[ApplicationLauncher.Structs.ApplicationStruct]' = None
@@ -45658,7 +46318,8 @@ class ApplicationBasic(Cluster):
             def attribute_type(cls) -> ClusterObjectFieldDescriptor:
                 return ClusterObjectFieldDescriptor(Type=ApplicationBasic.Structs.ApplicationStruct)
 
-            value: 'ApplicationBasic.Structs.ApplicationStruct' = field(default_factory=lambda: ApplicationBasic.Structs.ApplicationStruct())
+            value: 'ApplicationBasic.Structs.ApplicationStruct' = field(
+                default_factory=lambda: ApplicationBasic.Structs.ApplicationStruct())
 
         @dataclass
         class Status(ClusterAttributeDescriptor):
@@ -46036,9 +46697,11 @@ class ContentControl(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="enabled", Tag=0x00000000, Type=bool),
-                ClusterObjectFieldDescriptor(Label="onDemandRatings", Tag=0x00000001, Type=typing.Optional[typing.List[ContentControl.Structs.RatingNameStruct]]),
+                ClusterObjectFieldDescriptor(Label="onDemandRatings", Tag=0x00000001,
+                                             Type=typing.Optional[typing.List[ContentControl.Structs.RatingNameStruct]]),
                 ClusterObjectFieldDescriptor(Label="onDemandRatingThreshold", Tag=0x00000002, Type=typing.Optional[str]),
-                ClusterObjectFieldDescriptor(Label="scheduledContentRatings", Tag=0x00000003, Type=typing.Optional[typing.List[ContentControl.Structs.RatingNameStruct]]),
+                ClusterObjectFieldDescriptor(Label="scheduledContentRatings", Tag=0x00000003,
+                                             Type=typing.Optional[typing.List[ContentControl.Structs.RatingNameStruct]]),
                 ClusterObjectFieldDescriptor(Label="scheduledContentRatingThreshold", Tag=0x00000004, Type=typing.Optional[str]),
                 ClusterObjectFieldDescriptor(Label="screenDailyTime", Tag=0x00000005, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="remainingScreenTime", Tag=0x00000006, Type=typing.Optional[uint]),
@@ -46676,8 +47339,10 @@ class EcosystemInformation(Cluster):
         return ClusterObjectDescriptor(
             Fields=[
                 ClusterObjectFieldDescriptor(Label="removedOn", Tag=0x00000000, Type=typing.Union[None, Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="deviceDirectory", Tag=0x00000001, Type=typing.List[EcosystemInformation.Structs.EcosystemDeviceStruct]),
-                ClusterObjectFieldDescriptor(Label="locationDirectory", Tag=0x00000002, Type=typing.List[EcosystemInformation.Structs.EcosystemLocationStruct]),
+                ClusterObjectFieldDescriptor(Label="deviceDirectory", Tag=0x00000001,
+                                             Type=typing.List[EcosystemInformation.Structs.EcosystemDeviceStruct]),
+                ClusterObjectFieldDescriptor(Label="locationDirectory", Tag=0x00000002,
+                                             Type=typing.List[EcosystemInformation.Structs.EcosystemLocationStruct]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="eventList", Tag=0x0000FFFA, Type=typing.List[uint]),
@@ -46808,7 +47473,8 @@ class EcosystemInformation(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="locationName", Tag=0, Type=str),
                         ClusterObjectFieldDescriptor(Label="floorNumber", Tag=1, Type=typing.Union[Nullable, int]),
-                        ClusterObjectFieldDescriptor(Label="areaType", Tag=2, Type=typing.Union[Nullable, EcosystemInformation.Enums.AreaTypeTag]),
+                        ClusterObjectFieldDescriptor(Label="areaType", Tag=2,
+                                                     Type=typing.Union[Nullable, EcosystemInformation.Enums.AreaTypeTag]),
                     ])
 
             locationName: 'str' = ""
@@ -46822,13 +47488,15 @@ class EcosystemInformation(Cluster):
                 return ClusterObjectDescriptor(
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="uniqueLocationID", Tag=0, Type=str),
-                        ClusterObjectFieldDescriptor(Label="locationDescriptor", Tag=1, Type=EcosystemInformation.Structs.LocationDescriptorStruct),
+                        ClusterObjectFieldDescriptor(Label="locationDescriptor", Tag=1,
+                                                     Type=EcosystemInformation.Structs.LocationDescriptorStruct),
                         ClusterObjectFieldDescriptor(Label="locationDescriptorLastEdit", Tag=2, Type=uint),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=254, Type=uint),
                     ])
 
             uniqueLocationID: 'str' = ""
-            locationDescriptor: 'EcosystemInformation.Structs.LocationDescriptorStruct' = field(default_factory=lambda: EcosystemInformation.Structs.LocationDescriptorStruct())
+            locationDescriptor: 'EcosystemInformation.Structs.LocationDescriptorStruct' = field(
+                default_factory=lambda: EcosystemInformation.Structs.LocationDescriptorStruct())
             locationDescriptorLastEdit: 'uint' = 0
             fabricIndex: 'uint' = 0
 
@@ -46855,7 +47523,8 @@ class EcosystemInformation(Cluster):
                         ClusterObjectFieldDescriptor(Label="deviceNameLastEdit", Tag=1, Type=typing.Optional[uint]),
                         ClusterObjectFieldDescriptor(Label="bridgedEndpoint", Tag=2, Type=uint),
                         ClusterObjectFieldDescriptor(Label="originalEndpoint", Tag=3, Type=uint),
-                        ClusterObjectFieldDescriptor(Label="deviceTypes", Tag=4, Type=typing.List[EcosystemInformation.Structs.DeviceTypeStruct]),
+                        ClusterObjectFieldDescriptor(Label="deviceTypes", Tag=4,
+                                                     Type=typing.List[EcosystemInformation.Structs.DeviceTypeStruct]),
                         ClusterObjectFieldDescriptor(Label="uniqueLocationIDs", Tag=5, Type=typing.List[str]),
                         ClusterObjectFieldDescriptor(Label="uniqueLocationIDsLastEdit", Tag=6, Type=uint),
                         ClusterObjectFieldDescriptor(Label="fabricIndex", Tag=254, Type=uint),
@@ -47320,7 +47989,8 @@ class ElectricalMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="reactivePower", Tag=0x0000050E, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="apparentPower", Tag=0x0000050F, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="powerFactor", Tag=0x00000510, Type=typing.Optional[int]),
-                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriod", Tag=0x00000511, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriod",
+                                             Tag=0x00000511, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="averageRmsUnderVoltageCounter", Tag=0x00000513, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsExtremeOverVoltagePeriod", Tag=0x00000514, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsExtremeUnderVoltagePeriod", Tag=0x00000515, Type=typing.Optional[uint]),
@@ -47361,11 +48031,15 @@ class ElectricalMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="reactivePowerPhaseB", Tag=0x0000090E, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="apparentPowerPhaseB", Tag=0x0000090F, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="powerFactorPhaseB", Tag=0x00000910, Type=typing.Optional[int]),
-                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriodPhaseB", Tag=0x00000911, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageRmsOverVoltageCounterPhaseB", Tag=0x00000912, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageRmsUnderVoltageCounterPhaseB", Tag=0x00000913, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriodPhaseB",
+                                             Tag=0x00000911, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsOverVoltageCounterPhaseB",
+                                             Tag=0x00000912, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsUnderVoltageCounterPhaseB",
+                                             Tag=0x00000913, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsExtremeOverVoltagePeriodPhaseB", Tag=0x00000914, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="rmsExtremeUnderVoltagePeriodPhaseB", Tag=0x00000915, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="rmsExtremeUnderVoltagePeriodPhaseB",
+                                             Tag=0x00000915, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsVoltageSagPeriodPhaseB", Tag=0x00000916, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsVoltageSwellPeriodPhaseB", Tag=0x00000917, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="lineCurrentPhaseC", Tag=0x00000A01, Type=typing.Optional[uint]),
@@ -47383,11 +48057,15 @@ class ElectricalMeasurement(Cluster):
                 ClusterObjectFieldDescriptor(Label="reactivePowerPhaseC", Tag=0x00000A0E, Type=typing.Optional[int]),
                 ClusterObjectFieldDescriptor(Label="apparentPowerPhaseC", Tag=0x00000A0F, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="powerFactorPhaseC", Tag=0x00000A10, Type=typing.Optional[int]),
-                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriodPhaseC", Tag=0x00000A11, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageRmsOverVoltageCounterPhaseC", Tag=0x00000A12, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="averageRmsUnderVoltageCounterPhaseC", Tag=0x00000A13, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsVoltageMeasurementPeriodPhaseC",
+                                             Tag=0x00000A11, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsOverVoltageCounterPhaseC",
+                                             Tag=0x00000A12, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="averageRmsUnderVoltageCounterPhaseC",
+                                             Tag=0x00000A13, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsExtremeOverVoltagePeriodPhaseC", Tag=0x00000A14, Type=typing.Optional[uint]),
-                ClusterObjectFieldDescriptor(Label="rmsExtremeUnderVoltagePeriodPhaseC", Tag=0x00000A15, Type=typing.Optional[uint]),
+                ClusterObjectFieldDescriptor(Label="rmsExtremeUnderVoltagePeriodPhaseC",
+                                             Tag=0x00000A15, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsVoltageSagPeriodPhaseC", Tag=0x00000A16, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="rmsVoltageSwellPeriodPhaseC", Tag=0x00000A17, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
@@ -49797,14 +50475,16 @@ class UnitTesting(Cluster):
                 ClusterObjectFieldDescriptor(Label="octetString", Tag=0x00000019, Type=bytes),
                 ClusterObjectFieldDescriptor(Label="listInt8u", Tag=0x0000001A, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="listOctetString", Tag=0x0000001B, Type=typing.List[bytes]),
-                ClusterObjectFieldDescriptor(Label="listStructOctetString", Tag=0x0000001C, Type=typing.List[UnitTesting.Structs.TestListStructOctet]),
+                ClusterObjectFieldDescriptor(Label="listStructOctetString", Tag=0x0000001C,
+                                             Type=typing.List[UnitTesting.Structs.TestListStructOctet]),
                 ClusterObjectFieldDescriptor(Label="longOctetString", Tag=0x0000001D, Type=bytes),
                 ClusterObjectFieldDescriptor(Label="charString", Tag=0x0000001E, Type=str),
                 ClusterObjectFieldDescriptor(Label="longCharString", Tag=0x0000001F, Type=str),
                 ClusterObjectFieldDescriptor(Label="epochUs", Tag=0x00000020, Type=uint),
                 ClusterObjectFieldDescriptor(Label="epochS", Tag=0x00000021, Type=uint),
                 ClusterObjectFieldDescriptor(Label="vendorId", Tag=0x00000022, Type=uint),
-                ClusterObjectFieldDescriptor(Label="listNullablesAndOptionalsStruct", Tag=0x00000023, Type=typing.List[UnitTesting.Structs.NullablesAndOptionalsStruct]),
+                ClusterObjectFieldDescriptor(Label="listNullablesAndOptionalsStruct", Tag=0x00000023,
+                                             Type=typing.List[UnitTesting.Structs.NullablesAndOptionalsStruct]),
                 ClusterObjectFieldDescriptor(Label="enumAttr", Tag=0x00000024, Type=UnitTesting.Enums.SimpleEnum),
                 ClusterObjectFieldDescriptor(Label="structAttr", Tag=0x00000025, Type=UnitTesting.Structs.SimpleStruct),
                 ClusterObjectFieldDescriptor(Label="rangeRestrictedInt8u", Tag=0x00000026, Type=uint),
@@ -49812,7 +50492,8 @@ class UnitTesting(Cluster):
                 ClusterObjectFieldDescriptor(Label="rangeRestrictedInt16u", Tag=0x00000028, Type=uint),
                 ClusterObjectFieldDescriptor(Label="rangeRestrictedInt16s", Tag=0x00000029, Type=int),
                 ClusterObjectFieldDescriptor(Label="listLongOctetString", Tag=0x0000002A, Type=typing.List[bytes]),
-                ClusterObjectFieldDescriptor(Label="listFabricScoped", Tag=0x0000002B, Type=typing.List[UnitTesting.Structs.TestFabricScoped]),
+                ClusterObjectFieldDescriptor(Label="listFabricScoped", Tag=0x0000002B,
+                                             Type=typing.List[UnitTesting.Structs.TestFabricScoped]),
                 ClusterObjectFieldDescriptor(Label="timedWriteBoolean", Tag=0x00000030, Type=bool),
                 ClusterObjectFieldDescriptor(Label="generalErrorBoolean", Tag=0x00000031, Type=bool),
                 ClusterObjectFieldDescriptor(Label="clusterErrorBoolean", Tag=0x00000032, Type=bool),
@@ -49844,12 +50525,18 @@ class UnitTesting(Cluster):
                 ClusterObjectFieldDescriptor(Label="nullableFloatDouble", Tag=0x00004018, Type=typing.Union[Nullable, float]),
                 ClusterObjectFieldDescriptor(Label="nullableOctetString", Tag=0x00004019, Type=typing.Union[Nullable, bytes]),
                 ClusterObjectFieldDescriptor(Label="nullableCharString", Tag=0x0000401E, Type=typing.Union[Nullable, str]),
-                ClusterObjectFieldDescriptor(Label="nullableEnumAttr", Tag=0x00004024, Type=typing.Union[Nullable, UnitTesting.Enums.SimpleEnum]),
-                ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=0x00004025, Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
-                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt8u", Tag=0x00004026, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt8s", Tag=0x00004027, Type=typing.Union[Nullable, int]),
-                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt16u", Tag=0x00004028, Type=typing.Union[Nullable, uint]),
-                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt16s", Tag=0x00004029, Type=typing.Union[Nullable, int]),
+                ClusterObjectFieldDescriptor(Label="nullableEnumAttr", Tag=0x00004024,
+                                             Type=typing.Union[Nullable, UnitTesting.Enums.SimpleEnum]),
+                ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=0x00004025,
+                                             Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
+                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt8u",
+                                             Tag=0x00004026, Type=typing.Union[Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt8s",
+                                             Tag=0x00004027, Type=typing.Union[Nullable, int]),
+                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt16u",
+                                             Tag=0x00004028, Type=typing.Union[Nullable, uint]),
+                ClusterObjectFieldDescriptor(Label="nullableRangeRestrictedInt16s",
+                                             Tag=0x00004029, Type=typing.Union[Nullable, int]),
                 ClusterObjectFieldDescriptor(Label="writeOnlyInt8u", Tag=0x0000402A, Type=typing.Optional[uint]),
                 ClusterObjectFieldDescriptor(Label="generatedCommandList", Tag=0x0000FFF8, Type=typing.List[uint]),
                 ClusterObjectFieldDescriptor(Label="acceptedCommandList", Tag=0x0000FFF9, Type=typing.List[uint]),
@@ -50026,8 +50713,10 @@ class UnitTesting(Cluster):
                     Fields=[
                         ClusterObjectFieldDescriptor(Label="fabricSensitiveInt8u", Tag=1, Type=uint),
                         ClusterObjectFieldDescriptor(Label="optionalFabricSensitiveInt8u", Tag=2, Type=typing.Optional[uint]),
-                        ClusterObjectFieldDescriptor(Label="nullableFabricSensitiveInt8u", Tag=3, Type=typing.Union[Nullable, uint]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalFabricSensitiveInt8u", Tag=4, Type=typing.Union[None, Nullable, uint]),
+                        ClusterObjectFieldDescriptor(Label="nullableFabricSensitiveInt8u",
+                                                     Tag=3, Type=typing.Union[Nullable, uint]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalFabricSensitiveInt8u",
+                                                     Tag=4, Type=typing.Union[None, Nullable, uint]),
                         ClusterObjectFieldDescriptor(Label="fabricSensitiveCharString", Tag=5, Type=str),
                         ClusterObjectFieldDescriptor(Label="fabricSensitiveStruct", Tag=6, Type=UnitTesting.Structs.SimpleStruct),
                         ClusterObjectFieldDescriptor(Label="fabricSensitiveInt8uList", Tag=7, Type=typing.List[uint]),
@@ -50039,7 +50728,8 @@ class UnitTesting(Cluster):
             nullableFabricSensitiveInt8u: 'typing.Union[Nullable, uint]' = NullValue
             nullableOptionalFabricSensitiveInt8u: 'typing.Union[None, Nullable, uint]' = None
             fabricSensitiveCharString: 'str' = ""
-            fabricSensitiveStruct: 'UnitTesting.Structs.SimpleStruct' = field(default_factory=lambda: UnitTesting.Structs.SimpleStruct())
+            fabricSensitiveStruct: 'UnitTesting.Structs.SimpleStruct' = field(
+                default_factory=lambda: UnitTesting.Structs.SimpleStruct())
             fabricSensitiveInt8uList: 'typing.List[uint]' = field(default_factory=lambda: [])
             fabricIndex: 'uint' = 0
 
@@ -50055,12 +50745,18 @@ class UnitTesting(Cluster):
                         ClusterObjectFieldDescriptor(Label="nullableString", Tag=3, Type=typing.Union[Nullable, str]),
                         ClusterObjectFieldDescriptor(Label="optionalString", Tag=4, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalString", Tag=5, Type=typing.Union[None, Nullable, str]),
-                        ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=6, Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="optionalStruct", Tag=7, Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalStruct", Tag=8, Type=typing.Union[None, Nullable, UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="nullableList", Tag=9, Type=typing.Union[Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
-                        ClusterObjectFieldDescriptor(Label="optionalList", Tag=10, Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalList", Tag=11, Type=typing.Union[None, Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=6,
+                                                     Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="optionalStruct", Tag=7,
+                                                     Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalStruct", Tag=8,
+                                                     Type=typing.Union[None, Nullable, UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableList", Tag=9,
+                                                     Type=typing.Union[Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="optionalList", Tag=10,
+                                                     Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalList", Tag=11,
+                                                     Type=typing.Union[None, Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
                     ])
 
             nullableInt: 'typing.Union[Nullable, uint]' = NullValue
@@ -50423,19 +51119,25 @@ class UnitTesting(Cluster):
                         ClusterObjectFieldDescriptor(Label="nullableOptionalStringWasNull", Tag=12, Type=typing.Optional[bool]),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalStringValue", Tag=13, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="nullableStructWasNull", Tag=14, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="nullableStructValue", Tag=15, Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableStructValue", Tag=15,
+                                                     Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
                         ClusterObjectFieldDescriptor(Label="optionalStructWasPresent", Tag=16, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="optionalStructValue", Tag=17, Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="optionalStructValue", Tag=17,
+                                                     Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalStructWasPresent", Tag=18, Type=bool),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalStructWasNull", Tag=19, Type=typing.Optional[bool]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalStructValue", Tag=20, Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalStructValue", Tag=20,
+                                                     Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
                         ClusterObjectFieldDescriptor(Label="nullableListWasNull", Tag=21, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="nullableListValue", Tag=22, Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableListValue", Tag=22,
+                                                     Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
                         ClusterObjectFieldDescriptor(Label="optionalListWasPresent", Tag=23, Type=bool),
-                        ClusterObjectFieldDescriptor(Label="optionalListValue", Tag=24, Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="optionalListValue", Tag=24,
+                                                     Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalListWasPresent", Tag=25, Type=bool),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalListWasNull", Tag=26, Type=typing.Optional[bool]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalListValue", Tag=27, Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalListValue", Tag=27,
+                                                     Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
                     ])
 
             nullableIntWasNull: 'bool' = False
@@ -50710,12 +51412,18 @@ class UnitTesting(Cluster):
                         ClusterObjectFieldDescriptor(Label="nullableString", Tag=3, Type=typing.Union[Nullable, str]),
                         ClusterObjectFieldDescriptor(Label="optionalString", Tag=4, Type=typing.Optional[str]),
                         ClusterObjectFieldDescriptor(Label="nullableOptionalString", Tag=5, Type=typing.Union[None, Nullable, str]),
-                        ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=6, Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="optionalStruct", Tag=7, Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalStruct", Tag=8, Type=typing.Union[None, Nullable, UnitTesting.Structs.SimpleStruct]),
-                        ClusterObjectFieldDescriptor(Label="nullableList", Tag=9, Type=typing.Union[Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
-                        ClusterObjectFieldDescriptor(Label="optionalList", Tag=10, Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
-                        ClusterObjectFieldDescriptor(Label="nullableOptionalList", Tag=11, Type=typing.Union[None, Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableStruct", Tag=6,
+                                                     Type=typing.Union[Nullable, UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="optionalStruct", Tag=7,
+                                                     Type=typing.Optional[UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalStruct", Tag=8,
+                                                     Type=typing.Union[None, Nullable, UnitTesting.Structs.SimpleStruct]),
+                        ClusterObjectFieldDescriptor(Label="nullableList", Tag=9,
+                                                     Type=typing.Union[Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="optionalList", Tag=10,
+                                                     Type=typing.Optional[typing.List[UnitTesting.Enums.SimpleEnum]]),
+                        ClusterObjectFieldDescriptor(Label="nullableOptionalList", Tag=11,
+                                                     Type=typing.Union[None, Nullable, typing.List[UnitTesting.Enums.SimpleEnum]]),
                     ])
 
             nullableInt: 'typing.Union[Nullable, uint]' = NullValue
@@ -52790,4 +53498,3 @@ class SampleMei(Cluster):
 
             count: 'uint' = 0
             fabricIndex: 'uint' = 0
-
