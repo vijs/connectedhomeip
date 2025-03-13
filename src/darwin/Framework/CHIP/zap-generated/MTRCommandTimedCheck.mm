@@ -1214,6 +1214,24 @@ static BOOL CommandNeedsTimedInvokeInCommissionerControlCluster(AttributeId aAtt
     }
     }
 }
+static BOOL CommandNeedsTimedInvokeInJointFabricDatastoreCluster(AttributeId aAttributeId)
+{
+    using namespace Clusters::JointFabricDatastore;
+    switch (aAttributeId) {
+    default: {
+        return NO;
+    }
+    }
+}
+static BOOL CommandNeedsTimedInvokeInJointFabricPkiCluster(AttributeId aAttributeId)
+{
+    using namespace Clusters::JointFabricPki;
+    switch (aAttributeId) {
+    default: {
+        return NO;
+    }
+    }
+}
 static BOOL CommandNeedsTimedInvokeInTLSCertificateManagementCluster(AttributeId aAttributeId)
 {
     using namespace Clusters::TlsCertificateManagement;
@@ -1622,6 +1640,12 @@ BOOL MTRCommandNeedsTimedInvoke(NSNumber * _Nonnull aClusterID, NSNumber * _Nonn
     }
     case Clusters::CommissionerControl::Id: {
         return CommandNeedsTimedInvokeInCommissionerControlCluster(commandID);
+    }
+    case Clusters::JointFabricDatastore::Id: {
+        return CommandNeedsTimedInvokeInJointFabricDatastoreCluster(commandID);
+    }
+    case Clusters::JointFabricPki::Id: {
+        return CommandNeedsTimedInvokeInJointFabricPkiCluster(commandID);
     }
     case Clusters::TlsCertificateManagement::Id: {
         return CommandNeedsTimedInvokeInTLSCertificateManagementCluster(commandID);

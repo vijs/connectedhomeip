@@ -399,6 +399,12 @@ NSString * MTRClusterNameForID(MTRClusterIDType clusterID)
     case MTRClusterIDTypeCommissionerControlID:
         result = @"CommissionerControl";
         break;
+    case MTRClusterIDTypeJointFabricDatastoreID:
+        result = @"JointFabricDatastore";
+        break;
+    case MTRClusterIDTypeJointFabricPkiID:
+        result = @"JointFabricPki";
+        break;
     case MTRClusterIDTypeTLSCertificateManagementID:
         result = @"TLSCertificateManagement";
         break;
@@ -8265,6 +8271,104 @@ NSString * MTRAttributeNameForID(MTRClusterIDType clusterID, MTRAttributeIDType 
         }
         break;
 
+    case MTRClusterIDTypeJointFabricDatastoreID:
+
+        switch (attributeID) {
+
+            // Cluster JointFabricDatastore attributes
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorRootCaID:
+            result = @"AnchorRootCa";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorNodeIdID:
+            result = @"AnchorNodeId";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorVendorIdID:
+            result = @"AnchorVendorId";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeFriendlyNameID:
+            result = @"FriendlyName";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGroupKeyListID:
+            result = @"GroupKeyList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGroupListID:
+            result = @"GroupList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeNodeListID:
+            result = @"NodeList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAdminListID:
+            result = @"AdminList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeStatusEntryID:
+            result = @"StatusEntry";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGeneratedCommandListID:
+            result = @"GeneratedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAcceptedCommandListID:
+            result = @"AcceptedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAttributeListID:
+            result = @"AttributeList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeFeatureMapID:
+            result = @"FeatureMap";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricDatastoreAttributeClusterRevisionID:
+            result = @"ClusterRevision";
+            break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown attributeID %u>", attributeID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricPkiID:
+
+        switch (attributeID) {
+
+            // Cluster JointFabricPki attributes
+        case MTRAttributeIDTypeClusterJointFabricPkiAttributeGeneratedCommandListID:
+            result = @"GeneratedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricPkiAttributeAcceptedCommandListID:
+            result = @"AcceptedCommandList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricPkiAttributeAttributeListID:
+            result = @"AttributeList";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricPkiAttributeFeatureMapID:
+            result = @"FeatureMap";
+            break;
+
+        case MTRAttributeIDTypeClusterJointFabricPkiAttributeClusterRevisionID:
+            result = @"ClusterRevision";
+            break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown attributeID %u>", attributeID];
+            break;
+        }
+        break;
+
     case MTRClusterIDTypeTLSCertificateManagementID:
 
         switch (attributeID) {
@@ -11222,6 +11326,122 @@ NSString * MTRRequestCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDTy
         }
         break;
 
+    case MTRClusterIDTypeJointFabricDatastoreID:
+
+        switch (commandID) {
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddKeySetID:
+            result = @"AddKeySet";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateKeySetID:
+            result = @"UpdateKeySet";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveKeySetID:
+            result = @"RemoveKeySet";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddGroupID:
+            result = @"AddGroup";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateGroupID:
+            result = @"UpdateGroup";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveGroupID:
+            result = @"RemoveGroup";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddAdminID:
+            result = @"AddAdmin";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateAdminID:
+            result = @"UpdateAdmin";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveAdminID:
+            result = @"RemoveAdmin";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddPendingNodeID:
+            result = @"AddPendingNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRefreshNodeID:
+            result = @"RefreshNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateNodeID:
+            result = @"UpdateNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveNodeID:
+            result = @"RemoveNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateEndpointForNodeID:
+            result = @"UpdateEndpointForNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddGroupIDToEndpointForNodeID:
+            result = @"AddGroupIDToEndpointForNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveGroupIDFromEndpointForNodeID:
+            result = @"RemoveGroupIDFromEndpointForNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddBindingToEndpointForNodeID:
+            result = @"AddBindingToEndpointForNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveBindingFromEndpointForNodeID:
+            result = @"RemoveBindingFromEndpointForNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandAddACLToNodeID:
+            result = @"AddACLToNode";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveACLFromNodeID:
+            result = @"RemoveACLFromNode";
+            break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricPkiID:
+
+        switch (commandID) {
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandICACSRRequestID:
+            result = @"ICACSRRequest";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandAddICACID:
+            result = @"AddICAC";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorRequestID:
+            result = @"TransferAnchorRequest";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorCompleteID:
+            result = @"TransferAnchorComplete";
+            break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
     case MTRClusterIDTypeTLSCertificateManagementID:
 
         switch (commandID) {
@@ -12978,6 +13198,38 @@ NSString * MTRResponseCommandNameForID(MTRClusterIDType clusterID, MTRCommandIDT
 
         case MTRCommandIDTypeClusterCommissionerControlCommandReverseOpenCommissioningWindowID:
             result = @"ReverseOpenCommissioningWindow";
+            break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricDatastoreID:
+
+        switch (commandID) {
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown commandID %u>", commandID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricPkiID:
+
+        switch (commandID) {
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandICACSRResponseID:
+            result = @"ICACSRResponse";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandAddICACResponseID:
+            result = @"AddICACResponse";
+            break;
+
+        case MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorResponseID:
+            result = @"TransferAnchorResponse";
             break;
 
         default:
@@ -14880,6 +15132,26 @@ NSString * MTREventNameForID(MTRClusterIDType clusterID, MTREventIDType eventID)
         case MTREventIDTypeClusterCommissionerControlEventCommissioningRequestResultID:
             result = @"CommissioningRequestResult";
             break;
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown eventID %u>", eventID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricDatastoreID:
+
+        switch (eventID) {
+
+        default:
+            result = [NSString stringWithFormat:@"<Unknown eventID %u>", eventID];
+            break;
+        }
+        break;
+
+    case MTRClusterIDTypeJointFabricPkiID:
+
+        switch (eventID) {
 
         default:
             result = [NSString stringWithFormat:@"<Unknown eventID %u>", eventID];

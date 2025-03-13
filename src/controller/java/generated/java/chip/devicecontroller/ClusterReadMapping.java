@@ -19618,6 +19618,245 @@ public class ClusterReadMapping {
      
        return result;
     }
+    private static Map<String, InteractionInfo> readJointFabricDatastoreInteractionInfo() {
+       Map<String, InteractionInfo> result = new LinkedHashMap<>();Map<String, CommandParameterInfo> readJointFabricDatastoreAnchorRootCaCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAnchorRootCaAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAnchorRootCaAttribute(
+              (ChipClusters.OctetStringAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedOctetStringAttributeCallback(),
+          readJointFabricDatastoreAnchorRootCaCommandParams
+        );
+        result.put("readAnchorRootCaAttribute", readJointFabricDatastoreAnchorRootCaAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreAnchorNodeIdCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAnchorNodeIdAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAnchorNodeIdAttribute(
+              (ChipClusters.LongAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedLongAttributeCallback(),
+          readJointFabricDatastoreAnchorNodeIdCommandParams
+        );
+        result.put("readAnchorNodeIdAttribute", readJointFabricDatastoreAnchorNodeIdAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreAnchorVendorIdCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAnchorVendorIdAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAnchorVendorIdAttribute(
+              (ChipClusters.IntegerAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedIntegerAttributeCallback(),
+          readJointFabricDatastoreAnchorVendorIdCommandParams
+        );
+        result.put("readAnchorVendorIdAttribute", readJointFabricDatastoreAnchorVendorIdAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreFriendlyNameCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreFriendlyNameAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readFriendlyNameAttribute(
+              (ChipClusters.CharStringAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedCharStringAttributeCallback(),
+          readJointFabricDatastoreFriendlyNameCommandParams
+        );
+        result.put("readFriendlyNameAttribute", readJointFabricDatastoreFriendlyNameAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreGroupKeyListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreGroupKeyListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readGroupKeyListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.GroupKeyListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterGroupKeyListAttributeCallback(),
+          readJointFabricDatastoreGroupKeyListCommandParams
+        );
+        result.put("readGroupKeyListAttribute", readJointFabricDatastoreGroupKeyListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreGroupListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreGroupListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readGroupListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.GroupListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterGroupListAttributeCallback(),
+          readJointFabricDatastoreGroupListCommandParams
+        );
+        result.put("readGroupListAttribute", readJointFabricDatastoreGroupListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreNodeListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreNodeListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readNodeListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.NodeListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterNodeListAttributeCallback(),
+          readJointFabricDatastoreNodeListCommandParams
+        );
+        result.put("readNodeListAttribute", readJointFabricDatastoreNodeListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreAdminListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAdminListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAdminListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.AdminListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterAdminListAttributeCallback(),
+          readJointFabricDatastoreAdminListCommandParams
+        );
+        result.put("readAdminListAttribute", readJointFabricDatastoreAdminListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreStatusEntryCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreStatusEntryAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readStatusEntryAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.StatusEntryAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterStatusEntryAttributeCallback(),
+          readJointFabricDatastoreStatusEntryCommandParams
+        );
+        result.put("readStatusEntryAttribute", readJointFabricDatastoreStatusEntryAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreGeneratedCommandListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreGeneratedCommandListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readGeneratedCommandListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.GeneratedCommandListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterGeneratedCommandListAttributeCallback(),
+          readJointFabricDatastoreGeneratedCommandListCommandParams
+        );
+        result.put("readGeneratedCommandListAttribute", readJointFabricDatastoreGeneratedCommandListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreAcceptedCommandListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAcceptedCommandListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAcceptedCommandListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.AcceptedCommandListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterAcceptedCommandListAttributeCallback(),
+          readJointFabricDatastoreAcceptedCommandListCommandParams
+        );
+        result.put("readAcceptedCommandListAttribute", readJointFabricDatastoreAcceptedCommandListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreEventListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreEventListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readEventListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.EventListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterEventListAttributeCallback(),
+          readJointFabricDatastoreEventListCommandParams
+        );
+        result.put("readEventListAttribute", readJointFabricDatastoreEventListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreAttributeListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreAttributeListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readAttributeListAttribute(
+              (ChipClusters.JointFabricDatastoreCluster.AttributeListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricDatastoreClusterAttributeListAttributeCallback(),
+          readJointFabricDatastoreAttributeListCommandParams
+        );
+        result.put("readAttributeListAttribute", readJointFabricDatastoreAttributeListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreFeatureMapCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreFeatureMapAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readFeatureMapAttribute(
+              (ChipClusters.LongAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedLongAttributeCallback(),
+          readJointFabricDatastoreFeatureMapCommandParams
+        );
+        result.put("readFeatureMapAttribute", readJointFabricDatastoreFeatureMapAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricDatastoreClusterRevisionCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricDatastoreClusterRevisionAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricDatastoreCluster) cluster).readClusterRevisionAttribute(
+              (ChipClusters.IntegerAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedIntegerAttributeCallback(),
+          readJointFabricDatastoreClusterRevisionCommandParams
+        );
+        result.put("readClusterRevisionAttribute", readJointFabricDatastoreClusterRevisionAttributeInteractionInfo);
+     
+       return result;
+    }
+    private static Map<String, InteractionInfo> readJointFabricPkiInteractionInfo() {
+       Map<String, InteractionInfo> result = new LinkedHashMap<>();Map<String, CommandParameterInfo> readJointFabricPkiGeneratedCommandListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiGeneratedCommandListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readGeneratedCommandListAttribute(
+              (ChipClusters.JointFabricPkiCluster.GeneratedCommandListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricPkiClusterGeneratedCommandListAttributeCallback(),
+          readJointFabricPkiGeneratedCommandListCommandParams
+        );
+        result.put("readGeneratedCommandListAttribute", readJointFabricPkiGeneratedCommandListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricPkiAcceptedCommandListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiAcceptedCommandListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readAcceptedCommandListAttribute(
+              (ChipClusters.JointFabricPkiCluster.AcceptedCommandListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricPkiClusterAcceptedCommandListAttributeCallback(),
+          readJointFabricPkiAcceptedCommandListCommandParams
+        );
+        result.put("readAcceptedCommandListAttribute", readJointFabricPkiAcceptedCommandListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricPkiEventListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiEventListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readEventListAttribute(
+              (ChipClusters.JointFabricPkiCluster.EventListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricPkiClusterEventListAttributeCallback(),
+          readJointFabricPkiEventListCommandParams
+        );
+        result.put("readEventListAttribute", readJointFabricPkiEventListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricPkiAttributeListCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiAttributeListAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readAttributeListAttribute(
+              (ChipClusters.JointFabricPkiCluster.AttributeListAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedJointFabricPkiClusterAttributeListAttributeCallback(),
+          readJointFabricPkiAttributeListCommandParams
+        );
+        result.put("readAttributeListAttribute", readJointFabricPkiAttributeListAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricPkiFeatureMapCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiFeatureMapAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readFeatureMapAttribute(
+              (ChipClusters.LongAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedLongAttributeCallback(),
+          readJointFabricPkiFeatureMapCommandParams
+        );
+        result.put("readFeatureMapAttribute", readJointFabricPkiFeatureMapAttributeInteractionInfo);
+     Map<String, CommandParameterInfo> readJointFabricPkiClusterRevisionCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
+        InteractionInfo readJointFabricPkiClusterRevisionAttributeInteractionInfo = new InteractionInfo(
+          (cluster, callback, commandArguments) -> {
+            ((ChipClusters.JointFabricPkiCluster) cluster).readClusterRevisionAttribute(
+              (ChipClusters.IntegerAttributeCallback) callback
+            );
+          },
+          () -> new ClusterInfoMapping.DelegatedIntegerAttributeCallback(),
+          readJointFabricPkiClusterRevisionCommandParams
+        );
+        result.put("readClusterRevisionAttribute", readJointFabricPkiClusterRevisionAttributeInteractionInfo);
+     
+       return result;
+    }
     private static Map<String, InteractionInfo> readTlsCertificateManagementInteractionInfo() {
        Map<String, InteractionInfo> result = new LinkedHashMap<>();Map<String, CommandParameterInfo> readTlsCertificateManagementMaxRootCertificatesCommandParams = new LinkedHashMap<String, CommandParameterInfo>();
         InteractionInfo readTlsCertificateManagementMaxRootCertificatesAttributeInteractionInfo = new InteractionInfo(
@@ -21019,6 +21258,8 @@ public class ClusterReadMapping {
             put("chime", readChimeInteractionInfo());
             put("ecosystemInformation", readEcosystemInformationInteractionInfo());
             put("commissionerControl", readCommissionerControlInteractionInfo());
+            put("jointFabricDatastore", readJointFabricDatastoreInteractionInfo());
+            put("jointFabricPki", readJointFabricPkiInteractionInfo());
             put("tlsCertificateManagement", readTlsCertificateManagementInteractionInfo());
             put("unitTesting", readUnitTestingInteractionInfo());
             put("faultInjection", readFaultInjectionInteractionInfo());

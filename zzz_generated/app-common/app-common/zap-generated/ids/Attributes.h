@@ -7381,6 +7381,94 @@ static constexpr AttributeId Id = Globals::Attributes::ClusterRevision::Id;
 } // namespace Attributes
 } // namespace CommissionerControl
 
+namespace JointFabricDatastore {
+namespace Attributes {
+
+namespace AnchorRootCa {
+static constexpr AttributeId Id = 0x00000000;
+} // namespace AnchorRootCa
+
+namespace AnchorNodeId {
+static constexpr AttributeId Id = 0x00000001;
+} // namespace AnchorNodeId
+
+namespace AnchorVendorId {
+static constexpr AttributeId Id = 0x00000002;
+} // namespace AnchorVendorId
+
+namespace FriendlyName {
+static constexpr AttributeId Id = 0x00000003;
+} // namespace FriendlyName
+
+namespace GroupKeyList {
+static constexpr AttributeId Id = 0x00000004;
+} // namespace GroupKeyList
+
+namespace GroupList {
+static constexpr AttributeId Id = 0x00000005;
+} // namespace GroupList
+
+namespace NodeList {
+static constexpr AttributeId Id = 0x00000006;
+} // namespace NodeList
+
+namespace AdminList {
+static constexpr AttributeId Id = 0x00000007;
+} // namespace AdminList
+
+namespace StatusEntry {
+static constexpr AttributeId Id = 0x00000008;
+} // namespace StatusEntry
+
+namespace GeneratedCommandList {
+static constexpr AttributeId Id = Globals::Attributes::GeneratedCommandList::Id;
+} // namespace GeneratedCommandList
+
+namespace AcceptedCommandList {
+static constexpr AttributeId Id = Globals::Attributes::AcceptedCommandList::Id;
+} // namespace AcceptedCommandList
+
+namespace AttributeList {
+static constexpr AttributeId Id = Globals::Attributes::AttributeList::Id;
+} // namespace AttributeList
+
+namespace FeatureMap {
+static constexpr AttributeId Id = Globals::Attributes::FeatureMap::Id;
+} // namespace FeatureMap
+
+namespace ClusterRevision {
+static constexpr AttributeId Id = Globals::Attributes::ClusterRevision::Id;
+} // namespace ClusterRevision
+
+} // namespace Attributes
+} // namespace JointFabricDatastore
+
+namespace JointFabricPki {
+namespace Attributes {
+
+namespace GeneratedCommandList {
+static constexpr AttributeId Id = Globals::Attributes::GeneratedCommandList::Id;
+} // namespace GeneratedCommandList
+
+namespace AcceptedCommandList {
+static constexpr AttributeId Id = Globals::Attributes::AcceptedCommandList::Id;
+} // namespace AcceptedCommandList
+
+namespace AttributeList {
+static constexpr AttributeId Id = Globals::Attributes::AttributeList::Id;
+} // namespace AttributeList
+
+namespace FeatureMap {
+static constexpr AttributeId Id = Globals::Attributes::FeatureMap::Id;
+} // namespace FeatureMap
+
+namespace ClusterRevision {
+static constexpr AttributeId Id = Globals::Attributes::ClusterRevision::Id;
+} // namespace ClusterRevision
+
+} // namespace Attributes
+} // namespace JointFabricPki
+
 namespace TlsCertificateManagement {
 namespace Attributes {
 

@@ -5996,6 +5996,81 @@ static BOOL AttributeIsSpecifiedInCommissionerControlCluster(AttributeId aAttrib
     }
     }
 }
+static BOOL AttributeIsSpecifiedInJointFabricDatastoreCluster(AttributeId aAttributeId)
+{
+    using namespace Clusters::JointFabricDatastore;
+    switch (aAttributeId) {
+    case Attributes::AnchorRootCa::Id: {
+        return YES;
+    }
+    case Attributes::AnchorNodeId::Id: {
+        return YES;
+    }
+    case Attributes::AnchorVendorId::Id: {
+        return YES;
+    }
+    case Attributes::FriendlyName::Id: {
+        return YES;
+    }
+    case Attributes::GroupKeyList::Id: {
+        return YES;
+    }
+    case Attributes::GroupList::Id: {
+        return YES;
+    }
+    case Attributes::NodeList::Id: {
+        return YES;
+    }
+    case Attributes::AdminList::Id: {
+        return YES;
+    }
+    case Attributes::StatusEntry::Id: {
+        return YES;
+    }
+    case Attributes::GeneratedCommandList::Id: {
+        return YES;
+    }
+    case Attributes::AcceptedCommandList::Id: {
+        return YES;
+    }
+    case Attributes::AttributeList::Id: {
+        return YES;
+    }
+    case Attributes::FeatureMap::Id: {
+        return YES;
+    }
+    case Attributes::ClusterRevision::Id: {
+        return YES;
+    }
+    default: {
+        return NO;
+    }
+    }
+}
+static BOOL AttributeIsSpecifiedInJointFabricPkiCluster(AttributeId aAttributeId)
+{
+    using namespace Clusters::JointFabricPki;
+    switch (aAttributeId) {
+    case Attributes::GeneratedCommandList::Id: {
+        return YES;
+    }
+    case Attributes::AcceptedCommandList::Id: {
+        return YES;
+    }
+    case Attributes::AttributeList::Id: {
+        return YES;
+    }
+    case Attributes::FeatureMap::Id: {
+        return YES;
+    }
+    case Attributes::ClusterRevision::Id: {
+        return YES;
+    }
+    default: {
+        return NO;
+    }
+    }
+}
 static BOOL AttributeIsSpecifiedInTLSCertificateManagementCluster(AttributeId aAttributeId)
 {
     using namespace Clusters::TlsCertificateManagement;
@@ -6725,6 +6800,12 @@ BOOL MTRAttributeIsSpecified(ClusterId aClusterId, AttributeId aAttributeId)
     }
     case Clusters::CommissionerControl::Id: {
         return AttributeIsSpecifiedInCommissionerControlCluster(aAttributeId);
+    }
+    case Clusters::JointFabricDatastore::Id: {
+        return AttributeIsSpecifiedInJointFabricDatastoreCluster(aAttributeId);
+    }
+    case Clusters::JointFabricPki::Id: {
+        return AttributeIsSpecifiedInJointFabricPkiCluster(aAttributeId);
     }
     case Clusters::TlsCertificateManagement::Id: {
         return AttributeIsSpecifiedInTLSCertificateManagementCluster(aAttributeId);

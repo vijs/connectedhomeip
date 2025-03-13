@@ -207,6 +207,8 @@ typedef NS_ENUM(uint32_t, MTRClusterIDType) {
     MTRClusterIDTypeChimeID MTR_PROVISIONALLY_AVAILABLE = 0x00000556,
     MTRClusterIDTypeEcosystemInformationID MTR_PROVISIONALLY_AVAILABLE = 0x00000750,
     MTRClusterIDTypeCommissionerControlID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = 0x00000751,
+    MTRClusterIDTypeJointFabricDatastoreID MTR_PROVISIONALLY_AVAILABLE = 0x00000752,
+    MTRClusterIDTypeJointFabricPkiID MTR_PROVISIONALLY_AVAILABLE = 0x00000753,
     MTRClusterIDTypeTLSCertificateManagementID MTR_PROVISIONALLY_AVAILABLE = 0x00000801,
     MTRClusterIDTypeUnitTestingID MTR_AVAILABLE(ios(16.4), macos(13.3), watchos(9.4), tvos(16.4)) = 0xFFF1FC05,
     MTRClusterIDTypeSampleMEIID MTR_PROVISIONALLY_AVAILABLE = 0xFFF1FC20,
@@ -4764,6 +4766,29 @@ typedef NS_ENUM(uint32_t, MTRAttributeIDType) {
     MTRAttributeIDTypeClusterCommissionerControlAttributeFeatureMapID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = MTRAttributeIDTypeGlobalAttributeFeatureMapID,
     MTRAttributeIDTypeClusterCommissionerControlAttributeClusterRevisionID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = MTRAttributeIDTypeGlobalAttributeClusterRevisionID,
 
+    // Cluster JointFabricDatastore attributes
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorRootCaID MTR_PROVISIONALLY_AVAILABLE = 0x00000000,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorNodeIdID MTR_PROVISIONALLY_AVAILABLE = 0x00000001,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAnchorVendorIdID MTR_PROVISIONALLY_AVAILABLE = 0x00000002,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeFriendlyNameID MTR_PROVISIONALLY_AVAILABLE = 0x00000003,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGroupKeyListID MTR_PROVISIONALLY_AVAILABLE = 0x00000004,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGroupListID MTR_PROVISIONALLY_AVAILABLE = 0x00000005,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeNodeListID MTR_PROVISIONALLY_AVAILABLE = 0x00000006,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAdminListID MTR_PROVISIONALLY_AVAILABLE = 0x00000007,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeStatusEntryID MTR_PROVISIONALLY_AVAILABLE = 0x00000008,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeGeneratedCommandListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeGeneratedCommandListID,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAcceptedCommandListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeAcceptedCommandListID,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeAttributeListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeAttributeListID,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeFeatureMapID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeFeatureMapID,
+    MTRAttributeIDTypeClusterJointFabricDatastoreAttributeClusterRevisionID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeClusterRevisionID,
+
+    // Cluster JointFabricPki attributes
+    MTRAttributeIDTypeClusterJointFabricPkiAttributeGeneratedCommandListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeGeneratedCommandListID,
+    MTRAttributeIDTypeClusterJointFabricPkiAttributeAcceptedCommandListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeAcceptedCommandListID,
+    MTRAttributeIDTypeClusterJointFabricPkiAttributeAttributeListID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeAttributeListID,
+    MTRAttributeIDTypeClusterJointFabricPkiAttributeFeatureMapID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeFeatureMapID,
+    MTRAttributeIDTypeClusterJointFabricPkiAttributeClusterRevisionID MTR_PROVISIONALLY_AVAILABLE = MTRAttributeIDTypeGlobalAttributeClusterRevisionID,
+
     // Cluster TLSCertificateManagement attributes
     MTRAttributeIDTypeClusterTLSCertificateManagementAttributeMaxRootCertificatesID MTR_PROVISIONALLY_AVAILABLE = 0x00000000,
     MTRAttributeIDTypeClusterTLSCertificateManagementAttributeCurrentRootCertificatesID MTR_PROVISIONALLY_AVAILABLE = 0x00000001,
@@ -7019,6 +7044,37 @@ typedef NS_ENUM(uint32_t, MTRCommandIDType) {
     MTRCommandIDTypeClusterCommissionerControlCommandRequestCommissioningApprovalID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = 0x00000000,
     MTRCommandIDTypeClusterCommissionerControlCommandCommissionNodeID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = 0x00000001,
     MTRCommandIDTypeClusterCommissionerControlCommandReverseOpenCommissioningWindowID MTR_AVAILABLE(ios(18.4), macos(15.4), watchos(11.4), tvos(18.4)) = 0x00000002,
+
+    // Cluster JointFabricDatastore commands
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddKeySetID MTR_PROVISIONALLY_AVAILABLE = 0x00000000,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateKeySetID MTR_PROVISIONALLY_AVAILABLE = 0x00000001,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveKeySetID MTR_PROVISIONALLY_AVAILABLE = 0x00000002,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddGroupID MTR_PROVISIONALLY_AVAILABLE = 0x00000003,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateGroupID MTR_PROVISIONALLY_AVAILABLE = 0x00000004,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveGroupID MTR_PROVISIONALLY_AVAILABLE = 0x00000005,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddAdminID MTR_PROVISIONALLY_AVAILABLE = 0x00000006,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateAdminID MTR_PROVISIONALLY_AVAILABLE = 0x00000007,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveAdminID MTR_PROVISIONALLY_AVAILABLE = 0x00000008,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddPendingNodeID MTR_PROVISIONALLY_AVAILABLE = 0x00000009,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRefreshNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000A,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000B,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000C,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandUpdateEndpointForNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000D,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddGroupIDToEndpointForNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000E,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveGroupIDFromEndpointForNodeID MTR_PROVISIONALLY_AVAILABLE = 0x0000000F,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddBindingToEndpointForNodeID MTR_PROVISIONALLY_AVAILABLE = 0x00000010,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveBindingFromEndpointForNodeID MTR_PROVISIONALLY_AVAILABLE = 0x00000011,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandAddACLToNodeID MTR_PROVISIONALLY_AVAILABLE = 0x00000012,
+    MTRCommandIDTypeClusterJointFabricDatastoreCommandRemoveACLFromNodeID MTR_PROVISIONALLY_AVAILABLE = 0x00000013,
+
+    // Cluster JointFabricPki commands
+    MTRCommandIDTypeClusterJointFabricPkiCommandICACSRRequestID MTR_PROVISIONALLY_AVAILABLE = 0x00000000,
+    MTRCommandIDTypeClusterJointFabricPkiCommandICACSRResponseID MTR_PROVISIONALLY_AVAILABLE = 0x00000001,
+    MTRCommandIDTypeClusterJointFabricPkiCommandAddICACID MTR_PROVISIONALLY_AVAILABLE = 0x00000002,
+    MTRCommandIDTypeClusterJointFabricPkiCommandAddICACResponseID MTR_PROVISIONALLY_AVAILABLE = 0x00000003,
+    MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorRequestID MTR_PROVISIONALLY_AVAILABLE = 0x00000004,
+    MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorResponseID MTR_PROVISIONALLY_AVAILABLE = 0x00000005,
+    MTRCommandIDTypeClusterJointFabricPkiCommandTransferAnchorCompleteID MTR_PROVISIONALLY_AVAILABLE = 0x00000006,
 
     // Cluster TLSCertificateManagement commands
     MTRCommandIDTypeClusterTLSCertificateManagementCommandProvisionRootCertificateID MTR_PROVISIONALLY_AVAILABLE = 0x00000000,
