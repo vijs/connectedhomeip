@@ -148,6 +148,7 @@ private:
 
     bool mNeedsNetworkSetup = false;
     ReadCommissioningInfo mDeviceCommissioningInfo;
+    ReadJointFabricInfo mDeviceJointFabricInfo;
     bool mNeedsDST = false;
 
     bool mNeedIcdRegistration = false;
@@ -160,6 +161,9 @@ private:
     uint8_t mCSRNonce[kCSRNonceLength];
     uint8_t mNOCertBuffer[Credentials::kMaxCHIPCertLength];
     uint8_t mICACertBuffer[Credentials::kMaxCHIPCertLength];
+
+    uint16_t mICACsrBufferLen = 0;
+    uint8_t mICACsrBuffer[Crypto::kMAX_CSR_Buffer_Size];
 
     uint16_t mAttestationElementsLen = 0;
     uint8_t mAttestationElements[Credentials::kMaxRspLen];

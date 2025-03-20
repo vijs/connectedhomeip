@@ -39,6 +39,7 @@ using namespace ::chip::Controller;
 CHIP_ERROR PairingCommand::RunCommand()
 {
     CurrentCommissioner().RegisterPairingDelegate(this);
+    CurrentCommissioner().RegisterJCMTrustCheckDelegate(this);
     // Clear the CATs in OperationalCredentialsIssuer
     mCredIssuerCmds->SetCredentialIssuerCATValues(kUndefinedCATs);
 
@@ -106,10 +107,12 @@ CommissioningParameters PairingCommand::GetCommissioningParameters()
 {
     auto params = CommissioningParameters();
     params.SetSkipCommissioningComplete(mSkipCommissioningComplete.ValueOr(false));
+    params.SetJointFabric(mFilterType == chip::Dnssd::DiscoveryFilterType::kJointFabricMode);
     if (mBypassAttestationVerifier.ValueOr(false))
     {
         params.SetDeviceAttestationDelegate(this);
     }
+    params.SetCommissionJointFabricAnchor(mCommissionJointFabricAnchor.ValueOr(false));
 
     switch (mNetworkType)
     {
@@ -362,6 +365,9 @@ CHIP_ERROR PairingCommand::PairWithMdns(NodeId remoteId)
         filter.code         = 0;
         filter.instanceName = mDiscoveryFilterInstanceName;
         break;
+    case chip::Dnssd::DiscoveryFilterType::kJointFabricMode:
+        filter.code = 1;
+        break;
     }
 
     CurrentCommissioner().RegisterDeviceDiscoveryDelegate(this);
@@ -611,4 +617,22 @@ CHIP_ERROR PairingCommand::MaybeDisplayTermsAndConditions(CommissioningParameter
     }
 
     return CHIP_NO_ERROR;
+}
+
+void PairingCommand::OnJCMTrustCheckComplete(CHIP_ERROR error)
+{
+    if (error == CHIP_NO_ERROR)
+    {
+        ChipLogProgress(chipTool, "JCM Trust Check completed with success.");
+    }
+    else
+    {
+        ChipLogError(chipTool, "JCM Trust Check failed.");
+    }
+}
+
+bool PairingCommand::OnAskUserForConsentToOnboardVendorIdToEcosystemFabric(VendorId vendorId)
+{
+    ChipLogProgress(chipTool, "Consenting to Onboard device with VendorID %u into Ecosystem Fabric.", vendorId);
+    return true;
 }

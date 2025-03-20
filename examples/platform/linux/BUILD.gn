@@ -150,6 +150,11 @@ source_set("app-main") {
     deps += [ "${chip_root}/src/app/icd/server:manager" ]
   }
 
+  if (chip_enable_joint_fabric) {
+    sources += [ "${chip_root}/src/controller/ExamplePersistentStorage.cpp" ]
+    deps += [ "${chip_root}/third_party/inipp" ]
+  }
+
   defines += [
     "CHIP_DEVICE_CONFIG_ENABLE_SOFTWARE_DIAGNOSTIC_TRIGGER=${chip_enable_software_diagnostics_trigger}",
     "CHIP_DEVICE_CONFIG_ENABLE_SMOKE_CO_TRIGGER=${chip_enable_smoke_co_trigger}",
@@ -159,6 +164,7 @@ source_set("app-main") {
     "CHIP_DEVICE_CONFIG_ENABLE_WATER_HEATER_MANAGEMENT_TRIGGER=${chip_enable_water_heater_management_trigger}",
     "CHIP_DEVICE_CONFIG_ENABLE_WIFI_DIAGNOSTIC_TRIGGER=${chip_enable_wifi_diagnostics_trigger}",
     "CHIP_DEVICE_CONFIG_ENABLE_DEVICE_ENERGY_MANAGEMENT_TRIGGER=${chip_enable_device_energy_management_trigger}",
+    "CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC=${chip_enable_joint_fabric}",
   ]
 
   public_configs = [ ":app-main-config" ]

@@ -55,14 +55,14 @@ enum class PairingNetworkType
 class PairingCommand : public CHIPCommand,
                        public chip::Controller::DevicePairingDelegate,
                        public chip::Controller::DeviceDiscoveryDelegate,
+                       public chip::Controller::DeviceJCMTrustCheckDelegate,
                        public chip::Credentials::DeviceAttestationDelegate
 {
 public:
     PairingCommand(const char * commandName, PairingMode mode, PairingNetworkType networkType,
                    CredentialIssuerCommands * credIssuerCmds,
                    chip::Dnssd::DiscoveryFilterType filterType = chip::Dnssd::DiscoveryFilterType::kNone) :
-        CHIPCommand(commandName, credIssuerCmds),
-        mPairingMode(mode), mNetworkType(networkType), mFilterType(filterType),
+        CHIPCommand(commandName, credIssuerCmds), mPairingMode(mode), mNetworkType(networkType), mFilterType(filterType),
         mRemoteAddr{ IPAddress::Any, chip::Inet::InterfaceId::Null() }, mComplex_TimeZones(&mTimeZoneList),
         mComplex_DSTOffsets(&mDSTOffsetList), mCurrentFabricRemoveCallback(OnCurrentFabricRemove, this)
     {
@@ -82,6 +82,8 @@ public:
         AddArgument("icd-symmetric-key", &mICDSymmetricKey, "The 16 bytes ICD symmetric key, default: randomly generated.");
         AddArgument("icd-stay-active-duration", 0, UINT32_MAX, &mICDStayActiveDurationMsec,
                     "If set, a LIT ICD that is commissioned will be requested to stay active for this many milliseconds");
+        AddArgument("anchor", 0, 1, &mCommissionJointFabricAnchor,
+                    "Enable commissioning new device as a Joint Fabric Anchor - NOC will contain Joint Fabric Anchor CAT");
         switch (networkType)
         {
         case PairingNetworkType::None:
@@ -180,6 +182,7 @@ public:
             break;
         case chip::Dnssd::DiscoveryFilterType::kCommissioningMode:
         case chip::Dnssd::DiscoveryFilterType::kCommissioner:
+        case chip::Dnssd::DiscoveryFilterType::kJointFabricMode:
             break;
         case chip::Dnssd::DiscoveryFilterType::kDeviceType:
             AddArgument("device-type", 0, UINT16_MAX, &mDiscoveryFilterCode);
@@ -241,6 +244,10 @@ public:
                                       const chip::Credentials::DeviceAttestationVerifier::AttestationDeviceInfo & info,
                                       chip::Credentials::AttestationVerificationResult attestationResult) override;
 
+    /////////// DeviceJCMTrustCheckDelegate /////////
+    void OnJCMTrustCheckComplete(CHIP_ERROR error) override;
+    bool OnAskUserForConsentToOnboardVendorIdToEcosystemFabric(chip::VendorId vendorId) override;
+
 private:
     CHIP_ERROR RunInternal(NodeId remoteId);
     CHIP_ERROR Pair(NodeId remoteId, PeerAddress address);
@@ -264,6 +271,7 @@ private:
     chip::Optional<bool> mPaseOnly;
     chip::Optional<bool> mSkipCommissioningComplete;
     chip::Optional<bool> mBypassAttestationVerifier;
+    chip::Optional<bool> mCommissionJointFabricAnchor;
     chip::Optional<std::vector<uint32_t>> mCASEAuthTags;
     chip::Optional<char *> mCountryCode;
     chip::Optional<bool> mICDRegistration;

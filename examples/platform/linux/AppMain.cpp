@@ -126,6 +126,12 @@
 #include <platform/Linux/NetworkCommissioningDriver.h>
 #endif // CHIP_DEVICE_LAYER_TARGET_LINUX
 
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+#include <app/clusters/joint-fabric-administrator-server/joint-fabric-administrator-server.h>
+#include <controller/ExampleOperationalCredentialsIssuer.h>
+#include <controller/ExamplePersistentStorage.h>
+#endif
+
 using namespace chip;
 using namespace chip::ArgParser;
 using namespace chip::Credentials;
@@ -553,6 +559,28 @@ exit:
     return 0;
 }
 
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+namespace {
+Controller::ExampleOperationalCredentialsIssuer gOpCredsIssuer;
+PersistentStorage gStorage;
+
+CHIP_ERROR OnPrepareCredentialsIssuer()
+{
+    ReturnErrorOnFailure(gStorage.Init(nullptr, LinuxDeviceOptions::GetInstance().chipToolKvs));
+    ReturnErrorOnFailure(gOpCredsIssuer.Initialize(gStorage));
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR PrepareJointFabricCluster()
+{
+    SetOperationalCredentialsIssuer(&gOpCredsIssuer);
+    SetPrepareCredentialsIssuerCallback(OnPrepareCredentialsIssuer);
+    return CHIP_NO_ERROR;
+}
+} // namespace
+#endif
+
 void ChipLinuxAppMainLoop(AppMainLoopImplementation * impl)
 {
     gMainLoopImplementation = impl;
@@ -676,6 +704,10 @@ void ChipLinuxAppMainLoop(AppMainLoopImplementation * impl)
     // Init ZCL Data Model and CHIP App Server
     Server::GetInstance().Init(initParams);
 
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    VerifyOrDie(PrepareJointFabricCluster() == CHIP_NO_ERROR);
+#endif
+
 #if CHIP_CONFIG_USE_ACCESS_RESTRICTIONS
     if (LinuxDeviceOptions::GetInstance().commissioningArlEntries.HasValue())
     {
@@ -737,9 +769,9 @@ void ChipLinuxAppMainLoop(AppMainLoopImplementation * impl)
     signal(SIGTERM, StopSignalHandler);
     // NOLINTEND(bugprone-signal-handler)
 #else
-    struct sigaction sa                        = {};
-    sa.sa_handler                              = StopSignalHandler;
-    sa.sa_flags                                = SA_RESETHAND;
+    struct sigaction sa = {};
+    sa.sa_handler       = StopSignalHandler;
+    sa.sa_flags         = SA_RESETHAND;
     sigaction(SIGINT, &sa, nullptr);
     sigaction(SIGTERM, &sa, nullptr);
 #endif

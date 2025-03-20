@@ -102,6 +102,7 @@ struct LinuxDeviceOptions
     chip::Optional<chip::System::Clock::Milliseconds32> icdActiveModeDurationMs;
     chip::Optional<chip::System::Clock::Milliseconds32> icdIdleModeDurationMs;
 #endif
+    const char * chipToolKvs = nullptr;
     static LinuxDeviceOptions & GetInstance();
 };
 

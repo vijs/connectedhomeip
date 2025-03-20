@@ -58,6 +58,8 @@ using namespace chip::Credentials;
 using namespace chip::Crypto;
 using namespace chip::Protocols::InteractionModel;
 
+uint64_t gCaseAdminSubject;
+
 namespace {
 
 void SendNOCResponse(app::CommandHandler * commandObj, const ConcreteCommandPath & path, NodeOperationalCertStatusEnum status,
@@ -70,6 +72,7 @@ constexpr auto kPAICertificate = CertificateChainTypeEnum::kPAICertificate;
 CHIP_ERROR CreateAccessControlEntryForNewFabricAdministrator(const Access::SubjectDescriptor & subjectDescriptor,
                                                              FabricIndex fabricIndex, uint64_t subject)
 {
+    gCaseAdminSubject      = subject;
     NodeId subjectAsNodeID = static_cast<NodeId>(subject);
 
     if (!IsOperationalNodeId(subjectAsNodeID) && !IsCASEAuthTag(subjectAsNodeID))

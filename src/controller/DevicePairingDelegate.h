@@ -83,6 +83,8 @@ public:
      */
     virtual void OnReadCommissioningInfo(const ReadCommissioningInfo & info) {}
 
+    virtual void OnReadJointFabricInfo(const ReadJointFabricInfo & info) {}
+
     /**
      * @brief
      * Called when MatchingFabricInfo returned from target

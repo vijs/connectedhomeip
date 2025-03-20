@@ -40,6 +40,7 @@
 #include <controller/CHIPDeviceControllerSystemState.h>
 #include <controller/CommissioneeDeviceProxy.h>
 #include <controller/CommissioningDelegate.h>
+#include <controller/DeviceJCMTrustCheckDelegate.h>
 #include <controller/DevicePairingDelegate.h>
 #include <controller/OperationalCredentialsDelegate.h>
 #include <controller/SetUpCodePairer.h>
@@ -795,6 +796,12 @@ public:
     void RegisterPairingDelegate(DevicePairingDelegate * pairingDelegate) { mPairingDelegate = pairingDelegate; }
     DevicePairingDelegate * GetPairingDelegate() const { return mPairingDelegate; }
 
+    void RegisterJCMTrustCheckDelegate(DeviceJCMTrustCheckDelegate * jcmTrustCheckDelegate)
+    {
+        mJcmTrustCheckDelegate = jcmTrustCheckDelegate;
+    }
+    DeviceJCMTrustCheckDelegate * GetJcmTrustCheckDelegate() const { return mJcmTrustCheckDelegate; }
+
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     // ClusterStateCache::Callback impl
     void OnDone(app::ReadClient *) override;
@@ -836,12 +843,15 @@ public:
 private:
     DevicePairingDelegate * mPairingDelegate = nullptr;
 
+    DeviceJCMTrustCheckDelegate * mJcmTrustCheckDelegate = nullptr;
+
     DeviceProxy * mDeviceBeingCommissioned               = nullptr;
     CommissioneeDeviceProxy * mDeviceInPASEEstablishment = nullptr;
 
     Optional<System::Clock::Timeout> mCommissioningStepTimeout; // Note: For multi-interaction steps this is per interaction
     CommissioningStage mCommissioningStage = CommissioningStage::kSecurePairing;
     uint8_t mReadCommissioningInfoProgress = 0; // see ContinueReadingCommissioningInfo()
+    uint8_t mReadJointFabricInfoProgress   = 0; // see ContinueReadingJointFabricInfo()
 
     bool mRunCommissioningAfterConnection = false;
     Internal::InvokeCancelFn mInvokeCancelFn;
@@ -880,6 +890,8 @@ private:
      */
     CHIP_ERROR SendAttestationRequestCommand(DeviceProxy * device, const ByteSpan & attestationNonce,
                                              Optional<System::Clock::Timeout> timeout);
+    /* This function verifies trust towards the device. */
+    CHIP_ERROR JCMVerifyTrust(VendorId vendorId, FabricIndex fabricIndex);
     /* This function sends an CSR request to the device.
        The function does not hold a reference to the device object.
      */
@@ -895,6 +907,14 @@ private:
        The function does not hold a reference to the device object.
      */
     CHIP_ERROR SendTrustedRootCertificate(DeviceProxy * device, const ByteSpan & rcac, Optional<System::Clock::Timeout> timeout);
+    /* This function sends a Joint Fabric request to the device.
+       The function does not hold a reference to the device object.
+     */
+    CHIP_ERROR SendICACCSRRequestCommand(DeviceProxy * device, Optional<System::Clock::Timeout> timeout);
+    /* This function sends the ICA certificate to the device.
+       The function does not hold a reference to the device object.
+     */
+    CHIP_ERROR SendICA(DeviceProxy * device, const ByteSpan & icac, NodeId adminSubject, Optional<System::Clock::Timeout> timeout);
 
     /* This function is called by the commissioner code when the device completes
        the operational credential provisioning process.
@@ -941,6 +961,20 @@ private:
     static void OnRootCertSuccessResponse(void * context, const chip::app::DataModel::NullObjectType &);
     /* Callback called when adding root cert to device results in failure */
     static void OnRootCertFailureResponse(void * context, CHIP_ERROR error);
+
+    /* Callback when the device confirms that it wants to start JointFabric flow */
+    static void OnICACCSRResponse(void * context,
+                                  const app::Clusters::JointFabricAdministrator::Commands::ICACCSRResponse::DecodableType & data);
+    /* Callback called when device fails to start JointFabric flow */
+    static void OnJointFabricFailureResponse(void * context, CHIP_ERROR error);
+
+    static void
+    OnICACertSuccessResponse(void * context,
+                             const chip::app::Clusters::JointFabricAdministrator::Commands::ICACResponse::DecodableType & data);
+    static void OnICACertFailureResponse(void * context, CHIP_ERROR error);
+
+    static void OnWriteAdministratorFabricIndex(void * context);
+    static void OnWriteAdministratorFabricIndexFail(void * context, CHIP_ERROR error);
 
     static void OnDeviceConnectedFn(void * context, Messaging::ExchangeManager & exchangeMgr, const SessionHandle & sessionHandle);
     static void OnDeviceConnectionFailureFn(void * context, const ScopedNodeId & peerId, CHIP_ERROR error);
@@ -997,6 +1031,8 @@ private:
     OnICDManagementStayActiveResponse(void * context,
                                       const app::Clusters::IcdManagement::Commands::StayActiveResponse::DecodableType & data);
 
+    static void OnDeviceNOCIssuerSignature(void * context, CHIP_ERROR status, const ByteSpan & icac);
+
     /**
      * @brief
      *   This function processes the CSR sent by the device.
@@ -1034,6 +1070,11 @@ private:
      */
     CHIP_ERROR CheckForRevokedDACChain(const Credentials::DeviceAttestationVerifier::AttestationInfo & info);
 
+    /* This function signs the intermediate CA certificate of the device.
+       The function does not hold a reference to the device object.
+     */
+    CHIP_ERROR SignNOCIssuer(DeviceProxy * device, const ByteSpan & icaCsr);
+
     CommissioneeDeviceProxy * FindCommissioneeDevice(NodeId id);
     CommissioneeDeviceProxy * FindCommissioneeDevice(const Transport::PeerAddress & peerAddress);
     void ReleaseCommissioneeDevice(CommissioneeDeviceProxy * device);
@@ -1065,6 +1106,10 @@ private:
     CHIP_ERROR ParseFabrics(ReadCommissioningInfo & info);
     CHIP_ERROR ParseICDInfo(ReadCommissioningInfo & info);
     CHIP_ERROR ParseTimeSyncInfo(ReadCommissioningInfo & info);
+
+    void ContinueReadingJointFabricInfo(const CommissioningParameters & params);
+    void FinishReadingJointFabricInfo();
+    CHIP_ERROR ParseJointFabricInfo(ReadJointFabricInfo & info);
 #endif // CHIP_CONFIG_ENABLE_READ_CLIENT
 
     static CHIP_ERROR
@@ -1106,6 +1151,8 @@ private:
     CommissioningDelegate * mCommissioningDelegate =
         nullptr; // Commissioning delegate that issued the PerformCommissioningStep command
     CompletionStatus mCommissioningCompletionStatus;
+
+    chip::Callback::Callback<OnNOCIssuerSigned> mDeviceSignNOCIssuerCallback;
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     Platform::UniquePtr<app::ClusterStateCache> mAttributeCache;

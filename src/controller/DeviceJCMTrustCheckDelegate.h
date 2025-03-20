@@ -1,6 +1,6 @@
 /*
- *
- *    Copyright (c) 2021 Project CHIP Authors
+ *    Copyright (c) 2025 Project CHIP Authors
+ *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,24 +17,25 @@
 
 #pragma once
 
-#include <lib/dnssd/Advertiser.h>
+#include <lib/core/CHIPError.h>
+#include <lib/core/CHIPVendorIdentifiers.hpp>
+#include <lib/support/DLLUtil.h>
 
 namespace chip {
-namespace app {
+namespace Controller {
 
 /**
- * A way to ask what commissioning mode DnssdServer should be advertising.  This
- * needs to match the actual commissioning mode of the device (i.e. whether the
- * device will accept an attempt to establish a PASE session).
+ * A delegate that can be notified of progress as a JCM Trust check proceeds.
  */
-class DLL_EXPORT CommissioningModeProvider
+class DLL_EXPORT DeviceJCMTrustCheckDelegate
 {
 public:
-    virtual Dnssd::CommissioningMode GetCommissioningMode() const = 0;
-    virtual bool IsJointFabricEnabled()                           = 0;
+    virtual ~DeviceJCMTrustCheckDelegate() {}
 
-    virtual ~CommissioningModeProvider() {}
+    virtual void OnJCMTrustCheckComplete(CHIP_ERROR error) {}
+
+    virtual bool OnAskUserForConsentToOnboardVendorIdToEcosystemFabric(VendorId vendorId) { return false; }
 };
 
-} // namespace app
+} // namespace Controller
 } // namespace chip

@@ -73,6 +73,12 @@ const char * StageToString(CommissioningStage stage)
     case kAttestationRevocationCheck:
         return "AttestationRevocationCheck";
 
+    case kReadJointFabricInfo:
+        return "ReadJointFabricInfo";
+
+    case kJCMTrustCheck:
+        return "JCMTrustCheck";
+
     case kSendOpCertSigningRequest:
         return "SendOpCertSigningRequest";
 
@@ -87,6 +93,18 @@ const char * StageToString(CommissioningStage stage)
 
     case kSendNOC:
         return "SendNOC";
+
+    case kSendICACCSRRequest:
+        return "SendICACCSRRequest";
+        break;
+
+    case kSignNOCIssuer:
+        return "SignNOCIssuer";
+        break;
+
+    case kSendICA:
+        return "SendICA";
+        break;
 
     case kConfigureTrustedTimeSource:
         return "ConfigureTrustedTimeSource";
@@ -196,6 +214,15 @@ const char * MetricKeyForCommissioningStage(CommissioningStage stage)
 
     case kAttestationVerification:
         return "core_commissioning_stage_attestation_verification";
+
+    case kAttestationRevocationCheck:
+        return "core_commissioning_stage_attestation_revocation_check";
+
+    case kReadJointFabricInfo:
+        return "core_commissioning_stage_read_joint_fabric_info";
+
+    case kJCMTrustCheck:
+        return "core_commissioning_stage_jcm_trust_check";
 
     case kSendOpCertSigningRequest:
         return "core_commissioning_stage_opcert_signing_request";

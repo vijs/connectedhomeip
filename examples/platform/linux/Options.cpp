@@ -137,6 +137,9 @@ enum
     kDeviceOption_icdActiveModeDurationMs,
     kDeviceOption_icdIdleModeDuration,
 #endif // CHIP_ENABLE_ICD_SERVER
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    kDeviceOption_ChipToolKvs,
+#endif
 };
 
 constexpr unsigned kAppUsageLength = 64;
@@ -221,6 +224,9 @@ OptionDef sDeviceOptionDefs[] = {
     { "icdActiveModeDurationMs", kArgumentRequired, kDeviceOption_icdActiveModeDurationMs },
     { "icdIdleModeDuration", kArgumentRequired, kDeviceOption_icdIdleModeDuration },
 #endif // CHIP_ENABLE_ICD_SERVER
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    { "chip-tool-kvs", kArgumentRequired, kDeviceOption_ChipToolKvs },
+#endif
     {}
 };
 
@@ -402,6 +408,10 @@ const char * sDeviceOptionHelp =
     "  --icdIdleModeDuration <icdIdleModeDuration>\n"
     "       Sets the ICD idle mode durations (in seconds). (Default: 300)\n"
     "       This defines the how long the ICD server can stay in idle mode.\n"
+#endif
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    "  --chip-tool-kvs <filepath>\n"
+    "       A file to sync Key Value Store items with chip-tool.\n"
 #endif
     "\n";
 
@@ -821,6 +831,11 @@ bool HandleOption(const char * aProgram, OptionSet * aOptions, int aIdentifier, 
         }
         break;
     }
+#endif
+#if CHIP_DEVICE_CONFIG_ENABLE_JOINT_FABRIC
+    case kDeviceOption_ChipToolKvs:
+        LinuxDeviceOptions::GetInstance().chipToolKvs = aValue;
+        break;
 #endif
     default:
         PrintArgError("%s: INTERNAL ERROR: Unhandled option: %s\n", aProgram, aName);

@@ -473,7 +473,8 @@ DeviceCommissioner::DeviceCommissioner() :
     mOnDeviceConnectionRetryCallback(OnDeviceConnectionRetryFn, this),
 #endif // CHIP_DEVICE_CONFIG_ENABLE_AUTOMATIC_CASE_RETRIES
     mDeviceAttestationInformationVerificationCallback(OnDeviceAttestationInformationVerification, this),
-    mDeviceNOCChainCallback(OnDeviceNOCChainGeneration, this), mSetUpCodePairer(this)
+    mDeviceNOCChainCallback(OnDeviceNOCChainGeneration, this), mSetUpCodePairer(this),
+    mDeviceSignNOCIssuerCallback(OnDeviceNOCIssuerSignature, this)
 {}
 
 DeviceCommissioner::~DeviceCommissioner()
@@ -1534,6 +1535,33 @@ DeviceCommissioner::CheckForRevokedDACChain(const Credentials::DeviceAttestation
     return CHIP_NO_ERROR;
 }
 
+CHIP_ERROR DeviceCommissioner::JCMVerifyTrust(VendorId vendorId, FabricIndex fabricIndex)
+{
+    MATTER_TRACE_SCOPE("JCMVerifyTrust", "DeviceCommissioner");
+    VerifyOrReturnError(mState == State::Initialized, CHIP_ERROR_INCORRECT_STATE);
+
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    ChipLogDetail(Controller, "Verifying Trust of device with Vendor ID %d and FabricIndex %d.", vendorId, fabricIndex);
+
+    // TODO: perform trust check
+
+    if (mJcmTrustCheckDelegate)
+    {
+        mJcmTrustCheckDelegate->OnJCMTrustCheckComplete(err);
+        if (mJcmTrustCheckDelegate->OnAskUserForConsentToOnboardVendorIdToEcosystemFabric(vendorId) == true)
+        {
+            return CHIP_NO_ERROR;
+        }
+        else
+        {
+            return CHIP_ERROR_ACCESS_DENIED;
+        }
+    }
+
+    return CHIP_NO_ERROR;
+}
+
 CHIP_ERROR DeviceCommissioner::ValidateCSR(DeviceProxy * proxy, const ByteSpan & NOCSRElements,
                                            const ByteSpan & AttestationSignature, const ByteSpan & dac, const ByteSpan & csrNonce)
 {
@@ -1666,6 +1694,14 @@ CHIP_ERROR DeviceCommissioner::ProcessCSR(DeviceProxy * proxy, const ByteSpan & 
         mOperationalCredentialsDelegate->SetFabricIdForNextNOCRequest(GetFabricId());
     }
 
+    auto & params = mDefaultCommissioner->GetCommissioningParameters();
+
+    if (params.GetCommissionJointFabricAnchor().ValueOr(false))
+    {
+        CATValues anchorCat = { { 0xFFFC0001, 0xFFFF0001 } };
+        mOperationalCredentialsDelegate->SetCATValuesForNextNOCRequest(anchorCat);
+    }
+
     return mOperationalCredentialsDelegate->GenerateNOCChain(NOCSRElements, csrNonce, AttestationSignature, attestationChallenge,
                                                              dac, pai, &mDeviceNOCChainCallback);
 }
@@ -1741,6 +1777,7 @@ void DeviceCommissioner::OnOperationalCertificateAddResponse(
     MATTER_TRACE_SCOPE("OnOperationalCertificateAddResponse", "DeviceCommissioner");
     ChipLogProgress(Controller, "Device returned status %d on receiving the NOC", to_underlying(data.statusCode));
     DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+    auto & params                     = commissioner->mDefaultCommissioner->GetCommissioningParameters();
 
     CHIP_ERROR err = CHIP_NO_ERROR;
 
@@ -1751,7 +1788,17 @@ void DeviceCommissioner::OnOperationalCertificateAddResponse(
     err = ConvertFromOperationalCertStatus(data.statusCode);
     SuccessOrExit(err);
 
-    err = commissioner->OnOperationalCredentialsProvisioningCompletion(commissioner->mDeviceBeingCommissioned);
+    if (params.GetCommissionJointFabricAnchor().ValueOr(false) && data.fabricIndex.HasValue())
+    {
+        commissioner->SendCommissioningWriteRequest(
+            commissioner->mDeviceBeingCommissioned, kRootEndpointId, Clusters::JointFabricAdministrator::Id,
+            Clusters::JointFabricAdministrator::Attributes::AdministratorFabricIndex::Id, data.fabricIndex.Value(),
+            OnWriteAdministratorFabricIndex, OnWriteAdministratorFabricIndexFail);
+    }
+    else
+    {
+        err = commissioner->OnOperationalCredentialsProvisioningCompletion(commissioner->mDeviceBeingCommissioned);
+    }
 
 exit:
     if (err != CHIP_NO_ERROR)
@@ -1759,6 +1806,31 @@ exit:
         ChipLogProgress(Controller, "Add NOC failed with error %s", ErrorStr(err));
         commissioner->CommissioningStageComplete(err);
     }
+}
+
+void DeviceCommissioner::OnWriteAdministratorFabricIndex(void * context)
+{
+    MATTER_TRACE_SCOPE("OnWriteAdministratorFabricIndex", "DeviceCommissioner");
+
+    DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    err = commissioner->OnOperationalCredentialsProvisioningCompletion(commissioner->mDeviceBeingCommissioned);
+
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogProgress(Controller, "WriteAdministratorFabricIndex failed with error %s", ErrorStr(err));
+        commissioner->CommissioningStageComplete(err);
+    }
+}
+
+void DeviceCommissioner::OnWriteAdministratorFabricIndexFail(void * context, CHIP_ERROR error)
+{
+    MATTER_TRACE_SCOPE("OnWriteAdministratorFabricIndexFail", "DeviceCommissioner");
+    ChipLogProgress(Controller, "Device failed to write AdministratorFabricIndex. Response: %s", chip::ErrorStr(error));
+    DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+    commissioner->CommissioningStageComplete(error);
 }
 
 CHIP_ERROR DeviceCommissioner::SendTrustedRootCertificate(DeviceProxy * device, const ByteSpan & rcac,
@@ -1793,6 +1865,119 @@ void DeviceCommissioner::OnRootCertFailureResponse(void * context, CHIP_ERROR er
     ChipLogProgress(Controller, "Device failed to receive the root certificate Response: %s", chip::ErrorStr(error));
     DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
     commissioner->CommissioningStageComplete(error);
+}
+
+CHIP_ERROR DeviceCommissioner::SendICA(DeviceProxy * device, const ByteSpan & icac, NodeId adminSubject,
+                                       Optional<System::Clock::Timeout> timeout)
+{
+    MATTER_TRACE_SCOPE("SendICA", "DeviceCommissioner");
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+
+    ChipLogProgress(Controller, "Sending ICA certificate to the device");
+
+    JointFabricAdministrator::Commands::AddICAC::Type request;
+    request.ICACValue = icac;
+    // request.nodeId           = device->GetDeviceId();
+    // request.fabricId         = GetFabricId();
+    // request.adminVendorId    = mVendorId;
+    // request.caseAdminSubject = adminSubject;
+    ReturnErrorOnFailure(
+        SendCommissioningCommand(device, request, OnICACertSuccessResponse, OnICACertFailureResponse, kRootEndpointId, timeout));
+
+    ChipLogProgress(Controller, "Sent ICA certificate to the device");
+
+    return CHIP_NO_ERROR;
+}
+
+void DeviceCommissioner::OnICACertSuccessResponse(
+    void * context, const chip::app::Clusters::JointFabricAdministrator::Commands::ICACResponse::DecodableType & data)
+{
+    MATTER_TRACE_SCOPE("OnICACertSuccessResponse", "DeviceCommissioner");
+    ChipLogProgress(Controller, "Device confirmed that it has received the ICA certificate");
+    DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+
+    // TODO: Handle result from response.
+
+    commissioner->CommissioningStageComplete(CHIP_NO_ERROR);
+}
+
+void DeviceCommissioner::OnICACertFailureResponse(void * context, CHIP_ERROR error)
+{
+    MATTER_TRACE_SCOPE("OnICACertFailureResponse", "DeviceCommissioner");
+    ChipLogProgress(Controller, "Device failed to receive the ICA certificate Response: %s", chip::ErrorStr(error));
+    DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+    commissioner->CommissioningStageComplete(error);
+}
+
+CHIP_ERROR DeviceCommissioner::SendICACCSRRequestCommand(DeviceProxy * device, Optional<System::Clock::Timeout> timeout)
+{
+    MATTER_TRACE_SCOPE("SendICACCSRRequestCommand", "DeviceCommissioner");
+    ChipLogDetail(Controller, "Sending JointFabric request to %p device", device);
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+
+    JointFabricAdministrator::Commands::ICACCSRRequest::Type request;
+
+    ReturnErrorOnFailure(
+        SendCommissioningCommand(device, request, OnICACCSRResponse, OnJointFabricFailureResponse, kRootEndpointId, timeout));
+    ChipLogDetail(Controller, "Sent JointFabric request, waiting for the JointFabric Information");
+    return CHIP_NO_ERROR;
+}
+
+void DeviceCommissioner::OnJointFabricFailureResponse(void * context, CHIP_ERROR error)
+{
+    MATTER_TRACE_SCOPE("OnJointFabricFailureResponse", "DeviceCommissioner");
+    ChipLogProgress(Controller, "Device failed to receive the Joint ICA: %s", chip::ErrorStr(error));
+    DeviceCommissioner * commissioner = reinterpret_cast<DeviceCommissioner *>(context);
+    commissioner->CommissioningStageComplete(error);
+}
+
+void DeviceCommissioner::OnICACCSRResponse(void * context,
+                                           const JointFabricAdministrator::Commands::ICACCSRResponse::DecodableType & data)
+{
+    MATTER_TRACE_SCOPE("OnICACCSRResponse", "DeviceCommissioner");
+    ChipLogProgress(Controller, "Received JointFabric Information from the device");
+    DeviceCommissioner * commissioner = reinterpret_cast<DeviceCommissioner *>(context);
+
+    CommissioningDelegate::CommissioningReport report;
+    report.Set<ICACCSRResponse>(ICACCSRResponse(data.icaccsr));
+    commissioner->CommissioningStageComplete(CHIP_NO_ERROR, report);
+}
+
+void DeviceCommissioner::OnDeviceNOCIssuerSignature(void * context, CHIP_ERROR status, const ByteSpan & icac)
+{
+    MATTER_TRACE_SCOPE("OnDeviceNOCIssuerSignature", "DeviceCommissioner");
+    DeviceCommissioner * commissioner = static_cast<DeviceCommissioner *>(context);
+
+    ChipLogProgress(Controller, "Received callback from the CA for NOC Issuer signature. Status %s", ErrorStr(status));
+    if (status == CHIP_NO_ERROR && commissioner->mState != State::Initialized)
+    {
+        status = CHIP_ERROR_INCORRECT_STATE;
+    }
+    if (status != CHIP_NO_ERROR)
+    {
+        ChipLogError(Controller, "Failed in signing NOC Issuer. Error %s", ErrorStr(status));
+    }
+
+    CommissioningDelegate::CommissioningReport report;
+    report.Set<JointIcaCertificate>(JointIcaCertificate(icac));
+    commissioner->CommissioningStageComplete(status, report);
+}
+
+CHIP_ERROR DeviceCommissioner::SignNOCIssuer(DeviceProxy * proxy, const ByteSpan & icaCsr)
+{
+    MATTER_TRACE_SCOPE("SignNOCIssuer", "DeviceCommissioner");
+    VerifyOrReturnError(mState == State::Initialized, CHIP_ERROR_INCORRECT_STATE);
+
+    ChipLogProgress(Controller, "Joint Fabric: Signing Device's NOC Issuer");
+
+    mOperationalCredentialsDelegate->SetNodeIdForNextNOCRequest(proxy->GetDeviceId());
+
+    if (mFabricIndex != kUndefinedFabricIndex)
+    {
+        mOperationalCredentialsDelegate->SetFabricIdForNextNOCRequest(GetFabricId());
+    }
+
+    return mOperationalCredentialsDelegate->SignNOCIssuer(icaCsr, &mDeviceSignNOCIssuerCallback);
 }
 
 CHIP_ERROR DeviceCommissioner::OnOperationalCredentialsProvisioningCompletion(DeviceProxy * device)
@@ -2204,6 +2389,9 @@ void DeviceCommissioner::OnDone(app::ReadClient * readClient)
     case CommissioningStage::kReadCommissioningInfo:
         ContinueReadingCommissioningInfo(mCommissioningDelegate->GetCommissioningParameters());
         break;
+    case CommissioningStage::kReadJointFabricInfo:
+        ContinueReadingJointFabricInfo(mCommissioningDelegate->GetCommissioningParameters());
+        break;
     default:
         VerifyOrDie(false);
         break;
@@ -2353,6 +2541,66 @@ void DeviceCommissioner::ContinueReadingCommissioningInfo(const CommissioningPar
     SendCommissioningReadRequest(mDeviceBeingCommissioned, mCommissioningStepTimeout, builder.paths(), builder.size());
 }
 
+void DeviceCommissioner::ContinueReadingJointFabricInfo(const CommissioningParameters & params)
+{
+    VerifyOrDie(mCommissioningStage == CommissioningStage::kReadJointFabricInfo);
+
+    // mReadJointFabricInfoProgress starts at 0 and counts the number of paths we have read.
+    // A marker value is used to indicate that there are no further attributes to read.
+    static constexpr auto kReadProgressNoFurtherAttributes = std::numeric_limits<decltype(mReadJointFabricInfoProgress)>::max();
+    if (mReadJointFabricInfoProgress == kReadProgressNoFurtherAttributes)
+    {
+        FinishReadingJointFabricInfo();
+        return;
+    }
+
+    // We can ony read 9 paths per Read Interaction, since that is the minimum a server has to
+    // support per spec (see "Interaction Model Limits"), so we generally need to perform more
+    // that one interaction. To build the list of attributes for each interaction, we use a
+    // builder that skips adding paths that we already handled in a previous interaction, and
+    // returns false if the current request is exhausted. This construction avoids allocating
+    // memory to hold the complete list of attributes to read up front; however the logic to
+    // determine the attributes to include must be deterministic since it runs multiple times.
+    // The use of an immediately-invoked lambda is convenient for control flow.
+    ReadInteractionBuilder builder(mReadJointFabricInfoProgress);
+    [&]() -> void {
+        // Descriptor
+        VerifyOrReturn(builder.AddAttributePath(kRootEndpointId, Clusters::Descriptor::Id,
+                                                Clusters::Descriptor::Attributes::DeviceTypeList::Id));
+        VerifyOrReturn(
+            builder.AddAttributePath(kRootEndpointId, Clusters::Descriptor::Id, Clusters::Descriptor::Attributes::ServerList::Id));
+        VerifyOrReturn(
+            builder.AddAttributePath(kRootEndpointId, Clusters::Descriptor::Id, Clusters::Descriptor::Attributes::ClientList::Id));
+        VerifyOrReturn(
+            builder.AddAttributePath(kRootEndpointId, Clusters::Descriptor::Id, Clusters::Descriptor::Attributes::PartsList::Id));
+
+        // Joint Fabric Administrator: Joint Fabric Index (all endpoints)
+        VerifyOrReturn(builder.AddAttributePath(Clusters::JointFabricAdministrator::Id,
+                                                Clusters::JointFabricAdministrator::Attributes::AdministratorFabricIndex::Id));
+
+        // Extra paths requested via CommissioningParameters
+        for (auto const & path : params.GetExtraReadPaths())
+        {
+            VerifyOrReturn(builder.AddAttributePath(path));
+        }
+    }();
+
+    VerifyOrDie(builder.size() > 0); // our logic is broken if there is nothing to read
+    if (builder.exceeded())
+    {
+        // Keep track of the number of attributes we have read already so we can resume from there.
+        auto progress = mReadJointFabricInfoProgress + builder.size();
+        VerifyOrDie(progress < kReadProgressNoFurtherAttributes);
+        mReadJointFabricInfoProgress = static_cast<decltype(mReadJointFabricInfoProgress)>(progress);
+    }
+    else
+    {
+        mReadJointFabricInfoProgress = kReadProgressNoFurtherAttributes;
+    }
+
+    SendCommissioningReadRequest(mDeviceBeingCommissioned, mCommissioningStepTimeout, builder.paths(), builder.size());
+}
+
 namespace {
 void AccumulateErrors(CHIP_ERROR & acc, CHIP_ERROR err)
 {
@@ -2388,6 +2636,105 @@ void DeviceCommissioner::FinishReadingCommissioningInfo()
 
     // Only release the attribute cache once `info` is no longer needed.
     mAttributeCache.reset();
+}
+
+void DeviceCommissioner::FinishReadingJointFabricInfo()
+{
+    // We want to parse as much information as possible, even if we eventually end
+    // up returning an error (e.g. because some mandatory information was missing).
+    CHIP_ERROR err = CHIP_NO_ERROR;
+    ReadJointFabricInfo info;
+    info.attributes = mAttributeCache.get();
+    AccumulateErrors(err, ParseJointFabricInfo(info));
+
+    if (mPairingDelegate != nullptr && err == CHIP_NO_ERROR)
+    {
+        mPairingDelegate->OnReadJointFabricInfo(info);
+    }
+
+    CommissioningDelegate::CommissioningReport report;
+    report.Set<ReadJointFabricInfo>(info);
+    CommissioningStageComplete(err, report);
+
+    // Only release the attribute cache once `info` is no longer needed.
+    mAttributeCache.reset();
+}
+
+CHIP_ERROR DeviceCommissioner::ParseJointFabricInfo(ReadJointFabricInfo & info)
+{
+    using namespace Descriptor::Attributes;
+    using namespace JointFabricAdministrator::Attributes;
+    CHIP_ERROR return_err = CHIP_NO_ERROR;
+    CHIP_ERROR err;
+
+    err = mAttributeCache->ForEachAttribute(Descriptor::Id, [this, &info](const ConcreteAttributePath & path) {
+        switch (path.mAttributeId)
+        {
+        case DeviceTypeList::Id: {
+            DeviceTypeList::TypeInfo::DecodableType deviceTypeList;
+            ReturnErrorOnFailure(this->mAttributeCache->Get<DeviceTypeList::TypeInfo>(path, deviceTypeList));
+            auto iter = deviceTypeList.begin();
+            while (iter.Next())
+            {
+                ChipLogProgress(Controller, "DeviceType: %u", iter.GetValue().deviceType);
+            }
+        }
+        break;
+        case ServerList::Id: {
+            ServerList::TypeInfo::DecodableType serverList;
+            ReturnErrorOnFailure(this->mAttributeCache->Get<ServerList::TypeInfo>(path, serverList));
+            auto iter = serverList.begin();
+            while (iter.Next())
+            {
+                ChipLogProgress(Controller, "ServerList: %u", iter.GetValue());
+            }
+        }
+        break;
+        case ClientList::Id: {
+            ClientList::TypeInfo::DecodableType clientList;
+            ReturnErrorOnFailure(this->mAttributeCache->Get<ClientList::TypeInfo>(path, clientList));
+            auto iter = clientList.begin();
+            while (iter.Next())
+            {
+                ChipLogProgress(Controller, "ClientList: %u", iter.GetValue());
+            }
+        }
+        break;
+        case PartsList::Id: {
+            PartsList::TypeInfo::DecodableType partsList;
+            ReturnErrorOnFailure(this->mAttributeCache->Get<PartsList::TypeInfo>(path, partsList));
+            auto iter = partsList.begin();
+            while (iter.Next())
+            {
+                ChipLogProgress(Controller, "PartsList: %u", iter.GetValue());
+
+                if (iter.GetValue() != kInvalidEndpointId)
+                {
+                    CHIP_ERROR error = this->mAttributeCache->Get<AdministratorFabricIndex::TypeInfo>(
+                        kRootEndpointId, info.administratorFabricIndex);
+                    if (error != CHIP_NO_ERROR)
+                    {
+                        ChipLogError(Controller, "Failed to read AdministratorFabricIndex (endpoint %u): %" CHIP_ERROR_FORMAT,
+                                     iter.GetValue(), error.Format());
+                        return error;
+                    }
+                }
+            }
+        }
+        break;
+        default:
+            break;
+        }
+
+        return CHIP_NO_ERROR;
+    });
+    AccumulateErrors(return_err, err);
+
+    if (return_err != CHIP_NO_ERROR)
+    {
+        ChipLogError(Controller, "Failed parsing Joint Fabric information: %" CHIP_ERROR_FORMAT, return_err.Format());
+    }
+    return return_err;
 }
 
 CHIP_ERROR DeviceCommissioner::ParseGeneralCommissioningInfo(ReadCommissioningInfo & info)
@@ -3346,6 +3693,41 @@ void DeviceCommissioner::PerformCommissioningStep(DeviceProxy * proxy, Commissio
         }
     }
     break;
+    case CommissioningStage::kReadJointFabricInfo: {
+        VerifyOrDie(endpoint == kRootEndpointId);
+        ChipLogProgress(Controller, "Sending read requests for joint fabric information");
+
+        // Allocate a ClusterStateCache to collect the data from our read requests.
+        // The cache will be released in:
+        // - SendCommissioningReadRequest when failing to send a read request.
+        // - FinishReadingJointFabricInfo when the ReadJointFabricInfo stage is completed.
+        // - CancelCommissioningInteractions
+        mAttributeCache = Platform::MakeUnique<app::ClusterStateCache>(*this);
+
+        // Generally we need to make more than one read request, because as per spec a server only
+        // supports a limited number of paths per Read Interaction. Because the actual number of
+        // interactions we end up performing is dynamic, we track all of them within a single
+        // commissioning stage.
+        mReadJointFabricInfoProgress = 0;
+        ContinueReadingJointFabricInfo(params); // Note: assume params == delegate.GetCommissioningParameters()
+    }
+    break;
+    case CommissioningStage::kJCMTrustCheck: {
+        if (!params.GetRemoteVendorId().HasValue() || !params.GetAdministratorFabricIndex().HasValue())
+        {
+            ChipLogError(Controller, "Unable to verify trust towards device");
+            return CommissioningStageComplete(CHIP_ERROR_INVALID_ARGUMENT);
+        }
+
+        CHIP_ERROR err = JCMVerifyTrust(params.GetRemoteVendorId().Value(), params.GetAdministratorFabricIndex().Value());
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(Controller, "Failed to verify trust towards device: %" CHIP_ERROR_FORMAT, err.Format());
+        }
+        CommissioningStageComplete(err);
+        return;
+    }
+    break;
     case CommissioningStage::kSendOpCertSigningRequest: {
         if (!params.GetCSRNonce().HasValue())
         {
@@ -3450,6 +3832,53 @@ void DeviceCommissioner::PerformCommissioningStep(DeviceProxy * proxy, Commissio
         }
         break;
     }
+    case CommissioningStage::kSendICACCSRRequest: {
+        CHIP_ERROR err = SendICACCSRRequestCommand(proxy, timeout);
+        if (err != CHIP_NO_ERROR)
+        {
+            // We won't get any async callbacks here, so just complete our stage.
+            ChipLogError(Controller, "Failed to send JointFabric request: %" CHIP_ERROR_FORMAT, err.Format());
+            CommissioningStageComplete(err);
+            return;
+        }
+    }
+    break;
+    case CommissioningStage::kSignNOCIssuer: {
+        if (!params.GetIcaCsr().HasValue())
+        {
+            ChipLogError(Controller, "Joint Fabric - Unable to generate Sign ICA parameters");
+            return CommissioningStageComplete(CHIP_ERROR_INVALID_ARGUMENT);
+        }
+        CHIP_ERROR err = SignNOCIssuer(proxy, params.GetIcaCsr().Value());
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(Controller, "Joint Fabric - Unable to Sign ICA");
+            // Handle error, and notify session failure to the commissioner application.
+            ChipLogError(Controller, "Joint Fabric - Failed to process the Sign ICA request");
+            // TODO: Map error status to correct error code
+            CommissioningStageComplete(err);
+            return;
+        }
+    }
+    break;
+    case CommissioningStage::kSendICA: {
+        if (!params.GetIcac().HasValue())
+        {
+            ChipLogError(Controller, "AddICAC contents not specified");
+            CommissioningStageComplete(CHIP_ERROR_INVALID_ARGUMENT);
+            return;
+        }
+        CHIP_ERROR err = SendICA(proxy, params.GetIcac().Value(), params.GetAdminSubject().Value(), timeout);
+        if (err != CHIP_NO_ERROR)
+        {
+            // We won't get any async callbacks here, so just complete our stage.
+            ChipLogError(Controller, "Error sending ICA certificate: %" CHIP_ERROR_FORMAT, err.Format());
+            CommissioningStageComplete(err);
+            return;
+        }
+        break;
+    }
+    break;
     case CommissioningStage::kConfigureTrustedTimeSource: {
         if (!params.GetTrustedTimeSource().HasValue())
         {
