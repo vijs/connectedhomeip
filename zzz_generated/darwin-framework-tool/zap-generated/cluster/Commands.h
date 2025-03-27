@@ -167,6 +167,8 @@
 | CommodityTariff                                                     | 0x0700 |
 | EcosystemInformation                                                | 0x0750 |
 | CommissionerControl                                                 | 0x0751 |
+| JointFabricDatastore                                                | 0x0752 |
+| JointFabricAdministrator                                            | 0x0753 |
 | TlsCertificateManagement                                            | 0x0801 |
 | TlsClientManagement                                                 | 0x0802 |
 | MeterIdentification                                                 | 0x0B06 |
@@ -166776,6 +166778,3332 @@ public:
 
 #if MTR_ENABLE_PROVISIONAL
 /*----------------------------------------------------------------------------*\
+| Cluster JointFabricDatastore                                        | 0x0752 |
+|------------------------------------------------------------------------------|
+| Commands:                                                           |        |
+| * AddKeySet                                                         |   0x00 |
+| * UpdateKeySet                                                      |   0x01 |
+| * RemoveKeySet                                                      |   0x02 |
+| * AddGroup                                                          |   0x03 |
+| * UpdateGroup                                                       |   0x04 |
+| * RemoveGroup                                                       |   0x05 |
+| * AddAdmin                                                          |   0x06 |
+| * UpdateAdmin                                                       |   0x07 |
+| * RemoveAdmin                                                       |   0x08 |
+| * AddPendingNode                                                    |   0x09 |
+| * RefreshNode                                                       |   0x0A |
+| * UpdateNode                                                        |   0x0B |
+| * RemoveNode                                                        |   0x0C |
+| * UpdateEndpointForNode                                             |   0x0D |
+| * AddGroupIDToEndpointForNode                                       |   0x0E |
+| * RemoveGroupIDFromEndpointForNode                                  |   0x0F |
+| * AddBindingToEndpointForNode                                       |   0x10 |
+| * RemoveBindingFromEndpointForNode                                  |   0x11 |
+| * AddACLToNode                                                      |   0x12 |
+| * RemoveACLFromNode                                                 |   0x13 |
+|------------------------------------------------------------------------------|
+| Attributes:                                                         |        |
+| * AnchorRootCa                                                      | 0x0000 |
+| * AnchorNodeId                                                      | 0x0001 |
+| * AnchorVendorId                                                    | 0x0002 |
+| * FriendlyName                                                      | 0x0003 |
+| * GroupKeyList                                                      | 0x0004 |
+| * GroupList                                                         | 0x0005 |
+| * NodeList                                                          | 0x0006 |
+| * AdminList                                                         | 0x0007 |
+| * StatusEntry                                                       | 0x0008 |
+| * GeneratedCommandList                                              | 0xFFF8 |
+| * AcceptedCommandList                                               | 0xFFF9 |
+| * AttributeList                                                     | 0xFFFB |
+| * FeatureMap                                                        | 0xFFFC |
+| * ClusterRevision                                                   | 0xFFFD |
+|------------------------------------------------------------------------------|
+| Events:                                                             |        |
+\*----------------------------------------------------------------------------*/
+
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddKeySet
+ */
+class JointFabricDatastoreAddKeySet : public ClusterCommand {
+public:
+    JointFabricDatastoreAddKeySet()
+        : ClusterCommand("add-key-set")
+        , mComplex_GroupKeySet(&mRequest.groupKeySet)
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupKeySet", &mComplex_GroupKeySet);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddKeySet::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddKeySetParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupKeySet = [MTRJointFabricDatastoreClusterGroupKeySetStruct new];
+        params.groupKeySet.groupKeySetID = [NSNumber numberWithUnsignedShort:mRequest.groupKeySet.groupKeySetID];
+        params.groupKeySet.groupKeySecurityPolicy = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.groupKeySet.groupKeySecurityPolicy)];
+        if (mRequest.groupKeySet.epochKey0.IsNull()) {
+            params.groupKeySet.epochKey0 = nil;
+        } else {
+            params.groupKeySet.epochKey0 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey0.Value().data() length:mRequest.groupKeySet.epochKey0.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime0.IsNull()) {
+            params.groupKeySet.epochStartTime0 = nil;
+        } else {
+            params.groupKeySet.epochStartTime0 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime0.Value()];
+        }
+        if (mRequest.groupKeySet.epochKey1.IsNull()) {
+            params.groupKeySet.epochKey1 = nil;
+        } else {
+            params.groupKeySet.epochKey1 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey1.Value().data() length:mRequest.groupKeySet.epochKey1.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime1.IsNull()) {
+            params.groupKeySet.epochStartTime1 = nil;
+        } else {
+            params.groupKeySet.epochStartTime1 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime1.Value()];
+        }
+        if (mRequest.groupKeySet.epochKey2.IsNull()) {
+            params.groupKeySet.epochKey2 = nil;
+        } else {
+            params.groupKeySet.epochKey2 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey2.Value().data() length:mRequest.groupKeySet.epochKey2.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime2.IsNull()) {
+            params.groupKeySet.epochStartTime2 = nil;
+        } else {
+            params.groupKeySet.epochStartTime2 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime2.Value()];
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addKeySetWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddKeySet::Type mRequest;
+    TypedComplexArgument<chip::app::Clusters::JointFabricDatastore::Structs::GroupKeySetStruct::Type> mComplex_GroupKeySet;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command UpdateKeySet
+ */
+class JointFabricDatastoreUpdateKeySet : public ClusterCommand {
+public:
+    JointFabricDatastoreUpdateKeySet()
+        : ClusterCommand("update-key-set")
+        , mComplex_GroupKeySet(&mRequest.groupKeySet)
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupKeySet", &mComplex_GroupKeySet);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::UpdateKeySet::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterUpdateKeySetParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupKeySet = [MTRJointFabricDatastoreClusterGroupKeySetStruct new];
+        params.groupKeySet.groupKeySetID = [NSNumber numberWithUnsignedShort:mRequest.groupKeySet.groupKeySetID];
+        params.groupKeySet.groupKeySecurityPolicy = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.groupKeySet.groupKeySecurityPolicy)];
+        if (mRequest.groupKeySet.epochKey0.IsNull()) {
+            params.groupKeySet.epochKey0 = nil;
+        } else {
+            params.groupKeySet.epochKey0 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey0.Value().data() length:mRequest.groupKeySet.epochKey0.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime0.IsNull()) {
+            params.groupKeySet.epochStartTime0 = nil;
+        } else {
+            params.groupKeySet.epochStartTime0 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime0.Value()];
+        }
+        if (mRequest.groupKeySet.epochKey1.IsNull()) {
+            params.groupKeySet.epochKey1 = nil;
+        } else {
+            params.groupKeySet.epochKey1 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey1.Value().data() length:mRequest.groupKeySet.epochKey1.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime1.IsNull()) {
+            params.groupKeySet.epochStartTime1 = nil;
+        } else {
+            params.groupKeySet.epochStartTime1 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime1.Value()];
+        }
+        if (mRequest.groupKeySet.epochKey2.IsNull()) {
+            params.groupKeySet.epochKey2 = nil;
+        } else {
+            params.groupKeySet.epochKey2 = [NSData dataWithBytes:mRequest.groupKeySet.epochKey2.Value().data() length:mRequest.groupKeySet.epochKey2.Value().size()];
+        }
+        if (mRequest.groupKeySet.epochStartTime2.IsNull()) {
+            params.groupKeySet.epochStartTime2 = nil;
+        } else {
+            params.groupKeySet.epochStartTime2 = [NSNumber numberWithUnsignedLongLong:mRequest.groupKeySet.epochStartTime2.Value()];
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster updateKeySetWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::UpdateKeySet::Type mRequest;
+    TypedComplexArgument<chip::app::Clusters::JointFabricDatastore::Structs::GroupKeySetStruct::Type> mComplex_GroupKeySet;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveKeySet
+ */
+class JointFabricDatastoreRemoveKeySet : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveKeySet()
+        : ClusterCommand("remove-key-set")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupKeySetId", 0, UINT16_MAX, &mRequest.groupKeySetId);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveKeySet::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveKeySetParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupKeySetId = [NSNumber numberWithUnsignedShort:mRequest.groupKeySetId];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeKeySetWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveKeySet::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddGroup
+ */
+class JointFabricDatastoreAddGroup : public ClusterCommand {
+public:
+    JointFabricDatastoreAddGroup()
+        : ClusterCommand("add-group")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupKeySetID", 0, UINT16_MAX, &mRequest.groupKeySetID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupCAT", 0, UINT16_MAX, &mRequest.groupCAT);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupCATVersion", 0, UINT16_MAX, &mRequest.groupCATVersion);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupPermission", 0, UINT8_MAX, &mRequest.groupPermission);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddGroup::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddGroupParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupKeySetID = [NSNumber numberWithUnsignedShort:mRequest.groupKeySetID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupCAT = [NSNumber numberWithUnsignedShort:mRequest.groupCAT];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupCATVersion = [NSNumber numberWithUnsignedShort:mRequest.groupCATVersion];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupPermission = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.groupPermission)];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addGroupWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddGroup::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command UpdateGroup
+ */
+class JointFabricDatastoreUpdateGroup : public ClusterCommand {
+public:
+    JointFabricDatastoreUpdateGroup()
+        : ClusterCommand("update-group")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupKeySetID", 0, UINT16_MAX, &mRequest.groupKeySetID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupCAT", 0, UINT16_MAX, &mRequest.groupCAT);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupCATVersion", 0, UINT16_MAX, &mRequest.groupCATVersion);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupPermission", 0, UINT8_MAX, &mRequest.groupPermission);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::UpdateGroup::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterUpdateGroupParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupKeySetID = [NSNumber numberWithUnsignedShort:mRequest.groupKeySetID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupCAT = [NSNumber numberWithUnsignedShort:mRequest.groupCAT];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupCATVersion = [NSNumber numberWithUnsignedShort:mRequest.groupCATVersion];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupPermission = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.groupPermission)];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster updateGroupWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::UpdateGroup::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveGroup
+ */
+class JointFabricDatastoreRemoveGroup : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveGroup()
+        : ClusterCommand("remove-group")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveGroup::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveGroupParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeGroupWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveGroup::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddAdmin
+ */
+class JointFabricDatastoreAddAdmin : public ClusterCommand {
+public:
+    JointFabricDatastoreAddAdmin()
+        : ClusterCommand("add-admin")
+        , mComplex_AdminInformationEntry(&mRequest.adminInformationEntry)
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("AdminInformationEntry", &mComplex_AdminInformationEntry);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddAdmin::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddAdminParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        if (mRequest.adminInformationEntry.IsNull()) {
+            params.adminInformationEntry = nil;
+        } else {
+            params.adminInformationEntry = [MTRJointFabricDatastoreClusterDatastoreAdministratorInformationEntry new];
+            params.adminInformationEntry.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.adminInformationEntry.Value().nodeID];
+            params.adminInformationEntry.friendlyName = [[NSString alloc] initWithBytes:mRequest.adminInformationEntry.Value().friendlyName.data() length:mRequest.adminInformationEntry.Value().friendlyName.size() encoding:NSUTF8StringEncoding];
+            params.adminInformationEntry.vendorID = [NSNumber numberWithUnsignedShort:chip::to_underlying(mRequest.adminInformationEntry.Value().vendorID)];
+            params.adminInformationEntry.icac = [NSData dataWithBytes:mRequest.adminInformationEntry.Value().icac.data() length:mRequest.adminInformationEntry.Value().icac.size()];
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addAdminWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddAdmin::Type mRequest;
+    TypedComplexArgument<chip::app::DataModel::Nullable<chip::app::Clusters::JointFabricDatastore::Structs::DatastoreAdministratorInformationEntry::Type>> mComplex_AdminInformationEntry;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command UpdateAdmin
+ */
+class JointFabricDatastoreUpdateAdmin : public ClusterCommand {
+public:
+    JointFabricDatastoreUpdateAdmin()
+        : ClusterCommand("update-admin")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("Icac", &mRequest.icac);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::UpdateAdmin::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterUpdateAdminParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.icac = [NSData dataWithBytes:mRequest.icac.data() length:mRequest.icac.size()];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster updateAdminWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::UpdateAdmin::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveAdmin
+ */
+class JointFabricDatastoreRemoveAdmin : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveAdmin()
+        : ClusterCommand("remove-admin")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveAdmin::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveAdminParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeAdminWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveAdmin::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddPendingNode
+ */
+class JointFabricDatastoreAddPendingNode : public ClusterCommand {
+public:
+    JointFabricDatastoreAddPendingNode()
+        : ClusterCommand("add-pending-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddPendingNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddPendingNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addPendingNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddPendingNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RefreshNode
+ */
+class JointFabricDatastoreRefreshNode : public ClusterCommand {
+public:
+    JointFabricDatastoreRefreshNode()
+        : ClusterCommand("refresh-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RefreshNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRefreshNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster refreshNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RefreshNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command UpdateNode
+ */
+class JointFabricDatastoreUpdateNode : public ClusterCommand {
+public:
+    JointFabricDatastoreUpdateNode()
+        : ClusterCommand("update-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::UpdateNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterUpdateNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster updateNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::UpdateNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveNode
+ */
+class JointFabricDatastoreRemoveNode : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveNode()
+        : ClusterCommand("remove-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command UpdateEndpointForNode
+ */
+class JointFabricDatastoreUpdateEndpointForNode : public ClusterCommand {
+public:
+    JointFabricDatastoreUpdateEndpointForNode()
+        : ClusterCommand("update-endpoint-for-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("EndpointID", 0, UINT16_MAX, &mRequest.endpointID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("FriendlyName", &mRequest.friendlyName);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::UpdateEndpointForNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterUpdateEndpointForNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.endpointID = [NSNumber numberWithUnsignedShort:mRequest.endpointID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.friendlyName = [[NSString alloc] initWithBytes:mRequest.friendlyName.data() length:mRequest.friendlyName.size() encoding:NSUTF8StringEncoding];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster updateEndpointForNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::UpdateEndpointForNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddGroupIDToEndpointForNode
+ */
+class JointFabricDatastoreAddGroupIDToEndpointForNode : public ClusterCommand {
+public:
+    JointFabricDatastoreAddGroupIDToEndpointForNode()
+        : ClusterCommand("add-group-idto-endpoint-for-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("EndpointID", 0, UINT16_MAX, &mRequest.endpointID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddGroupIDToEndpointForNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddGroupIDToEndpointForNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.endpointID = [NSNumber numberWithUnsignedShort:mRequest.endpointID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addGroupIDToEndpointForNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddGroupIDToEndpointForNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveGroupIDFromEndpointForNode
+ */
+class JointFabricDatastoreRemoveGroupIDFromEndpointForNode : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveGroupIDFromEndpointForNode()
+        : ClusterCommand("remove-group-idfrom-endpoint-for-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("EndpointID", 0, UINT16_MAX, &mRequest.endpointID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("GroupID", 0, UINT16_MAX, &mRequest.groupID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveGroupIDFromEndpointForNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveGroupIDFromEndpointForNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.endpointID = [NSNumber numberWithUnsignedShort:mRequest.endpointID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.groupID = [NSNumber numberWithUnsignedShort:mRequest.groupID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeGroupIDFromEndpointForNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveGroupIDFromEndpointForNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddBindingToEndpointForNode
+ */
+class JointFabricDatastoreAddBindingToEndpointForNode : public ClusterCommand {
+public:
+    JointFabricDatastoreAddBindingToEndpointForNode()
+        : ClusterCommand("add-binding-to-endpoint-for-node")
+        , mComplex_Binding(&mRequest.binding)
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("EndpointID", 0, UINT16_MAX, &mRequest.endpointID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("Binding", &mComplex_Binding);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddBindingToEndpointForNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddBindingToEndpointForNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.endpointID = [NSNumber numberWithUnsignedShort:mRequest.endpointID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.binding = [MTRJointFabricDatastoreClusterTargetStruct new];
+        if (mRequest.binding.node.HasValue()) {
+            params.binding.node = [NSNumber numberWithUnsignedLongLong:mRequest.binding.node.Value()];
+        } else {
+            params.binding.node = nil;
+        }
+        if (mRequest.binding.group.HasValue()) {
+            params.binding.group = [NSNumber numberWithUnsignedShort:mRequest.binding.group.Value()];
+        } else {
+            params.binding.group = nil;
+        }
+        if (mRequest.binding.endpoint.HasValue()) {
+            params.binding.endpoint = [NSNumber numberWithUnsignedShort:mRequest.binding.endpoint.Value()];
+        } else {
+            params.binding.endpoint = nil;
+        }
+        if (mRequest.binding.cluster.HasValue()) {
+            params.binding.cluster = [NSNumber numberWithUnsignedInt:mRequest.binding.cluster.Value()];
+        } else {
+            params.binding.cluster = nil;
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addBindingToEndpointForNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddBindingToEndpointForNode::Type mRequest;
+    TypedComplexArgument<chip::app::Clusters::JointFabricDatastore::Structs::TargetStruct::Type> mComplex_Binding;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveBindingFromEndpointForNode
+ */
+class JointFabricDatastoreRemoveBindingFromEndpointForNode : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveBindingFromEndpointForNode()
+        : ClusterCommand("remove-binding-from-endpoint-for-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("ListID", 0, UINT16_MAX, &mRequest.listID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("EndpointID", 0, UINT16_MAX, &mRequest.endpointID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveBindingFromEndpointForNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveBindingFromEndpointForNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.listID = [NSNumber numberWithUnsignedShort:mRequest.listID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.endpointID = [NSNumber numberWithUnsignedShort:mRequest.endpointID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeBindingFromEndpointForNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveBindingFromEndpointForNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddACLToNode
+ */
+class JointFabricDatastoreAddACLToNode : public ClusterCommand {
+public:
+    JointFabricDatastoreAddACLToNode()
+        : ClusterCommand("add-aclto-node")
+        , mComplex_ACLEntry(&mRequest.ACLEntry)
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("ACLEntry", &mComplex_ACLEntry);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::AddACLToNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterAddACLToNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.aclEntry = [MTRJointFabricDatastoreClusterAccessControlEntryStruct new];
+        params.aclEntry.privilege = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.ACLEntry.privilege)];
+        params.aclEntry.authMode = [NSNumber numberWithUnsignedChar:chip::to_underlying(mRequest.ACLEntry.authMode)];
+        if (mRequest.ACLEntry.subjects.IsNull()) {
+            params.aclEntry.subjects = nil;
+        } else {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.ACLEntry.subjects.Value()) {
+                    NSNumber * newElement_2;
+                    newElement_2 = [NSNumber numberWithUnsignedLongLong:entry_2];
+                    [array_2 addObject:newElement_2];
+                }
+                params.aclEntry.subjects = array_2;
+            }
+        }
+        if (mRequest.ACLEntry.targets.IsNull()) {
+            params.aclEntry.targets = nil;
+        } else {
+            { // Scope for our temporary variables
+                auto * array_2 = [NSMutableArray new];
+                for (auto & entry_2 : mRequest.ACLEntry.targets.Value()) {
+                    MTRJointFabricDatastoreClusterAccessControlTargetStruct * newElement_2;
+                    newElement_2 = [MTRJointFabricDatastoreClusterAccessControlTargetStruct new];
+                    if (entry_2.cluster.IsNull()) {
+                        newElement_2.cluster = nil;
+                    } else {
+                        newElement_2.cluster = [NSNumber numberWithUnsignedInt:entry_2.cluster.Value()];
+                    }
+                    if (entry_2.endpoint.IsNull()) {
+                        newElement_2.endpoint = nil;
+                    } else {
+                        newElement_2.endpoint = [NSNumber numberWithUnsignedShort:entry_2.endpoint.Value()];
+                    }
+                    if (entry_2.deviceType.IsNull()) {
+                        newElement_2.deviceType = nil;
+                    } else {
+                        newElement_2.deviceType = [NSNumber numberWithUnsignedInt:entry_2.deviceType.Value()];
+                    }
+                    [array_2 addObject:newElement_2];
+                }
+                params.aclEntry.targets = array_2;
+            }
+        }
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addACLToNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::AddACLToNode::Type mRequest;
+    TypedComplexArgument<chip::app::Clusters::JointFabricDatastore::Structs::AccessControlEntryStruct::Type> mComplex_ACLEntry;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command RemoveACLFromNode
+ */
+class JointFabricDatastoreRemoveACLFromNode : public ClusterCommand {
+public:
+    JointFabricDatastoreRemoveACLFromNode()
+        : ClusterCommand("remove-aclfrom-node")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("ListID", 0, UINT16_MAX, &mRequest.listID);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("NodeID", 0, UINT64_MAX, &mRequest.nodeID);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricDatastore::Commands::RemoveACLFromNode::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricDatastoreClusterRemoveACLFromNodeParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.listID = [NSNumber numberWithUnsignedShort:mRequest.listID];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.nodeID = [NSNumber numberWithUnsignedLongLong:mRequest.nodeID];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster removeACLFromNodeWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricDatastore::Commands::RemoveACLFromNode::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AnchorRootCa
+ */
+class ReadJointFabricDatastoreAnchorRootCa : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAnchorRootCa()
+        : ReadAttribute("anchor-root-ca")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAnchorRootCa()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorRootCa::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAnchorRootCaWithCompletion:^(NSData * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AnchorRootCa response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AnchorRootCa read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAnchorRootCa : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAnchorRootCa()
+        : SubscribeAttribute("anchor-root-ca")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAnchorRootCa()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorRootCa::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAnchorRootCaWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSData * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AnchorRootCa response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AnchorNodeId
+ */
+class ReadJointFabricDatastoreAnchorNodeId : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAnchorNodeId()
+        : ReadAttribute("anchor-node-id")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAnchorNodeId()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorNodeId::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAnchorNodeIdWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AnchorNodeId response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AnchorNodeId read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAnchorNodeId : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAnchorNodeId()
+        : SubscribeAttribute("anchor-node-id")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAnchorNodeId()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorNodeId::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAnchorNodeIdWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AnchorNodeId response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AnchorVendorId
+ */
+class ReadJointFabricDatastoreAnchorVendorId : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAnchorVendorId()
+        : ReadAttribute("anchor-vendor-id")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAnchorVendorId()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorVendorId::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAnchorVendorIdWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AnchorVendorId response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AnchorVendorId read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAnchorVendorId : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAnchorVendorId()
+        : SubscribeAttribute("anchor-vendor-id")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAnchorVendorId()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AnchorVendorId::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAnchorVendorIdWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AnchorVendorId response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute FriendlyName
+ */
+class ReadJointFabricDatastoreFriendlyName : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreFriendlyName()
+        : ReadAttribute("friendly-name")
+    {
+    }
+
+    ~ReadJointFabricDatastoreFriendlyName()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::FriendlyName::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeFriendlyNameWithCompletion:^(NSString * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.FriendlyName response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore FriendlyName read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreFriendlyName : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreFriendlyName()
+        : SubscribeAttribute("friendly-name")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreFriendlyName()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::FriendlyName::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeFriendlyNameWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSString * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.FriendlyName response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute GroupKeyList
+ */
+class ReadJointFabricDatastoreGroupKeyList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreGroupKeyList()
+        : ReadAttribute("group-key-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreGroupKeyList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GroupKeyList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeGroupKeyListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.GroupKeyList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore GroupKeyList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreGroupKeyList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreGroupKeyList()
+        : SubscribeAttribute("group-key-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreGroupKeyList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GroupKeyList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeGroupKeyListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.GroupKeyList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute GroupList
+ */
+class ReadJointFabricDatastoreGroupList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreGroupList()
+        : ReadAttribute("group-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreGroupList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GroupList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRReadParams alloc] init];
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        [cluster readAttributeGroupListWithParams:params completion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.GroupList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore GroupList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreGroupList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreGroupList()
+        : SubscribeAttribute("group-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreGroupList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GroupList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeGroupListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.GroupList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute NodeList
+ */
+class ReadJointFabricDatastoreNodeList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreNodeList()
+        : ReadAttribute("node-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreNodeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::NodeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRReadParams alloc] init];
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        [cluster readAttributeNodeListWithParams:params completion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.NodeList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore NodeList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreNodeList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreNodeList()
+        : SubscribeAttribute("node-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreNodeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::NodeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeNodeListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.NodeList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AdminList
+ */
+class ReadJointFabricDatastoreAdminList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAdminList()
+        : ReadAttribute("admin-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAdminList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AdminList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAdminListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AdminList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AdminList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAdminList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAdminList()
+        : SubscribeAttribute("admin-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAdminList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AdminList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAdminListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AdminList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute StatusEntry
+ */
+class ReadJointFabricDatastoreStatusEntry : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreStatusEntry()
+        : ReadAttribute("status-entry")
+    {
+    }
+
+    ~ReadJointFabricDatastoreStatusEntry()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::StatusEntry::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeStatusEntryWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.StatusEntry response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore StatusEntry read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreStatusEntry : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreStatusEntry()
+        : SubscribeAttribute("status-entry")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreStatusEntry()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::StatusEntry::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeStatusEntryWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.StatusEntry response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute GeneratedCommandList
+ */
+class ReadJointFabricDatastoreGeneratedCommandList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreGeneratedCommandList()
+        : ReadAttribute("generated-command-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreGeneratedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GeneratedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeGeneratedCommandListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.GeneratedCommandList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore GeneratedCommandList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreGeneratedCommandList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreGeneratedCommandList()
+        : SubscribeAttribute("generated-command-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreGeneratedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::GeneratedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeGeneratedCommandListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.GeneratedCommandList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AcceptedCommandList
+ */
+class ReadJointFabricDatastoreAcceptedCommandList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAcceptedCommandList()
+        : ReadAttribute("accepted-command-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAcceptedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AcceptedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAcceptedCommandListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AcceptedCommandList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AcceptedCommandList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAcceptedCommandList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAcceptedCommandList()
+        : SubscribeAttribute("accepted-command-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAcceptedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AcceptedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAcceptedCommandListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AcceptedCommandList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AttributeList
+ */
+class ReadJointFabricDatastoreAttributeList : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreAttributeList()
+        : ReadAttribute("attribute-list")
+    {
+    }
+
+    ~ReadJointFabricDatastoreAttributeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AttributeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAttributeListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.AttributeList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore AttributeList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreAttributeList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreAttributeList()
+        : SubscribeAttribute("attribute-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreAttributeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::AttributeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAttributeListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.AttributeList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute FeatureMap
+ */
+class ReadJointFabricDatastoreFeatureMap : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreFeatureMap()
+        : ReadAttribute("feature-map")
+    {
+    }
+
+    ~ReadJointFabricDatastoreFeatureMap()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::FeatureMap::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeFeatureMapWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.FeatureMap response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore FeatureMap read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreFeatureMap : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreFeatureMap()
+        : SubscribeAttribute("feature-map")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreFeatureMap()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::FeatureMap::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeFeatureMapWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.FeatureMap response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute ClusterRevision
+ */
+class ReadJointFabricDatastoreClusterRevision : public ReadAttribute {
+public:
+    ReadJointFabricDatastoreClusterRevision()
+        : ReadAttribute("cluster-revision")
+    {
+    }
+
+    ~ReadJointFabricDatastoreClusterRevision()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::ClusterRevision::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeClusterRevisionWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricDatastore.ClusterRevision response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricDatastore ClusterRevision read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricDatastoreClusterRevision : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricDatastoreClusterRevision()
+        : SubscribeAttribute("cluster-revision")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricDatastoreClusterRevision()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricDatastore::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricDatastore::Attributes::ClusterRevision::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricDatastore alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeClusterRevisionWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricDatastore.ClusterRevision response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*----------------------------------------------------------------------------*\
+| Cluster JointFabricAdministrator                                    | 0x0753 |
+|------------------------------------------------------------------------------|
+| Commands:                                                           |        |
+| * ICACCSRRequest                                                    |   0x00 |
+| * AddICAC                                                           |   0x02 |
+| * OpenJointCommissioningWindow                                      |   0x04 |
+|------------------------------------------------------------------------------|
+| Attributes:                                                         |        |
+| * AdministratorFabricIndex                                          | 0x0000 |
+| * GeneratedCommandList                                              | 0xFFF8 |
+| * AcceptedCommandList                                               | 0xFFF9 |
+| * AttributeList                                                     | 0xFFFB |
+| * FeatureMap                                                        | 0xFFFC |
+| * ClusterRevision                                                   | 0xFFFD |
+|------------------------------------------------------------------------------|
+| Events:                                                             |        |
+\*----------------------------------------------------------------------------*/
+
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command ICACCSRRequest
+ */
+class JointFabricAdministratorICACCSRRequest : public ClusterCommand {
+public:
+    JointFabricAdministratorICACCSRRequest()
+        : ClusterCommand("icaccsrrequest")
+    {
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricAdministrator::Commands::ICACCSRRequest::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricAdministratorClusterICACCSRRequestParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster ICACCSRRequestWithParams:params completion:
+                    ^(MTRJointFabricAdministratorClusterICACCSRResponseParams * _Nullable values, NSError * _Nullable error) {
+                        NSLog(@"Values: %@", values);
+                        if (error == nil) {
+                            constexpr chip::CommandId responseId = chip::app::Clusters::JointFabricAdministrator::Commands::ICACCSRResponse::Id;
+                            RemoteDataModelLogger::LogCommandAsJSON(@(endpointId), @(clusterId), @(responseId), values);
+                        }
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            constexpr chip::CommandId responseId = chip::app::Clusters::JointFabricAdministrator::Commands::ICACCSRResponse::Id;
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(responseId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command AddICAC
+ */
+class JointFabricAdministratorAddICAC : public ClusterCommand {
+public:
+    JointFabricAdministratorAddICAC()
+        : ClusterCommand("add-icac")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("ICACValue", &mRequest.ICACValue);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricAdministrator::Commands::AddICAC::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricAdministratorClusterAddICACParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.icacValue = [NSData dataWithBytes:mRequest.ICACValue.data() length:mRequest.ICACValue.size()];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster addICACWithParams:params completion:
+                    ^(MTRJointFabricAdministratorClusterICACResponseParams * _Nullable values, NSError * _Nullable error) {
+                        NSLog(@"Values: %@", values);
+                        if (error == nil) {
+                            constexpr chip::CommandId responseId = chip::app::Clusters::JointFabricAdministrator::Commands::ICACResponse::Id;
+                            RemoteDataModelLogger::LogCommandAsJSON(@(endpointId), @(clusterId), @(responseId), values);
+                        }
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            constexpr chip::CommandId responseId = chip::app::Clusters::JointFabricAdministrator::Commands::ICACResponse::Id;
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(responseId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricAdministrator::Commands::AddICAC::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*
+ * Command OpenJointCommissioningWindow
+ */
+class JointFabricAdministratorOpenJointCommissioningWindow : public ClusterCommand {
+public:
+    JointFabricAdministratorOpenJointCommissioningWindow()
+        : ClusterCommand("open-joint-commissioning-window")
+    {
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("CommissioningTimeout", 0, UINT16_MAX, &mRequest.commissioningTimeout);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("PAKEPasscodeVerifier", &mRequest.PAKEPasscodeVerifier);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("Discriminator", 0, UINT16_MAX, &mRequest.discriminator);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("Iterations", 0, UINT32_MAX, &mRequest.iterations);
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        AddArgument("Salt", &mRequest.salt);
+#endif // MTR_ENABLE_PROVISIONAL
+        ClusterCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId commandId = chip::app::Clusters::JointFabricAdministrator::Commands::OpenJointCommissioningWindow::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") command (0x%08" PRIX32 ") on endpoint %u", clusterId, commandId, endpointId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRJointFabricAdministratorClusterOpenJointCommissioningWindowParams alloc] init];
+        params.timedInvokeTimeoutMs = mTimedInteractionTimeoutMs.HasValue() ? [NSNumber numberWithUnsignedShort:mTimedInteractionTimeoutMs.Value()] : nil;
+#if MTR_ENABLE_PROVISIONAL
+        params.commissioningTimeout = [NSNumber numberWithUnsignedShort:mRequest.commissioningTimeout];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.pakePasscodeVerifier = [NSData dataWithBytes:mRequest.PAKEPasscodeVerifier.data() length:mRequest.PAKEPasscodeVerifier.size()];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.discriminator = [NSNumber numberWithUnsignedShort:mRequest.discriminator];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.iterations = [NSNumber numberWithUnsignedInt:mRequest.iterations];
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        params.salt = [NSData dataWithBytes:mRequest.salt.data() length:mRequest.salt.size()];
+#endif // MTR_ENABLE_PROVISIONAL
+        uint16_t repeatCount = mRepeatCount.ValueOr(1);
+        uint16_t __block responsesNeeded = repeatCount;
+        while (repeatCount--) {
+            [cluster openJointCommissioningWindowWithParams:params completion:
+                    ^(NSError * _Nullable error) {
+                        responsesNeeded--;
+                        if (error != nil) {
+                            mError = error;
+                            LogNSError("Error", error);
+                            RemoteDataModelLogger::LogCommandErrorAsJSON(@(endpointId), @(clusterId), @(commandId), error);
+                        }
+                        if (responsesNeeded == 0) {
+                            SetCommandExitStatus(mError);
+                        }
+                    }];
+        }
+        return CHIP_NO_ERROR;
+    }
+
+private:
+    chip::app::Clusters::JointFabricAdministrator::Commands::OpenJointCommissioningWindow::Type mRequest;
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AdministratorFabricIndex
+ */
+class ReadJointFabricAdministratorAdministratorFabricIndex : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorAdministratorFabricIndex()
+        : ReadAttribute("administrator-fabric-index")
+    {
+    }
+
+    ~ReadJointFabricAdministratorAdministratorFabricIndex()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AdministratorFabricIndex::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeADMINISTRATORFABRICINDEXWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.ADMINISTRATORFABRICINDEX response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator ADMINISTRATORFABRICINDEX read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorAdministratorFabricIndex : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorAdministratorFabricIndex()
+        : SubscribeAttribute("administrator-fabric-index")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorAdministratorFabricIndex()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AdministratorFabricIndex::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeADMINISTRATORFABRICINDEXWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.ADMINISTRATORFABRICINDEX response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute GeneratedCommandList
+ */
+class ReadJointFabricAdministratorGeneratedCommandList : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorGeneratedCommandList()
+        : ReadAttribute("generated-command-list")
+    {
+    }
+
+    ~ReadJointFabricAdministratorGeneratedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::GeneratedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeGeneratedCommandListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.GeneratedCommandList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator GeneratedCommandList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorGeneratedCommandList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorGeneratedCommandList()
+        : SubscribeAttribute("generated-command-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorGeneratedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::GeneratedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeGeneratedCommandListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.GeneratedCommandList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AcceptedCommandList
+ */
+class ReadJointFabricAdministratorAcceptedCommandList : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorAcceptedCommandList()
+        : ReadAttribute("accepted-command-list")
+    {
+    }
+
+    ~ReadJointFabricAdministratorAcceptedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AcceptedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAcceptedCommandListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.AcceptedCommandList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator AcceptedCommandList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorAcceptedCommandList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorAcceptedCommandList()
+        : SubscribeAttribute("accepted-command-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorAcceptedCommandList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AcceptedCommandList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAcceptedCommandListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.AcceptedCommandList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute AttributeList
+ */
+class ReadJointFabricAdministratorAttributeList : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorAttributeList()
+        : ReadAttribute("attribute-list")
+    {
+    }
+
+    ~ReadJointFabricAdministratorAttributeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AttributeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeAttributeListWithCompletion:^(NSArray * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.AttributeList response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator AttributeList read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorAttributeList : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorAttributeList()
+        : SubscribeAttribute("attribute-list")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorAttributeList()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::AttributeList::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeAttributeListWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSArray * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.AttributeList response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute FeatureMap
+ */
+class ReadJointFabricAdministratorFeatureMap : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorFeatureMap()
+        : ReadAttribute("feature-map")
+    {
+    }
+
+    ~ReadJointFabricAdministratorFeatureMap()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::FeatureMap::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeFeatureMapWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.FeatureMap response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator FeatureMap read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorFeatureMap : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorFeatureMap()
+        : SubscribeAttribute("feature-map")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorFeatureMap()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::FeatureMap::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeFeatureMapWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.FeatureMap response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+
+/*
+ * Attribute ClusterRevision
+ */
+class ReadJointFabricAdministratorClusterRevision : public ReadAttribute {
+public:
+    ReadJointFabricAdministratorClusterRevision()
+        : ReadAttribute("cluster-revision")
+    {
+    }
+
+    ~ReadJointFabricAdministratorClusterRevision()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::AttributeId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::ClusterRevision::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReadAttribute (0x%08" PRIX32 ") on endpoint %u", endpointId, clusterId, attributeId);
+
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        [cluster readAttributeClusterRevisionWithCompletion:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+            NSLog(@"JointFabricAdministrator.ClusterRevision response %@", [value description]);
+            if (error == nil) {
+                RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+            } else {
+                LogNSError("JointFabricAdministrator ClusterRevision read Error", error);
+                RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+            }
+            SetCommandExitStatus(error);
+        }];
+        return CHIP_NO_ERROR;
+    }
+};
+
+class SubscribeAttributeJointFabricAdministratorClusterRevision : public SubscribeAttribute {
+public:
+    SubscribeAttributeJointFabricAdministratorClusterRevision()
+        : SubscribeAttribute("cluster-revision")
+    {
+    }
+
+    ~SubscribeAttributeJointFabricAdministratorClusterRevision()
+    {
+    }
+
+    CHIP_ERROR SendCommand(MTRBaseDevice * device, chip::EndpointId endpointId) override
+    {
+        constexpr chip::ClusterId clusterId = chip::app::Clusters::JointFabricAdministrator::Id;
+        constexpr chip::CommandId attributeId = chip::app::Clusters::JointFabricAdministrator::Attributes::ClusterRevision::Id;
+
+        ChipLogProgress(chipTool, "Sending cluster (0x%08" PRIX32 ") ReportAttribute (0x%08" PRIX32 ") on endpoint %u", clusterId, attributeId, endpointId);
+        dispatch_queue_t callbackQueue = dispatch_queue_create("com.chip.command", DISPATCH_QUEUE_SERIAL_WITH_AUTORELEASE_POOL);
+        __auto_type * cluster = [[MTRBaseClusterJointFabricAdministrator alloc] initWithDevice:device endpointID:@(endpointId) queue:callbackQueue];
+        __auto_type * params = [[MTRSubscribeParams alloc] initWithMinInterval:@(mMinInterval) maxInterval:@(mMaxInterval)];
+        if (mKeepSubscriptions.HasValue()) {
+            params.replaceExistingSubscriptions = !mKeepSubscriptions.Value();
+        }
+        if (mFabricFiltered.HasValue()) {
+            params.filterByFabric = mFabricFiltered.Value();
+        }
+        if (mAutoResubscribe.HasValue()) {
+            params.resubscribeAutomatically = mAutoResubscribe.Value();
+        }
+        [cluster subscribeAttributeClusterRevisionWithParams:params
+            subscriptionEstablished:^() { mSubscriptionEstablished = YES; }
+            reportHandler:^(NSNumber * _Nullable value, NSError * _Nullable error) {
+                NSLog(@"JointFabricAdministrator.ClusterRevision response %@", [value description]);
+                if (error == nil) {
+                    RemoteDataModelLogger::LogAttributeAsJSON(@(endpointId), @(clusterId), @(attributeId), value);
+                } else {
+                    RemoteDataModelLogger::LogAttributeErrorAsJSON(@(endpointId), @(clusterId), @(attributeId), error);
+                }
+                SetCommandExitStatus(error);
+            }];
+
+        return CHIP_NO_ERROR;
+    }
+};
+
+#endif // MTR_ENABLE_PROVISIONAL
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+/*----------------------------------------------------------------------------*\
 | Cluster TlsCertificateManagement                                    | 0x0801 |
 |------------------------------------------------------------------------------|
 | Commands:                                                           |        |
@@ -191659,6 +194987,189 @@ void registerClusterCommissionerControl(Commands & commands)
 
     commands.RegisterCluster(clusterName, clusterCommands);
 }
+void registerClusterJointFabricDatastore(Commands & commands)
+{
+#if MTR_ENABLE_PROVISIONAL
+    using namespace chip::app::Clusters::JointFabricDatastore;
+
+    const char * clusterName = "JointFabricDatastore";
+
+    commands_list clusterCommands = {
+        make_unique<ClusterCommand>(Id), //
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddKeySet>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreUpdateKeySet>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveKeySet>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddGroup>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreUpdateGroup>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveGroup>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddAdmin>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreUpdateAdmin>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveAdmin>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddPendingNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRefreshNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreUpdateNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreUpdateEndpointForNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddGroupIDToEndpointForNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveGroupIDFromEndpointForNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddBindingToEndpointForNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveBindingFromEndpointForNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreAddACLToNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricDatastoreRemoveACLFromNode>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+        make_unique<ReadAttribute>(Id), //
+        make_unique<WriteAttribute>(Id), //
+        make_unique<SubscribeAttribute>(Id), //
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAnchorRootCa>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAnchorRootCa>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAnchorNodeId>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAnchorNodeId>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAnchorVendorId>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAnchorVendorId>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreFriendlyName>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreFriendlyName>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreGroupKeyList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreGroupKeyList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreGroupList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreGroupList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreNodeList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreNodeList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAdminList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAdminList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreStatusEntry>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreStatusEntry>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreGeneratedCommandList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreGeneratedCommandList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAcceptedCommandList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAcceptedCommandList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreAttributeList>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreAttributeList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreFeatureMap>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreFeatureMap>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricDatastoreClusterRevision>(), //
+        make_unique<SubscribeAttributeJointFabricDatastoreClusterRevision>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+    };
+
+    commands.RegisterCluster(clusterName, clusterCommands);
+#endif // MTR_ENABLE_PROVISIONAL
+}
+void registerClusterJointFabricAdministrator(Commands & commands)
+{
+#if MTR_ENABLE_PROVISIONAL
+    using namespace chip::app::Clusters::JointFabricAdministrator;
+
+    const char * clusterName = "JointFabricAdministrator";
+
+    commands_list clusterCommands = {
+        make_unique<ClusterCommand>(Id), //
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricAdministratorICACCSRRequest>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricAdministratorAddICAC>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<JointFabricAdministratorOpenJointCommissioningWindow>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+        make_unique<ReadAttribute>(Id), //
+        make_unique<WriteAttribute>(Id), //
+        make_unique<SubscribeAttribute>(Id), //
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorAdministratorFabricIndex>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorAdministratorFabricIndex>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorGeneratedCommandList>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorGeneratedCommandList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorAcceptedCommandList>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorAcceptedCommandList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorAttributeList>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorAttributeList>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorFeatureMap>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorFeatureMap>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+#if MTR_ENABLE_PROVISIONAL
+        make_unique<ReadJointFabricAdministratorClusterRevision>(), //
+        make_unique<SubscribeAttributeJointFabricAdministratorClusterRevision>(), //
+#endif // MTR_ENABLE_PROVISIONAL
+    };
+
+    commands.RegisterCluster(clusterName, clusterCommands);
+#endif // MTR_ENABLE_PROVISIONAL
+}
 void registerClusterTlsCertificateManagement(Commands & commands)
 {
 #if MTR_ENABLE_PROVISIONAL
@@ -192442,6 +195953,8 @@ void registerClusters(Commands & commands)
     registerClusterCommodityTariff(commands);
     registerClusterEcosystemInformation(commands);
     registerClusterCommissionerControl(commands);
+    registerClusterJointFabricDatastore(commands);
+    registerClusterJointFabricAdministrator(commands);
     registerClusterTlsCertificateManagement(commands);
     registerClusterTlsClientManagement(commands);
     registerClusterMeterIdentification(commands);
