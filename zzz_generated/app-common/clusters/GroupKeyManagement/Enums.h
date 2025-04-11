@@ -26,17 +26,7 @@ namespace app {
 namespace Clusters {
 namespace GroupKeyManagement {
 
-// Enum for GroupKeySecurityPolicyEnum
-enum class GroupKeySecurityPolicyEnum : uint8_t
-{
-    kTrustFirst   = 0x00,
-    kCacheAndSync = 0x01,
-    // All received enum values that are not listed above will be mapped
-    // to kUnknownEnumValue. This is a helper enum value that should only
-    // be used by code to process how it handles receiving and unknown
-    // enum value. This specific should never be transmitted.
-    kUnknownEnumValue = 2,
-};
+using GroupKeySecurityPolicyEnum = Clusters::detail::GroupKeySecurityPolicyEnum;
 
 // Bitmap for Feature
 enum class Feature : uint32_t

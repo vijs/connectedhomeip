@@ -32,12 +32,14 @@ limitations under the License.
 
   <enum name="GroupKeySecurityPolicyEnum" type="enum8">
     <cluster code="0x003F"/>
+    <cluster code="0x0752"/>
     <item name="TrustFirst" value="0x00"/>
     <item name="CacheAndSync" value="0x01"/>
   </enum>
 
   <struct name="GroupKeySetStruct">
     <cluster code="0x003F"/>
+    <cluster code="0x0752"/>
     <item fieldId="0" name="GroupKeySetID" type="int16u"/>
     <item fieldId="1" name="GroupKeySecurityPolicy" type="GroupKeySecurityPolicyEnum"/>
     <item fieldId="2" name="EpochKey0" type="octet_string" length="16" isNullable="true"/>

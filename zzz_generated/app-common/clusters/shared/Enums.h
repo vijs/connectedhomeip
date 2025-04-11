@@ -26,6 +26,34 @@ namespace Clusters {
 namespace detail {
 // Enums shared across multiple clusters.
 
+// Enum for AccessControlEntryAuthModeEnum
+enum class AccessControlEntryAuthModeEnum : uint8_t
+{
+    kPase  = 0x01,
+    kCase  = 0x02,
+    kGroup = 0x03,
+    // All received enum values that are not listed above will be mapped
+    // to kUnknownEnumValue. This is a helper enum value that should only
+    // be used by code to process how it handles receiving and unknown
+    // enum value. This specific should never be transmitted.
+    kUnknownEnumValue = 0,
+};
+
+// Enum for AccessControlEntryPrivilegeEnum
+enum class AccessControlEntryPrivilegeEnum : uint8_t
+{
+    kView       = 0x01,
+    kProxyView  = 0x02,
+    kOperate    = 0x03,
+    kManage     = 0x04,
+    kAdminister = 0x05,
+    // All received enum values that are not listed above will be mapped
+    // to kUnknownEnumValue. This is a helper enum value that should only
+    // be used by code to process how it handles receiving and unknown
+    // enum value. This specific should never be transmitted.
+    kUnknownEnumValue = 0,
+};
+
 // Enum for ChangeIndicationEnum
 enum class ChangeIndicationEnum : uint8_t
 {
@@ -44,6 +72,18 @@ enum class DegradationDirectionEnum : uint8_t
 {
     kUp   = 0x00,
     kDown = 0x01,
+    // All received enum values that are not listed above will be mapped
+    // to kUnknownEnumValue. This is a helper enum value that should only
+    // be used by code to process how it handles receiving and unknown
+    // enum value. This specific should never be transmitted.
+    kUnknownEnumValue = 2,
+};
+
+// Enum for GroupKeySecurityPolicyEnum
+enum class GroupKeySecurityPolicyEnum : uint8_t
+{
+    kTrustFirst   = 0x00,
+    kCacheAndSync = 0x01,
     // All received enum values that are not listed above will be mapped
     // to kUnknownEnumValue. This is a helper enum value that should only
     // be used by code to process how it handles receiving and unknown

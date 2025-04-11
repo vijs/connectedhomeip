@@ -35,43 +35,7 @@ namespace app {
 namespace Clusters {
 namespace Binding {
 namespace Structs {
-namespace TargetStruct {
-enum class Fields : uint8_t
-{
-    kNode        = 1,
-    kGroup       = 2,
-    kEndpoint    = 3,
-    kCluster     = 4,
-    kFabricIndex = 254,
-};
-
-struct Type
-{
-public:
-    Optional<chip::NodeId> node;
-    Optional<chip::GroupId> group;
-    Optional<chip::EndpointId> endpoint;
-    Optional<chip::ClusterId> cluster;
-    chip::FabricIndex fabricIndex = static_cast<chip::FabricIndex>(0);
-
-    CHIP_ERROR Decode(TLV::TLVReader & reader);
-
-    static constexpr bool kIsFabricScoped = true;
-
-    auto GetFabricIndex() const { return fabricIndex; }
-
-    void SetFabricIndex(chip::FabricIndex fabricIndex_) { fabricIndex = fabricIndex_; }
-
-    CHIP_ERROR EncodeForWrite(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
-    CHIP_ERROR EncodeForRead(TLV::TLVWriter & aWriter, TLV::Tag aTag, FabricIndex aAccessingFabricIndex) const;
-
-private:
-    CHIP_ERROR DoEncode(TLV::TLVWriter & aWriter, TLV::Tag aTag, const Optional<FabricIndex> & aAccessingFabricIndex) const;
-};
-
-using DecodableType = Type;
-
-} // namespace TargetStruct
+namespace TargetStruct = Clusters::detail::Structs::TargetStruct;
 } // namespace Structs
 } // namespace Binding
 } // namespace Clusters

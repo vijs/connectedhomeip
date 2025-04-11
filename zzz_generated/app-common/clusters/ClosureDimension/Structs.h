@@ -35,6 +35,31 @@ namespace app {
 namespace Clusters {
 namespace ClosureDimension {
 namespace Structs {
+namespace ClosureDimensionTargetStruct {
+enum class Fields : uint8_t
+{
+    kPosition = 0,
+    kLatch    = 1,
+    kSpeed    = 2,
+};
+
+struct Type
+{
+public:
+    Optional<chip::Percent100ths> position;
+    Optional<TargetLatchEnum> latch;
+    Optional<Globals::ThreeLevelAutoEnum> speed;
+
+    CHIP_ERROR Decode(TLV::TLVReader & reader);
+
+    static constexpr bool kIsFabricScoped = false;
+
+    CHIP_ERROR Encode(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
+};
+
+using DecodableType = Type;
+
+} // namespace ClosureDimensionTargetStruct
 namespace CurrentStruct {
 enum class Fields : uint8_t
 {
@@ -83,31 +108,6 @@ public:
 using DecodableType = Type;
 
 } // namespace RangePercent100thsStruct
-namespace TargetStruct {
-enum class Fields : uint8_t
-{
-    kPosition = 0,
-    kLatch    = 1,
-    kSpeed    = 2,
-};
-
-struct Type
-{
-public:
-    Optional<chip::Percent100ths> position;
-    Optional<TargetLatchEnum> latch;
-    Optional<Globals::ThreeLevelAutoEnum> speed;
-
-    CHIP_ERROR Decode(TLV::TLVReader & reader);
-
-    static constexpr bool kIsFabricScoped = false;
-
-    CHIP_ERROR Encode(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
-};
-
-using DecodableType = Type;
-
-} // namespace TargetStruct
 namespace UnitRangeStruct {
 enum class Fields : uint8_t
 {

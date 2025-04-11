@@ -215,6 +215,82 @@ public:
 using DecodableType = Type;
 
 } // namespace ApplicationStruct
+namespace AccessControlTargetStruct {
+enum class Fields : uint8_t
+{
+    kCluster    = 0,
+    kEndpoint   = 1,
+    kDeviceType = 2,
+};
+
+struct Type
+{
+public:
+    DataModel::Nullable<chip::ClusterId> cluster;
+    DataModel::Nullable<chip::EndpointId> endpoint;
+    DataModel::Nullable<chip::DeviceTypeId> deviceType;
+
+    CHIP_ERROR Decode(TLV::TLVReader & reader);
+
+    static constexpr bool kIsFabricScoped = false;
+
+    CHIP_ERROR Encode(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
+};
+
+using DecodableType = Type;
+
+} // namespace AccessControlTargetStruct
+namespace AccessControlEntryStruct {
+enum class Fields : uint8_t
+{
+    kPrivilege   = 1,
+    kAuthMode    = 2,
+    kSubjects    = 3,
+    kTargets     = 4,
+    kFabricIndex = 254,
+};
+
+struct Type
+{
+public:
+    AccessControlEntryPrivilegeEnum privilege = static_cast<AccessControlEntryPrivilegeEnum>(0);
+    AccessControlEntryAuthModeEnum authMode   = static_cast<AccessControlEntryAuthModeEnum>(0);
+    DataModel::Nullable<DataModel::List<const uint64_t>> subjects;
+    DataModel::Nullable<DataModel::List<const Structs::AccessControlTargetStruct::Type>> targets;
+    chip::FabricIndex fabricIndex = static_cast<chip::FabricIndex>(0);
+
+    static constexpr bool kIsFabricScoped = true;
+
+    auto GetFabricIndex() const { return fabricIndex; }
+
+    void SetFabricIndex(chip::FabricIndex fabricIndex_) { fabricIndex = fabricIndex_; }
+
+    CHIP_ERROR EncodeForWrite(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
+    CHIP_ERROR EncodeForRead(TLV::TLVWriter & aWriter, TLV::Tag aTag, FabricIndex aAccessingFabricIndex) const;
+
+private:
+    CHIP_ERROR DoEncode(TLV::TLVWriter & aWriter, TLV::Tag aTag, const Optional<FabricIndex> & aAccessingFabricIndex) const;
+};
+
+struct DecodableType
+{
+public:
+    AccessControlEntryPrivilegeEnum privilege = static_cast<AccessControlEntryPrivilegeEnum>(0);
+    AccessControlEntryAuthModeEnum authMode   = static_cast<AccessControlEntryAuthModeEnum>(0);
+    DataModel::Nullable<DataModel::DecodableList<uint64_t>> subjects;
+    DataModel::Nullable<DataModel::DecodableList<Structs::AccessControlTargetStruct::DecodableType>> targets;
+    chip::FabricIndex fabricIndex = static_cast<chip::FabricIndex>(0);
+
+    CHIP_ERROR Decode(TLV::TLVReader & reader);
+
+    static constexpr bool kIsFabricScoped = true;
+
+    auto GetFabricIndex() const { return fabricIndex; }
+
+    void SetFabricIndex(chip::FabricIndex fabricIndex_) { fabricIndex = fabricIndex_; }
+};
+
+} // namespace AccessControlEntryStruct
 namespace ErrorStateStruct {
 enum class Fields : uint8_t
 {
@@ -240,6 +316,41 @@ public:
 using DecodableType = Type;
 
 } // namespace ErrorStateStruct
+namespace GroupKeySetStruct {
+enum class Fields : uint8_t
+{
+    kGroupKeySetID          = 0,
+    kGroupKeySecurityPolicy = 1,
+    kEpochKey0              = 2,
+    kEpochStartTime0        = 3,
+    kEpochKey1              = 4,
+    kEpochStartTime1        = 5,
+    kEpochKey2              = 6,
+    kEpochStartTime2        = 7,
+};
+
+struct Type
+{
+public:
+    uint16_t groupKeySetID                            = static_cast<uint16_t>(0);
+    GroupKeySecurityPolicyEnum groupKeySecurityPolicy = static_cast<GroupKeySecurityPolicyEnum>(0);
+    DataModel::Nullable<chip::ByteSpan> epochKey0;
+    DataModel::Nullable<uint64_t> epochStartTime0;
+    DataModel::Nullable<chip::ByteSpan> epochKey1;
+    DataModel::Nullable<uint64_t> epochStartTime1;
+    DataModel::Nullable<chip::ByteSpan> epochKey2;
+    DataModel::Nullable<uint64_t> epochStartTime2;
+
+    CHIP_ERROR Decode(TLV::TLVReader & reader);
+
+    static constexpr bool kIsFabricScoped = false;
+
+    CHIP_ERROR Encode(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
+};
+
+using DecodableType = Type;
+
+} // namespace GroupKeySetStruct
 namespace ICEServerStruct {
 enum class Fields : uint8_t
 {
@@ -322,6 +433,43 @@ public:
 using DecodableType = Type;
 
 } // namespace OperationalStateStruct
+namespace TargetStruct {
+enum class Fields : uint8_t
+{
+    kNode        = 1,
+    kGroup       = 2,
+    kEndpoint    = 3,
+    kCluster     = 4,
+    kFabricIndex = 254,
+};
+
+struct Type
+{
+public:
+    Optional<chip::NodeId> node;
+    Optional<chip::GroupId> group;
+    Optional<chip::EndpointId> endpoint;
+    Optional<chip::ClusterId> cluster;
+    chip::FabricIndex fabricIndex = static_cast<chip::FabricIndex>(0);
+
+    CHIP_ERROR Decode(TLV::TLVReader & reader);
+
+    static constexpr bool kIsFabricScoped = true;
+
+    auto GetFabricIndex() const { return fabricIndex; }
+
+    void SetFabricIndex(chip::FabricIndex fabricIndex_) { fabricIndex = fabricIndex_; }
+
+    CHIP_ERROR EncodeForWrite(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
+    CHIP_ERROR EncodeForRead(TLV::TLVWriter & aWriter, TLV::Tag aTag, FabricIndex aAccessingFabricIndex) const;
+
+private:
+    CHIP_ERROR DoEncode(TLV::TLVWriter & aWriter, TLV::Tag aTag, const Optional<FabricIndex> & aAccessingFabricIndex) const;
+};
+
+using DecodableType = Type;
+
+} // namespace TargetStruct
 namespace ViewportStruct {
 enum class Fields : uint8_t
 {

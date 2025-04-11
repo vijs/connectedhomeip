@@ -58,11 +58,11 @@ struct TypeInfo
 namespace Target {
 struct TypeInfo
 {
-    using Type = chip::app::DataModel::Nullable<chip::app::Clusters::ClosureDimension::Structs::TargetStruct::Type>;
+    using Type = chip::app::DataModel::Nullable<chip::app::Clusters::ClosureDimension::Structs::ClosureDimensionTargetStruct::Type>;
     using DecodableType =
-        chip::app::DataModel::Nullable<chip::app::Clusters::ClosureDimension::Structs::TargetStruct::DecodableType>;
-    using DecodableArgType =
-        const chip::app::DataModel::Nullable<chip::app::Clusters::ClosureDimension::Structs::TargetStruct::DecodableType> &;
+        chip::app::DataModel::Nullable<chip::app::Clusters::ClosureDimension::Structs::ClosureDimensionTargetStruct::DecodableType>;
+    using DecodableArgType = const chip::app::DataModel::Nullable<
+        chip::app::Clusters::ClosureDimension::Structs::ClosureDimensionTargetStruct::DecodableType> &;
 
     static constexpr ClusterId GetClusterId() { return Clusters::ClosureDimension::Id; }
     static constexpr AttributeId GetAttributeId() { return Attributes::Target::Id; }

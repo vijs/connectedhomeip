@@ -19,6 +19,7 @@ limitations under the License.
 
   <enum name="AccessControlEntryPrivilegeEnum" type="enum8">
     <cluster code="0x001F"/>
+    <cluster code="0x0752"/>
     <item name="View" value="0x01"/>
     <item name="ProxyView" value="0x02"/>
     <item name="Operate" value="0x03"/>
@@ -28,6 +29,7 @@ limitations under the License.
 
   <enum name="AccessControlEntryAuthModeEnum" type="enum8">
     <cluster code="0x001F"/>
+    <cluster code="0x0752"/>
     <item name="PASE" value="0x01"/>
     <item name="CASE" value="0x02"/>
     <item name="Group" value="0x03"/>
@@ -50,6 +52,7 @@ limitations under the License.
 
   <struct name="AccessControlTargetStruct">
     <cluster code="0x001F"/>
+    <cluster code="0x0752"/>
     <item fieldId="0" name="Cluster" type="cluster_id" isNullable="true"/>
     <item fieldId="1" name="Endpoint" type="endpoint_no" isNullable="true"/>
     <item fieldId="2" name="DeviceType" type="devtype_id" isNullable="true"/>
@@ -57,6 +60,7 @@ limitations under the License.
 
   <struct name="AccessControlEntryStruct" isFabricScoped="true">
     <cluster code="0x001F"/>
+    <cluster code="0x0752"/>
     <item fieldId="1" name="Privilege" type="AccessControlEntryPrivilegeEnum" isFabricSensitive="true" min="0x00" max="0x05"/>
     <item fieldId="2" name="AuthMode" type="AccessControlEntryAuthModeEnum" isFabricSensitive="true" min="0x00" max="0x03"/>
     <item fieldId="3" name="Subjects" type="int64u" isNullable="true" array="true" isFabricSensitive="true"/>

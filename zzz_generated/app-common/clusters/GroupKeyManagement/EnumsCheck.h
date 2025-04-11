@@ -22,19 +22,6 @@
 
 namespace chip {
 namespace app {
-namespace Clusters {
-static auto __attribute__((unused)) EnsureKnownEnumValue(GroupKeyManagement::GroupKeySecurityPolicyEnum val)
-{
-    using EnumType = GroupKeyManagement::GroupKeySecurityPolicyEnum;
-    switch (val)
-    {
-    case EnumType::kTrustFirst:
-    case EnumType::kCacheAndSync:
-        return val;
-    default:
-        return EnumType::kUnknownEnumValue;
-    }
-}
-} // namespace Clusters
+namespace Clusters {} // namespace Clusters
 } // namespace app
 } // namespace chip

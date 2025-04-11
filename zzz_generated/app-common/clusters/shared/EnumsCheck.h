@@ -23,6 +23,34 @@
 namespace chip {
 namespace app {
 namespace Clusters {
+static auto __attribute__((unused)) EnsureKnownEnumValue(detail::AccessControlEntryAuthModeEnum val)
+{
+    using EnumType = detail::AccessControlEntryAuthModeEnum;
+    switch (val)
+    {
+    case EnumType::kPase:
+    case EnumType::kCase:
+    case EnumType::kGroup:
+        return val;
+    default:
+        return EnumType::kUnknownEnumValue;
+    }
+}
+static auto __attribute__((unused)) EnsureKnownEnumValue(detail::AccessControlEntryPrivilegeEnum val)
+{
+    using EnumType = detail::AccessControlEntryPrivilegeEnum;
+    switch (val)
+    {
+    case EnumType::kView:
+    case EnumType::kProxyView:
+    case EnumType::kOperate:
+    case EnumType::kManage:
+    case EnumType::kAdminister:
+        return val;
+    default:
+        return EnumType::kUnknownEnumValue;
+    }
+}
 static auto __attribute__((unused)) EnsureKnownEnumValue(Globals::AreaTypeTag val)
 {
     using EnumType = Globals::AreaTypeTag;
@@ -195,6 +223,18 @@ static auto __attribute__((unused)) EnsureKnownEnumValue(Globals::FloorSurfaceTa
     case EnumType::kTerrazzo:
     case EnumType::kTile:
     case EnumType::kVinyl:
+        return val;
+    default:
+        return EnumType::kUnknownEnumValue;
+    }
+}
+static auto __attribute__((unused)) EnsureKnownEnumValue(detail::GroupKeySecurityPolicyEnum val)
+{
+    using EnumType = detail::GroupKeySecurityPolicyEnum;
+    switch (val)
+    {
+    case EnumType::kTrustFirst:
+    case EnumType::kCacheAndSync:
         return val;
     default:
         return EnumType::kUnknownEnumValue;

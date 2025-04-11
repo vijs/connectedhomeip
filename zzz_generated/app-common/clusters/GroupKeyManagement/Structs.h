@@ -116,41 +116,7 @@ private:
 using DecodableType = Type;
 
 } // namespace GroupKeyMapStruct
-namespace GroupKeySetStruct {
-enum class Fields : uint8_t
-{
-    kGroupKeySetID          = 0,
-    kGroupKeySecurityPolicy = 1,
-    kEpochKey0              = 2,
-    kEpochStartTime0        = 3,
-    kEpochKey1              = 4,
-    kEpochStartTime1        = 5,
-    kEpochKey2              = 6,
-    kEpochStartTime2        = 7,
-};
-
-struct Type
-{
-public:
-    uint16_t groupKeySetID                            = static_cast<uint16_t>(0);
-    GroupKeySecurityPolicyEnum groupKeySecurityPolicy = static_cast<GroupKeySecurityPolicyEnum>(0);
-    DataModel::Nullable<chip::ByteSpan> epochKey0;
-    DataModel::Nullable<uint64_t> epochStartTime0;
-    DataModel::Nullable<chip::ByteSpan> epochKey1;
-    DataModel::Nullable<uint64_t> epochStartTime1;
-    DataModel::Nullable<chip::ByteSpan> epochKey2;
-    DataModel::Nullable<uint64_t> epochStartTime2;
-
-    CHIP_ERROR Decode(TLV::TLVReader & reader);
-
-    static constexpr bool kIsFabricScoped = false;
-
-    CHIP_ERROR Encode(TLV::TLVWriter & aWriter, TLV::Tag aTag) const;
-};
-
-using DecodableType = Type;
-
-} // namespace GroupKeySetStruct
+namespace GroupKeySetStruct = Clusters::detail::Structs::GroupKeySetStruct;
 } // namespace Structs
 } // namespace GroupKeyManagement
 } // namespace Clusters
