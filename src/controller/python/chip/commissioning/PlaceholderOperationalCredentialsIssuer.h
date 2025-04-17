@@ -53,6 +53,18 @@ public:
         return CHIP_ERROR_NOT_IMPLEMENTED;
     }
 
+    CHIP_ERROR SignICAC(const ByteSpan & icaCsr, Callback::Callback<Controller::OnICACSigned> * onCompletion) override
+    {
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+
+    CHIP_ERROR SignNOC(const ByteSpan & icac, const ByteSpan & nocCsr, MutableByteSpan & noc) override
+    {
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+
+    CHIP_ERROR ObtainIcaCsr(MutableByteSpan & icaCsr) override { return CHIP_ERROR_NOT_IMPLEMENTED; }
+
     void SetNodeIdForNextNOCRequest(NodeId nodeId) override {}
 
     void SetFabricIdForNextNOCRequest(FabricId fabricId) override {}

@@ -473,7 +473,9 @@ DeviceCommissioner::DeviceCommissioner() :
     mOnDeviceConnectionRetryCallback(OnDeviceConnectionRetryFn, this),
 #endif // CHIP_DEVICE_CONFIG_ENABLE_AUTOMATIC_CASE_RETRIES
     mDeviceAttestationInformationVerificationCallback(OnDeviceAttestationInformationVerification, this),
-    mDeviceNOCChainCallback(OnDeviceNOCChainGeneration, this), mSetUpCodePairer(this)
+    mDeviceNOCChainCallback(OnDeviceNOCChainGeneration, this), mSetUpCodePairer(this),
+    mJCMCommissionerCompleteCallback(OnJCMTrustVerificationComplete, this),
+    mJCMAdministratorCompleteCallback(OnJCMICACCrossSignComplete, this), mDeviceSignICACCallback(OnDeviceICACSignature, this)
 {}
 
 CHIP_ERROR DeviceCommissioner::Init(CommissionerInitParams params)
@@ -1542,6 +1544,75 @@ DeviceCommissioner::CheckForRevokedDACChain(const Credentials::DeviceAttestation
     return CHIP_NO_ERROR;
 }
 
+CHIP_ERROR DeviceCommissioner::JCMVerifyTrust(VendorId vendorId, FabricIndex fabricIndex)
+{
+    MATTER_TRACE_SCOPE("JCMVerifyTrust", "DeviceCommissioner");
+    VerifyOrReturnError(mState == State::Initialized, CHIP_ERROR_INCORRECT_STATE);
+
+    ChipLogDetail(Controller, "Verifying Trust of device with Vendor ID %d and FabricIndex %d.", vendorId, fabricIndex);
+
+    ReturnErrorOnFailure(mJCMCommissioner.Start(mDeviceBeingCommissioned, &mJCMCommissionerCompleteCallback));
+
+    return CHIP_NO_ERROR;
+}
+
+CHIP_ERROR DeviceCommissioner::JCMCrossSignICAC()
+{
+    MATTER_TRACE_SCOPE("JCMCrossSignICAC", "DeviceCommissioner");
+    VerifyOrReturnError(mState == State::Initialized, CHIP_ERROR_INCORRECT_STATE);
+
+    ChipLogDetail(Controller, "Preparing to Cross Sign device's ICAC");
+
+    ReturnErrorOnFailure(mJCMAdministrator.Start(mDeviceBeingCommissioned, &mJCMAdministratorCompleteCallback));
+
+    return CHIP_NO_ERROR;
+}
+
+void DeviceCommissioner::OnJCMTrustVerificationComplete(void * context, JCMCommissionerInfo * info, JCMCommissionerResult result)
+{
+    ChipLogProgress(Controller, "Device passed JCM Trust Verification");
+
+    DeviceCommissioner * commissioner = reinterpret_cast<DeviceCommissioner *>(context);
+    if (result == JCMCommissionerResult::kSuccess)
+    {
+        CHIP_ERROR error = CHIP_NO_ERROR;
+
+        if (mJcmTrustCheckDelegate)
+        {
+            mJcmTrustCheckDelegate->OnJCMTrustCheckComplete(err);
+            if (mJcmTrustCheckDelegate->OnAskUserForConsentToOnboardVendorIdToEcosystemFabric(vendorId) == false)
+            {
+                error = CHIP_ERROR_ACCESS_DENIED;
+            }
+        }
+
+        commissioner->CommissioningStageComplete(error);
+    }
+    else
+    {
+        ChipLogError(Controller, "Failed in verifying 'JCM Trust Verification': err %hu", static_cast<uint16_t>(result));
+        CommissioningDelegate::CommissioningReport report;
+        report.Set<JCMCommissionerError>(result);
+        commissioner->CommissioningStageComplete(CHIP_ERROR_INTERNAL, report);
+    }
+}
+
+void DeviceCommissioner::OnJCMICACCrossSign(void * context, JCMAdministratorCompletionResult result)
+{
+    ChipLogProgress(Controller, "JCM: ICAC Cross Signed complete");
+
+    DeviceCommissioner * commissioner = reinterpret_cast<DeviceCommissioner *>(context);
+    if (result == JCMAdministratorCompletionResult::kSuccess)
+    {
+        commissioner->CommissioningStageComplete(CHIP_NO_ERROR);
+    }
+    else
+    {
+        ChipLogError(Controller, "Failed Cross Signing ICAC: err %hu", static_cast<uint16_t>(result));
+        commissioner->CommissioningStageComplete(CHIP_ERROR_INTERNAL);
+    }
+}
+
 CHIP_ERROR DeviceCommissioner::ValidateCSR(DeviceProxy * proxy, const ByteSpan & NOCSRElements,
                                            const ByteSpan & AttestationSignature, const ByteSpan & dac, const ByteSpan & csrNonce)
 {
@@ -1672,6 +1743,14 @@ CHIP_ERROR DeviceCommissioner::ProcessCSR(DeviceProxy * proxy, const ByteSpan & 
     if (mFabricIndex != kUndefinedFabricIndex)
     {
         mOperationalCredentialsDelegate->SetFabricIdForNextNOCRequest(GetFabricId());
+    }
+
+    auto & params = mDefaultCommissioner->GetCommissioningParameters();
+
+    if (params.GetCommissionJointFabricAnchor().ValueOr(false))
+    {
+        CATValues anchorCat = { { 0xFFFC0001, 0xFFFF0001 } };
+        mOperationalCredentialsDelegate->SetCATValuesForNextNOCRequest(anchorCat);
     }
 
     return mOperationalCredentialsDelegate->GenerateNOCChain(NOCSRElements, csrNonce, AttestationSignature, attestationChallenge,
@@ -3354,6 +3433,21 @@ void DeviceCommissioner::PerformCommissioningStep(DeviceProxy * proxy, Commissio
         }
     }
     break;
+    case CommissioningStage::kJCMTrustCheck: {
+        if (!params.GetRemoteVendorId().HasValue() || !params.GetAdministratorFabricIndex().HasValue())
+        {
+            ChipLogError(Controller, "Unable to verify trust towards device");
+            return CommissioningStageComplete(CHIP_ERROR_INVALID_ARGUMENT);
+        }
+
+        CHIP_ERROR err = JCMVerifyTrust(params.GetRemoteVendorId().Value(), params.GetAdministratorFabricIndex().Value());
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(Controller, "Failed to verify trust towards device: %" CHIP_ERROR_FORMAT, err.Format());
+            CommissioningStageComplete(err);
+        }
+    }
+    break;
     case CommissioningStage::kSendOpCertSigningRequest: {
         if (!params.GetCSRNonce().HasValue())
         {
@@ -3458,6 +3552,16 @@ void DeviceCommissioner::PerformCommissioningStep(DeviceProxy * proxy, Commissio
         }
         break;
     }
+    case CommissioningStage::kJCMCrossSignICAC: {
+        CHIP_ERROR err = JCMCrossSignICAC();
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(Controller, "Failed to Cross Sign device's ICAC: %" CHIP_ERROR_FORMAT, err.Format());
+            CommissioningStageComplete(err);
+        }
+        return;
+    }
+    break;
     case CommissioningStage::kConfigureTrustedTimeSource: {
         if (!params.GetTrustedTimeSource().HasValue())
         {

@@ -22,6 +22,7 @@
 #include <app/ClusterStateCache.h>
 #include <app/OperationalSessionSetup.h>
 #include <controller/CommissioneeDeviceProxy.h>
+#include <controller/JCMCommissioner.h>
 #include <credentials/attestation_verifier/DeviceAttestationDelegate.h>
 #include <credentials/attestation_verifier/DeviceAttestationVerifier.h>
 #include <crypto/CHIPCryptoPAL.h>
@@ -51,11 +52,13 @@ enum CommissioningStage : uint8_t
     kSendAttestationRequest,     ///< Send AttestationRequest (0x3E:0) command to the device
     kAttestationVerification,    ///< Verify AttestationResponse (0x3E:1) validity
     kAttestationRevocationCheck, ///< Verify Revocation Status of device's DAC chain
+    kJCMTrustCheck,              ///< JCM: Verify trust towards device
     kSendOpCertSigningRequest,   ///< Send CSRRequest (0x3E:4) command to the device
     kValidateCSR,                ///< Verify CSRResponse (0x3E:5) validity
     kGenerateNOCChain,           ///< TLV encode Node Operational Credentials (NOC) chain certs
     kSendTrustedRootCert,        ///< Send AddTrustedRootCertificate (0x3E:11) command to the device
     kSendNOC,                    ///< Send AddNOC (0x3E:6) command to the device
+    kJCMCrossSignICAC,           ///< JCM: Cross Sign device's ICAC
     kConfigureTrustedTimeSource, ///< Configure a trusted time source if one is required and available (must be done after SendNOC)
     kICDGetRegistrationInfo,     ///< Waiting for the higher layer to provide ICD registration informations.
     kICDRegistration,            ///< Register for ICD management
@@ -248,11 +251,6 @@ public:
     // the node id in the DeviceProxy.
     const Optional<ByteSpan> GetNoc() const { return mNoc; }
 
-    // The intermediate certificate for the node being commissioned. In the AutoCommissioner, this is set by by the
-    // kGenerateNOCChain stage through the OperationalCredentialsDelegate.
-    // This value should be set before calling PerformCommissioningStep for the kSendNOC step.
-    const Optional<ByteSpan> GetIcac() const { return mIcac; }
-
     // Epoch key for the identity protection key for the node being commissioned. In the AutoCommissioner, this is set by by the
     // kGenerateNOCChain stage through the OperationalCredentialsDelegate.
     // This value must be set before calling PerformCommissioningStep for the kSendNOC step.
@@ -279,7 +277,7 @@ public:
     // Product attestation intermediate certificate from the node. This is obtained from the node in response to the
     // CertificateChainRequest command for the PAI. In the AutoCommissioner, this is automatically set from the report from the
     // kSendPAICertificateRequest stage.
-    // This must be set before calling PerformCommissioningStep for the kAttestationVerificationstep.
+    // This must be set before calling PerformCommissioningStep for the kAttestationVerification step.
     const Optional<ByteSpan> GetPAI() const { return mPAI; }
 
     // Device attestation certificate from the node. This is obtained from the node in response to the CertificateChainRequest
@@ -287,6 +285,11 @@ public:
     // stage.
     // This must be set before calling PerformCommissioningStep for the kAttestationVerification step.
     const Optional<ByteSpan> GetDAC() const { return mDAC; }
+
+    // NOC ICA CSR from the node. This is obtained from node in response to the ICACCSRRequest command. In the
+    // AutoCommissioner, this is automatically set from the report from the kSendICACCSRRequest stage.
+    // This must be set before calling PerformCommissioningStep for the kSignICA step.
+    const Optional<ByteSpan> GetIcaCsr() const { return mIcaCsr; }
 
     // Node ID when a matching fabric is found in the Node Operational Credentials cluster.
     // In the AutoCommissioner, this is set from kReadCommissioningInfo stage.
@@ -541,6 +544,13 @@ public:
         return *this;
     }
 
+    Optional<bool> GetCommissionJointFabricAnchor() const { return mCommissionJointFabricAnchor; }
+    CommissioningParameters & SetCommissionJointFabricAnchor(bool commissionJointFabricAnchor)
+    {
+        mCommissionJointFabricAnchor = MakeOptional(commissionJointFabricAnchor);
+        return *this;
+    }
+
     // Check for matching fabric on target device by reading fabric list and looking for a
     // fabricId and RootCert match. If a match is detected, then use GetNodeId() to
     // access the nodeId for the device on the matching fabric.
@@ -548,6 +558,13 @@ public:
     CommissioningParameters & SetCheckForMatchingFabric(bool checkForMatchingFabric)
     {
         mCheckForMatchingFabric = checkForMatchingFabric;
+        return *this;
+    }
+
+    bool GetJointFabric() const { return mJointFabric; }
+    CommissioningParameters & SetJointFabric(bool jointFabric)
+    {
+        mJointFabric = jointFabric;
         return *this;
     }
 
@@ -670,6 +687,7 @@ private:
     Optional<bool> mAttemptWiFiNetworkScan;
     Optional<bool> mAttemptThreadNetworkScan; // This automatically gets set to false when a ThreadOperationalDataset is set
     Optional<bool> mSkipCommissioningComplete;
+    Optional<bool> mCommissionJointFabricAnchor;
 
     Optional<NodeId> mICDCheckInNodeId;
     Optional<uint64_t> mICDMonitoredSubject;
@@ -679,6 +697,8 @@ private:
     ICDRegistrationStrategy mICDRegistrationStrategy = ICDRegistrationStrategy::kIgnore;
     bool mCheckForMatchingFabric                     = false;
     Span<const app::AttributePathParams> mExtraReadPaths;
+
+    bool mJointFabric = false;
 };
 
 struct RequestedCertificate
@@ -706,9 +726,7 @@ struct CSRResponse
 struct NocChain
 {
     NocChain(ByteSpan newNoc, ByteSpan newIcac, ByteSpan newRcac, Crypto::IdentityProtectionKeySpan newIpk,
-             NodeId newAdminSubject) :
-        noc(newNoc),
-        icac(newIcac), rcac(newRcac), ipk(newIpk), adminSubject(newAdminSubject)
+             NodeId newAdminSubject) : noc(newNoc), icac(newIcac), rcac(newRcac), ipk(newIpk), adminSubject(newAdminSubject)
     {}
     ByteSpan noc;
     ByteSpan icac;
@@ -824,7 +842,7 @@ struct NetworkCommissioningStatusInfo
 class CommissioningDelegate
 {
 public:
-    virtual ~CommissioningDelegate(){};
+    virtual ~CommissioningDelegate() {};
     /* CommissioningReport is returned after each commissioning step is completed. The reports for each step are:
      * kReadCommissioningInfo: ReadCommissioningInfo
      * kArmFailsafe: CommissioningErrorInfo if there is an error
@@ -838,10 +856,12 @@ public:
      * kSendAttestationRequest: AttestationResponse
      * kAttestationVerification: AttestationErrorInfo if there is an error
      * kAttestationRevocationCheck: AttestationErrorInfo if there is an error
+     * kJCMTrustCheck: JCMCommissionerError
      * kSendOpCertSigningRequest: CSRResponse
      * kGenerateNOCChain: NocChain
      * kSendTrustedRootCert: None
      * kSendNOC: None
+     * kJCMCrossSignICAC: JCMAdministratorCompletionError
      * kConfigureTrustedTimeSource: None
      * kWiFiNetworkSetup: NetworkCommissioningStatusInfo if there is an error
      * kThreadNetworkSetup: NetworkCommissioningStatusInfo if there is an error
@@ -855,7 +875,8 @@ public:
      * kCleanup: None
      */
     struct CommissioningReport
-        : Variant<RequestedCertificate, AttestationResponse, CSRResponse, NocChain, OperationalNodeFoundData, ReadCommissioningInfo,
+        : Variant<RequestedCertificate, AttestationResponse, CSRResponse, NocChain, ICACCSRResponse,
+                  JCMAdministratorCompletionError, OperationalNodeFoundData, ReadCommissioningInfo, JCMCommissionerError,
                   AttestationErrorInfo, CommissioningErrorInfo, NetworkCommissioningStatusInfo, TimeZoneResponseInfo>
     {
         CommissioningReport() : stageCompleted(CommissioningStage::kError) {}

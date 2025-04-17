@@ -386,6 +386,12 @@ CommissioningStage AutoCommissioner::GetNextCommissioningStageInternal(Commissio
     case CommissioningStage::kAttestationVerification:
         return CommissioningStage::kAttestationRevocationCheck;
     case CommissioningStage::kAttestationRevocationCheck:
+        if (mParams.GetJointFabric())
+        {
+            return CommissioningStage::kJCMTrustCheck;
+        }
+    // fallthrough
+    case CommissioningStage::kJCMTrustCheck:
         return CommissioningStage::kSendOpCertSigningRequest;
     case CommissioningStage::kSendOpCertSigningRequest:
         return CommissioningStage::kValidateCSR;
@@ -396,6 +402,12 @@ CommissioningStage AutoCommissioner::GetNextCommissioningStageInternal(Commissio
     case CommissioningStage::kSendTrustedRootCert:
         return CommissioningStage::kSendNOC;
     case CommissioningStage::kSendNOC:
+        if (mParams.GetJointFabric())
+        {
+            return CommissioningStage::kJCMCrossSignICAC;
+        }
+        // fallthrough
+    case CommissioningStage::kJCMCrossSignICAC:
         if (mDeviceCommissioningInfo.requiresTrustedTimeSource && mParams.GetTrustedTimeSource().HasValue())
         {
             return CommissioningStage::kConfigureTrustedTimeSource;
@@ -791,6 +803,7 @@ CHIP_ERROR AutoCommissioner::CommissioningStepFinished(CHIP_ERROR err, Commissio
         case CommissioningStage::kSendAttestationRequest: {
             auto & elements  = report.Get<AttestationResponse>().attestationElements;
             auto & signature = report.Get<AttestationResponse>().signature;
+
             if (elements.size() > sizeof(mAttestationElements))
             {
                 ChipLogError(Controller, "AutoCommissioner attestationElements buffer size %u larger than cache size %u",

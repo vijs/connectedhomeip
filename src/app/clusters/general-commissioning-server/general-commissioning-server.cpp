@@ -31,6 +31,7 @@
 #include <app/CommandHandlerInterface.h>
 #include <app/CommandHandlerInterfaceRegistry.h>
 #include <app/ConcreteCommandPath.h>
+#include <app/clusters/joint-fabric-administrator-server/joint-fabric-administrator-server.h>
 #include <app/reporting/reporting.h>
 #include <app/server/CommissioningWindowManager.h>
 #include <app/server/Server.h>
@@ -389,6 +390,7 @@ void GeneralCommissioningGlobalInstance::HandleCommissioningComplete(
     DeviceControlServer * devCtrl = &DeviceLayer::DeviceControlServer::DeviceControlSvr();
     auto & failSafe               = Server::GetInstance().GetFailSafeContext();
     auto & fabricTable            = Server::GetInstance().GetFabricTable();
+    auto & commissionMgr          = Server::GetInstance().GetCommissioningWindowManager();
 
     ChipLogProgress(FailSafe, "GeneralCommissioning: Received CommissioningComplete");
 
@@ -493,6 +495,24 @@ void GeneralCommissioningGlobalInstance::HandleCommissioningComplete(
     failSafe.DisarmFailSafe();
     err = devCtrl->PostCommissioningCompleteEvent(handle->AsSecureSession()->GetPeerNodeId(), handle->GetFabricIndex());
     CheckSuccess(err, Failure);
+
+    if (commissionMgr.IsJointFabricEnabled())
+    {
+        err = devCtrl->PostJointFabricCommissioningCompleteEvent(handle->AsSecureSession()->GetPeerNodeId(),
+                                                                 handle->GetFabricIndex());
+        CheckSuccess(err, Failure);
+    }
+    else
+    {
+        CATValues cats;
+        if (fabricTable.FetchCATs(handle->GetFabricIndex(), cats) == CHIP_NO_ERROR)
+        {
+            if (cats.ContainsIdentifier(kAnchorIdentifier) || cats.ContainsIdentifier(kAnchorAndDatastoreIdentifier))
+            {
+                Server::GetInstance().GetJointFabricDatastorage().SetAdministratorFabricIndex(handle->GetFabricIndex());
+            }
+        }
+    }
 
     Breadcrumb::Set(ctx.mRequestPath.mEndpointId, 0);
     response.errorCode = CommissioningErrorEnum::kOk;

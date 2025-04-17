@@ -103,6 +103,8 @@ public:
         AddArgument(
             "commissioner-vendor-id", 0, UINT16_MAX, &mCommissionerVendorId,
             "The vendor id to use for chip-tool. If not provided, chip::VendorId::TestVendor1 (65521, 0xFFF1) will be used.");
+        AddArgument("commissioner-case-auth-tags", 1, UINT32_MAX, &mCASEAuthTags,
+                    "The CATs to be encoded in the NOC sent to the commissionee");
     }
 
     /////////// Command Interface /////////
@@ -222,6 +224,7 @@ private:
     chip::Optional<char *> mCommissionerName;
     chip::Optional<chip::NodeId> mCommissionerNodeId;
     chip::Optional<chip::VendorId> mCommissionerVendorId;
+    chip::Optional<std::vector<uint32_t>> mCASEAuthTags;
     chip::Optional<uint16_t> mBleAdapterId;
     chip::Optional<char *> mPaaTrustStorePath;
     chip::Optional<char *> mCDTrustStorePath;

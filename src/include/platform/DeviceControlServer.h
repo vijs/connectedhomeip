@@ -34,6 +34,7 @@ public:
     // ===== Members for internal use by other Device Layer components.
 
     CHIP_ERROR PostCommissioningCompleteEvent(NodeId peerNodeId, FabricIndex accessingFabricIndex);
+    CHIP_ERROR PostJointFabricCommissioningCompleteEvent(NodeId peerNodeId, FabricIndex accessingFabricIndex);
     CHIP_ERROR SetRegulatoryConfig(uint8_t location, const CharSpan & countryCode);
     CHIP_ERROR PostConnectedToOperationalNetworkEvent(ByteSpan networkID);
     CHIP_ERROR PostCloseAllBLEConnectionsToOperationalNetworkEvent();

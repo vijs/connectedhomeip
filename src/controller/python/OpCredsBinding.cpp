@@ -105,6 +105,18 @@ private:
                                                       onCompletion);
     }
 
+    CHIP_ERROR SignICAC(const ByteSpan & icaCsr, Callback::Callback<OnICACSigned> * onCompletion) override
+    {
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+
+    CHIP_ERROR SignNOC(const ByteSpan & icac, const ByteSpan & nocCsr, MutableByteSpan & noc) override
+    {
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+
+    CHIP_ERROR ObtainIcaCsr(MutableByteSpan & icaCsr) override { return CHIP_ERROR_NOT_IMPLEMENTED; }
+
     void SetNodeIdForNextNOCRequest(NodeId nodeId) override { mExampleOpCredsIssuer.SetNodeIdForNextNOCRequest(nodeId); }
 
     void SetFabricIdForNextNOCRequest(FabricId fabricId) override { mExampleOpCredsIssuer.SetFabricIdForNextNOCRequest(fabricId); }

@@ -45,6 +45,17 @@ CHIP_ERROR DeviceControlServer::PostCommissioningCompleteEvent(NodeId peerNodeId
     return PlatformMgr().PostEvent(&event);
 }
 
+CHIP_ERROR DeviceControlServer::PostJointFabricCommissioningCompleteEvent(NodeId peerNodeId, FabricIndex accessingFabricIndex)
+{
+    ChipDeviceEvent event{
+
+        .Type                  = DeviceEventType::kJointFabricCommissioningComplete,
+        .CommissioningComplete = { .nodeId = peerNodeId, .fabricIndex = accessingFabricIndex }
+    };
+
+    return PlatformMgr().PostEvent(&event);
+}
+
 CHIP_ERROR DeviceControlServer::SetRegulatoryConfig(uint8_t location, const CharSpan & countryCode)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;

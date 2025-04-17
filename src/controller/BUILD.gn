@@ -69,6 +69,8 @@ static_library("controller") {
     "DeviceDiscoveryDelegate.h",
     "DevicePairingDelegate.h",
     "ExampleOperationalCredentialsIssuer.h",
+    "JCMCommissioner.h",
+    "JCMAdministrator.h",
     "SetUpCodePairer.h",
   ]
 
@@ -86,6 +88,8 @@ static_library("controller") {
       "CommissionerDiscoveryController.h",
       "CommissioningDelegate.cpp",
       "ExampleOperationalCredentialsIssuer.cpp",
+      "JCMAdministrator.cpp",
+      "JCMCommissioner.cpp",
       "SetUpCodePairer.cpp",
     ]
 

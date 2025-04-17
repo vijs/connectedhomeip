@@ -207,6 +207,11 @@ enum PublicEventTypes
     kCommissioningComplete,
 
     /**
+     * Joint Fabric Commissioning has completed by a call to the general commissioning cluster command.
+     */
+    kJointFabricCommissioningComplete,
+
+    /**
      * Signals that the fail-safe timer expired before the CommissioningComplete command was
      * successfully invoked.
      */

@@ -40,7 +40,10 @@
 #include <controller/CHIPDeviceControllerSystemState.h>
 #include <controller/CommissioneeDeviceProxy.h>
 #include <controller/CommissioningDelegate.h>
+#include <controller/DeviceJCMTrustCheckDelegate.h>
 #include <controller/DevicePairingDelegate.h>
+#include <controller/JCMAdministrator.h>
+#include <controller/JCMCommissioner.h>
 #include <controller/OperationalCredentialsDelegate.h>
 #include <controller/SetUpCodePairer.h>
 #include <credentials/FabricTable.h>
@@ -796,6 +799,12 @@ public:
     void RegisterPairingDelegate(DevicePairingDelegate * pairingDelegate) { mPairingDelegate = pairingDelegate; }
     DevicePairingDelegate * GetPairingDelegate() const { return mPairingDelegate; }
 
+    void RegisterJCMTrustCheckDelegate(DeviceJCMTrustCheckDelegate * jcmTrustCheckDelegate)
+    {
+        mJcmTrustCheckDelegate = jcmTrustCheckDelegate;
+    }
+    DeviceJCMTrustCheckDelegate * GetJcmTrustCheckDelegate() const { return mJcmTrustCheckDelegate; }
+
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     // ClusterStateCache::Callback impl
     void OnDone(app::ReadClient *) override;
@@ -836,6 +845,8 @@ public:
 
 private:
     DevicePairingDelegate * mPairingDelegate = nullptr;
+
+    DeviceJCMTrustCheckDelegate * mJcmTrustCheckDelegate = nullptr;
 
     DeviceProxy * mDeviceBeingCommissioned               = nullptr;
     CommissioneeDeviceProxy * mDeviceInPASEEstablishment = nullptr;
@@ -881,6 +892,8 @@ private:
      */
     CHIP_ERROR SendAttestationRequestCommand(DeviceProxy * device, const ByteSpan & attestationNonce,
                                              Optional<System::Clock::Timeout> timeout);
+    /* This function verifies trust towards the device. */
+    CHIP_ERROR JCMVerifyTrust(VendorId vendorId, FabricIndex fabricIndex);
     /* This function sends an CSR request to the device.
        The function does not hold a reference to the device object.
      */
@@ -896,6 +909,8 @@ private:
        The function does not hold a reference to the device object.
      */
     CHIP_ERROR SendTrustedRootCertificate(DeviceProxy * device, const ByteSpan & rcac, Optional<System::Clock::Timeout> timeout);
+
+    CHIP_ERROR JCMCrossSignICAC();
 
     /* This function is called by the commissioner code when the device completes
        the operational credential provisioning process.
@@ -916,6 +931,9 @@ private:
     static void
     OnAttestationResponse(void * context,
                           const app::Clusters::OperationalCredentials::Commands::AttestationResponse::DecodableType & data);
+
+    static void OnJCMTrustVerificationComplete(void * context, JCMCommissionerInfo * info, JCMCommissionerResult result);
+    static void OnJCMICACCrossSign(void * context, JCMAdministratorCompletionResult result);
 
     /**
      * @brief
@@ -1107,6 +1125,11 @@ private:
     CommissioningDelegate * mCommissioningDelegate =
         nullptr; // Commissioning delegate that issued the PerformCommissioningStep command
     CompletionStatus mCommissioningCompletionStatus;
+
+    chip::Callback::Callback<JCMCommissionerCompleteCallback> mJCMCommissionerCompleteCallback;
+    chip::Callback::Callback<JCMAdministratorCompleteCallback> mJCMAdministratorCompleteCallback;
+    JCMCommissioner mJCMCommissioner;
+    JCMAdministrator mJCMAdministrator;
 
 #if CHIP_CONFIG_ENABLE_READ_CLIENT
     Platform::UniquePtr<app::ClusterStateCache> mAttributeCache;

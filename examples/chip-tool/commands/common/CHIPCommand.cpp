@@ -501,6 +501,19 @@ CHIP_ERROR CHIPCommand::InitializeCommissioner(CommissionerIdentity & identity, 
 
         ReturnLogErrorOnFailure(ephemeralKey.Initialize(chip::Crypto::ECPKeyTarget::ECDSA));
 
+        if (mCASEAuthTags.HasValue() && mCASEAuthTags.Value().size() <= chip::kMaxSubjectCATAttributeCount)
+        {
+            chip::CATValues cats = chip::kUndefinedCATs;
+            for (size_t index = 0; index < mCASEAuthTags.Value().size(); ++index)
+            {
+                cats.values[index] = mCASEAuthTags.Value()[index];
+            }
+            if (cats.AreValid())
+            {
+                mCommissionerStorage.SetCommissionerCATs(cats);
+            }
+        }
+
         ReturnLogErrorOnFailure(mCredIssuerCmds->GenerateControllerNOCChain(identity.mLocalNodeId, fabricId,
                                                                             mCommissionerStorage.GetCommissionerCATs(),
                                                                             ephemeralKey, rcacSpan, icacSpan, nocSpan));

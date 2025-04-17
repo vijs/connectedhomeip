@@ -36,6 +36,9 @@ static constexpr NodeId kTagVersionMask       = 0x0000'0000'0000'FFFFULL;
 // Maximum number of CASE Authenticated Tags (CAT) in the CHIP certificate subject.
 static constexpr size_t kMaxSubjectCATAttributeCount = CHIP_CONFIG_CERT_MAX_RDN_ATTRIBUTES - 2;
 
+static constexpr uint16_t kAnchorIdentifier             = 0xFFFF;
+static constexpr uint16_t kAnchorAndDatastoreIdentifier = 0xFFFC;
+
 constexpr NodeId NodeIdFromCASEAuthTag(CASEAuthTag aCAT)
 {
     return kMinCASEAuthTag | aCAT;
